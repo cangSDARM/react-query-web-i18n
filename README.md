@@ -1,30 +1,33 @@
-# React Query Docs
+# Website
 
-This is source code to react-query.tanstack.com. It is forked from the [Formik](https://formik.org) docs and is built with:
+This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
-- Next.js
-- MDX
-- Tailwind
-- Algolia
-- Notion
+## Installation
 
-## Running locally
-
-```sh
+```console
 yarn install
 ```
 
-At the moment, you need to signup for Notion, and [follow these instructions](https://github.com/ijjk/notion-blog#getting-blog-index-and-token) to get a token and create a blog in order to develop locally. Not ideal, but hopefully will fix soon.
+## Local Development
 
-With tokens and page index in hand, rename `.sample.env` and `.sample.env.build` to just `.env` and `.env.build`. In each one, add respective parameters:
-
-```diff
--NOTION_TOKEN=XXXX
-+NOTION_TOKEN=<YOUR_TOKEN>
--BLOG_INDEX_ID=XXXXX
-+BLOG_INDEX_ID=<YOUR_BLOG_INDEX_ID>
+```console
+yarn start
 ```
 
-Now it will work. Run `yarn dev` to get going.
+This command starts a local development server and open up a browser window. Most changes are reflected live without having to restart the server.
 
-If you get stuck or need help, [send a DM to Jared](https://twitter.com/jaredpalmer) on Twitter.
+## Build
+
+```console
+yarn build
+```
+
+This command generates static content into the `build` directory and can be served using any static contents hosting service.
+
+## Deployment
+
+```console
+GIT_USER=<Your GitHub username> USE_SSH=true yarn deploy
+```
+
+If you are using GitHub pages for hosting, this command is a convenient way to build the website and push to the `gh-pages` branch.
