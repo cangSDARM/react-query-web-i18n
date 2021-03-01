@@ -1,9 +1,10 @@
 module.exports = {
   title: 'React Query 中文文档',
-  url: 'https://your-docusaurus-test-site.com',
+  url: 'https://cangsdarm.github.io',
   baseUrl: '/react-query-web-i18n/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
+  organizationName: 'cangsdarm',
   favicon: 'img/favicon.png',
   projectName: 'ReactQueryCN',
   i18n: {
