@@ -1,9 +1,6 @@
 name: Sync
 
-on: 
-  push:
-    branches:
-      - gh-pages
+on: page_build
 
 jobs:
   build:

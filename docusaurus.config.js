@@ -11,6 +11,13 @@ module.exports = {
     defaultLocale: 'cn',
     locales: ['cn'],
   },
+  scripts: [
+    {
+      src:
+        'https://www.google-analytics.com/analytics.js',
+      async: true,
+    },
+  ],
   themeConfig: {
     sidebarCollapsible: false,
     navbar: {
