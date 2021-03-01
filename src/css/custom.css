@@ -32,6 +32,20 @@ a {
   padding: 0 var(--ifm-pre-padding);
 }
 
+h1.docTitle_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocItem- {
+  font-size: 2.75em;
+  height: 6rem;
+}
+
 blockquote {
-  border-left: 4px solid var(--ifm-color-emphasis-300);
+  padding: .75rem;
+  color: var(--ifm-color-emphasis-700);
+  background-color: var(--ifm-color-emphasis-100);
+  margin-bottom: 1.5rem;
+  --border-opacity: 1;
+  border-color: rgba(210,214,220,var(--border-opacity));
+  border-width: 1px 1px 1px 4px;
+  border-radius: .125rem;
+  font-size: .875rem;
+  line-height: 1.25rem;
 }

@@ -7,6 +7,8 @@ doc
 .docusaurus
 .cache-loader
 
+bak.*
+
 # Misc
 .DS_Store
 .env.local

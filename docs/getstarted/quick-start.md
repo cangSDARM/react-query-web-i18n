@@ -3,7 +3,7 @@ id: quick-start
 title: 快速入门
 ---
 
-该示例非常简要地说明了React Query的3个核心概念：
+该示例非常简要地说明了 React Query 的 3 个核心概念：
 
 - 查询 Queries
 - 修改 Mutations
@@ -49,7 +49,7 @@ function Todos() {
   return (
     <div>
       <ul>
-        {query.data.map(todo => (
+        {query.data.map((todo) => (
           <li key={todo.id}>{todo.title}</li>
         ))}
       </ul>
@@ -71,5 +71,5 @@ function Todos() {
 render(<App />, document.getElementById('root'))
 ```
 
-这三个概念构成了React Query的大部分核心功能。
+这三个概念构成了 React Query 的大部分核心功能。
 本文档的下一部分将详细介绍这些核心概念。
