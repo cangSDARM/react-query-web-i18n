@@ -20,7 +20,6 @@ module.exports = {
   ],
   clientModules: [
     require.resolve('./global-module.js'),
-    require.resolve('./mySiteGlobalCss.css'),
   ],
   themeConfig: {
     sidebarCollapsible: false,
