@@ -15,7 +15,7 @@ $ yarn add react-query
 
 React Query兼容React v16.8+，并与React dom和React Native兼容。
 
-> 想在下载之前试一下吗？ 尝试[入门](/docs/examples/simple)或[基本](/docs/examples/basic)的示例！
+> 想在下载之前试一下吗？ 尝试[入门](https://react-query.tanstack.com/docs/examples/simple)或[基本](https://react-query.tanstack.com/docs/examples/basic)的示例！
 
 ### CDN
 

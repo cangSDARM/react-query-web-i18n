@@ -1,7 +1,7 @@
 module.exports = {
   title: 'React Query 中文文档',
   url: 'https://your-docusaurus-test-site.com',
-  baseUrl: '/',
+  baseUrl: '/react-query-web-i18n/',
   onBrokenLinks: 'throw',
   onBrokenMarkdownLinks: 'warn',
   favicon: 'img/favicon.png',
