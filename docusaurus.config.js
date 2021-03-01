@@ -14,9 +14,13 @@ module.exports = {
   scripts: [
     {
       src:
-        'https://www.google-analytics.com/analytics.js',
+        'https://www.googletagmanager.com/gtag/js?id=G-EGJ5SQ3RN3',
       async: true,
     },
+  ],
+  clientModules: [
+    require.resolve('./global-module.js'),
+    require.resolve('./mySiteGlobalCss.css'),
   ],
   themeConfig: {
     sidebarCollapsible: false,
