@@ -11,16 +11,7 @@ module.exports = {
     defaultLocale: 'cn',
     locales: ['cn'],
   },
-  scripts: [
-    {
-      src:
-        'https://www.googletagmanager.com/gtag/js?id=G-EGJ5SQ3RN3',
-      async: true,
-    },
-  ],
-  clientModules: [
-    require.resolve('./global-module.js'),
-  ],
+  ssrTemplate: require('./ssr-template.js').default,
   themeConfig: {
     sidebarCollapsible: false,
     navbar: {
