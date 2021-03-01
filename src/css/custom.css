@@ -17,6 +17,8 @@
   --ifm-code-font-size: 95%;
   --text-opacity: 1;
   --ifm-link-color: rgba(28,100,242,var(--text-opacity));
+  --ifm-blockquote-padding-vertical: 0.25em;
+  --ifm-blockquote-padding-horizontal: 1em;
 }
 
 a {
@@ -28,4 +30,8 @@ a {
   display: block;
   margin: 0 calc(-1 * var(--ifm-pre-padding));
   padding: 0 var(--ifm-pre-padding);
+}
+
+blockquote {
+  border-left: 4px solid var(--ifm-color-emphasis-300);
 }

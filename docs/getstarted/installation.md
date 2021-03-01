@@ -19,12 +19,12 @@ React Query兼容React v16.8+，并与React dom和React Native兼容。
 
 ### CDN
 
-If you're not using a module bundler or package manager we also have a global ("UMD") build hosted on the [unpkg.com](https://unpkg.com) CDN. Simply add the following `<script>` tag to the bottom of your HTML file:
+如果您没有使用模块打包器或程序包管理器，我们还在 [unpkg.com](https://unpkg.com) 上托管了一个全局（“ UMD”）构建。 只需将以下<script\>标记添加到HTML文件的底部：
 
 ```html
 <script src="https://unpkg.com/react-query/dist/react-query.production.min.js"></script>
 ```
 
-Once you've added this you will have access to the `window.ReactQuery` object and its exports.
+添加后，您将可以访问`window.ReactQuery`对象及其导出。
 
-> This installation/usage requires the [React CDN script bundles](https://reactjs.org/docs/cdn-links.html) to be on the page as well.
+> 此安装/使用也需要在页面上包含 [React CDN](https://reactjs.org/docs/cdn-links.html) 脚本包。
