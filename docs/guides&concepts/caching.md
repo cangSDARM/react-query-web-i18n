@@ -1,32 +1,33 @@
 ---
 id: caching
-title: Caching Examples
+title: 缓存示例
 ---
 
-> Please thoroughly read the [Important Defaults](./important-defaults) before reading this guide
+> 在阅读本篇文档之前，请认真阅读[重要的默认配置](./important-defaults)
 
-## Basic Example
+## 基础
 
-This caching example illustrates the story and lifecycle of:
+此缓存示例说明了以下内容和其生命周期：
 
-- Query Instances with and without cache data
-- Background Refetching
-- Inactive Queries
-- Garbage Collection
+- 查询有和没有缓存数据的实例
+- 后台重新拉取
+- 不活跃的查询
+- 垃圾回收
 
-Let's assume we are using the default `cacheTime` of **5 minutes** and the default `staleTime` of `0`.
+假设我们使用的默认`cacheTime`为**5 分钟**，默认的`staleTime`为`0`。
 
-- A new instance of `useQuery('todos', fetchTodos)` mounts.
-  - Since no other queries have been made with this query + variable combination, this query will show a hard loading state and make a network request to fetch the data.
-  - It will then cache the data using `'todos'` and `fetchTodos` as the unique identifiers for that cache.
-  - The hook will mark itself as stale after the configured `staleTime` (defaults to `0`, or immediately).
-- A second instance of `useQuery('todos', fetchTodos)` mounts elsewhere.
-  - Because this exact data exist in the cache from the first instance of this query, that data is immediately returned from the cache.
-- A background refetch is triggered for both queries (but only one request), since a new instance appeared on screen.
-  - Both instances are updated with the new data if the fetch is successful
-- Both instances of the `useQuery('todos', fetchTodos)` query are unmounted and no longer in use.
-  - Since there are no more active instances to this query, a cache timeout is set using `cacheTime` to delete and garbage collect the query (defaults to **5 minutes**).
-- Before the cache timeout has completed another instance of `useQuery('todos', fetchTodos)` mounts. The query immediately returns the available cached value while the `fetchTodos` function is being run in the background to populate the query with a fresh value.
-- The final instance of `useQuery('todos', fetchTodos)` unmounts.
-- No more instances of `useQuery('todos', fetchTodos)` appear within **5 minutes**.
-  - This query and its data are deleted and garbage collected.
+- `useQuery('todos', fetchTodos)`的一个新实例被挂载
+  - 由于没有使用该查询 + 变量组合的方式进行其他查询，该查询将显示硬加载状态，并发出网络请求以获取数据
+  - 然后它将使用`todos`和`fetchTodos`作为缓存的唯一标识符缓存数据
+  - 在配置的`staleTime`（默认为`0`或立即）之后，该 Hook 会将自己标记为过时
+- `useQuery('todos', fetchTodos)`的第二个实例挂载在其他位置
+  - 由于该查询的第一个实例的数据已存在于缓存中，因此该数据将立即从缓存返回
+- 由于某些原因触发了其中一个，两个查询都会在后台重新拉取（但只有一个请求）
+  - 如果数据获取成功，两个实例都将使用新的数据来进行更新
+- `useQuery('todos', fetchTodos)`查询的两个实例都已卸载，并且不再使用
+  - 由于此查询没有更多活动实例，因此可以使用`cacheTime`设置缓存超时，以删除查询并对其进行垃圾回收（默认为**5 分钟**）
+- 在缓存超时完成之前，挂载另一个`useQuery('todos', fetchTodos)`实例
+  - 当`fetchTodos`函数在后台运行时，该查询立即返回可用的缓存值，以用一个新值填充
+- `useQuery('todos', fetchTodos)`的最后一个实例卸载
+- **5分钟**内没有再出现`useQuery('todos', fetchTodos)`的实例
+  - 该查询及其（缓存）数据将被删除并进行垃圾回收。

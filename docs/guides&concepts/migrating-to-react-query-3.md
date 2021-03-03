@@ -1,42 +1,44 @@
 ---
 id: migrating-to-react-query-3
-title: Migrating to React Query 3
+title: 迁移到React Query 3
 ---
 
-Previous versions of React Query were awesome and brought some amazing new features, more magic, and an overall better experience to the library. They also brought on massive adoption and likewise a lot of refining fire (issues/contributions) to the library and brought to light a few things that needed more polish to make the library even better. v3 contains that very polish.
+以前版本的 React Query 很棒，并为库带来了一些惊人的新特性、更多的魔力以及更好的整体体验。
+社区还为 React Query 带来了许多建议，同样也带来了对 React Query 的大量改进（issues/contributions）。
+v3 版本 merge 了许多性能优化和 API 调优的内容。
 
-## Overview
+## 概览
 
-- More scalable and testable cache configuration
-- Better SSR support
-- Data-lag (previously usePaginatedQuery) anywhere!
-- Bi-directional Infinite Queries
-- Query data selectors!
-- Fully configure defaults for queries and/or mutations before use
-- More granularity for optional rendering optimization
-- New `useQueries` hook! (Variable-length parallel query execution)
-- Query filter support for the `useIsFetching()` hook!
-- Retry/offline/replay support for mutations
-- Observe queries/mutations outside of React
-- Use the React Query core logic anywhere you want!
-- Bundled/Colocated Devtools via `react-query/devtools`
-- Cache Persistence to localstorage (experimental via `react-query/persistQueryClient-experimental` and `react-query/createLocalStoragePersistor-experimental`)
+- 更具可扩展性和可测试性的缓存配置
+- 更好的 SSR 支持
+- 可以在任何地方的数据延迟(Data-lag，以前的 usePaginatedQuery)
+- 双向(Bi-directional)无限查询
+- 查询数据选择器！
+- 在使用前为查询和/或修改配置完整的默认值
+- 更加细粒度的可选渲染优化
+- 新用途 `useQueries` Hook！（可变长度的并行查询）
+- 查询过滤器对 `useIsFetching()` Hook 的支持！
+- 修改对于重试/离线/重放的支持
+- 修改/查询可以在 React 之外实现观察者模式
+- 随时随地使用 React Query 核心逻辑！
+- 通过使用`react-query/devtools`，随时享受 Devtools
+- 持久化缓存到 localstorage 中 (_实验性_， `react-query/persistQueryClient-experimental` 和 `react-query/createLocalStoragePersistor-experimental`)
 
-## Breaking Changes
+## 破坏性修改
 
-### The `QueryCache` has been split into a `QueryClient` and lower-level `QueryCache` and `MutationCache` instances.
+### QueryCache 已被分解进 `QueryClient` 和较低级别的 `QueryCache` 和 `MutationCache` 实例。
 
-The `QueryCache` contains all queries, the `MutationCache` contains all mutations, and the `QueryClient` can be used to set configuration and to interact with them.
+`QueryCache` 包含所有查询，`MutationCache` 包含所有修改，而 `QueryClient` 可用于设置配置并与其进行交互。
 
-This has some benefits:
+这带来了一些好处：
 
-- Allows for different types of caches.
-- Multiple clients with different configurations can use the same cache.
-- Clients can be used to track queries, which can be used for shared caches on SSR.
-- The client API is more focused towards general usage.
-- Easier to test the individual components.
+- 允许使用不同类型的缓存
+- 具有不同配置的多个 clinet 可以使用相同的缓存
+- Clinets 可以跟踪查询，这些查询可用在 SSR 上共享缓存
+- 客户端 API 更侧重于一般用法
+- 更容易进行独立于各个组件的测试
 
-When creating a `new QueryClient()`, a `QueryCache` and `MutationCache` are automatically created for you if you don't supply them.
+当 `new QueryClient()` 时，如果不提供 `QueryCache` 和 `MutationCache` 对象，则会自动为您创建
 
 ```js
 import { QueryClient } from 'react-query'
@@ -44,9 +46,9 @@ import { QueryClient } from 'react-query'
 const queryClient = new QueryClient()
 ```
 
-### `ReactQueryConfigProvider` and `ReactQueryCacheProvider` have both been replaced by `QueryClientProvider`
+### `ReactQueryConfigProvider` 和 `ReactQueryCacheProvider` 已被 `QueryClientProvider` 替代
 
-Default options for queries and mutations can now be specified in `QueryClient`:
+现在可以在 `QueryClient` 中指定查询和修改的默认参数：
 
 ```js
 const queryClient = new QueryClient({
@@ -61,7 +63,7 @@ const queryClient = new QueryClient({
 })
 ```
 
-The `QueryClientProvider` component is now used to connect a `QueryClient` to your application:
+`QueryClientProvider` 组件现在用于将 `QueryClient` 连接到应用：
 
 ```js
 import { QueryClient, QueryClientProvider } from 'react-query'
@@ -73,17 +75,18 @@ function App() {
 }
 ```
 
-### The default `QueryCache` is gone. **For real this time!**
+### 默认的 `QueryCache` 已被移除，彻底
 
-As previously noted with a deprecation, there is no longer a default `QueryCache` that is created or exported from the main package. **You must create your own via `new QueryClient()` or `new QueryCache()` (which you can then pass to `new QueryClient({ queryCache })` )**
+如先前所提到的，不再有从主包创建或导出的默认 `QueryCache`。
+你必须通过 `new QueryClient()` 或 `new QueryCache()` 自己创建一个（后一个可以稍后通过 `new QueryClient({ queryCache })` 传入）
 
-### The deprecated `makeQueryCache` utility has been removed.
+### 不推荐使用的 `makeQueryCache` 已被删除
 
-It's been a long time coming, but it's finally gone :)
+已经有很长时间了，但是终于消失了 :)
 
-### `QueryCache.prefetchQuery()` has been moved to `QueryClient.prefetchQuery()`
+### `QueryCache.prefetchQuery()` 被 `QueryClient.prefetchQuery()` 替代
 
-The new `QueryClient.prefetchQuery()` function is async, but **does not return the data from the query**. If you require the data, use the new `QueryClient.fetchQuery()` function
+新的 `QueryClient.prefetchQuery()` 函数是异步的，但**不会从查询中返回数据**。如果你需要数据，使用新的 `QueryClient.fetchQuery()` 函数
 
 ```js
 // Prefetch a query:
@@ -93,36 +96,37 @@ await queryClient.prefetchQuery('posts', fetchPosts)
 try {
   const data = await queryClient.fetchQuery('posts', fetchPosts)
 } catch (error) {
-  // Error handling
+  // 错误处理
 }
 ```
 
-### `ReactQueryErrorResetBoundary` and `QueryCache.resetErrorBoundaries()` have been replaced by `QueryErrorResetBoundary` and `useQueryErrorResetBoundary()`.
+### `ReactQueryErrorResetBoundary` 和 `QueryCache.resetErrorBoundaries()` 被 `QueryErrorResetBoundary` 和 `useQueryErrorResetBoundary()` 替代
 
-Together, these provide the same experience as before, but with added control to choose which component trees you want to reset. For more information, see:
+它们一起提供了与以前相同的体验，但增加了对手动选择要重置的组件树的控制。
+有关更多信息，请参见：
 
 - [QueryErrorResetBoundary](../reference/QueryErrorResetBoundary)
 - [useQueryErrorResetBoundary](../reference/useQueryErrorResetBoundary)
 
-### `QueryCache.getQuery()` has been replaced by `QueryCache.find()`.
+### `QueryCache.getQuery()` 被 `QueryCache.find()` 替代
 
-`QueryCache.find()` should now be used to look up individual queries from a cache
+`QueryCache.find()` 现在用于从一个缓存中查找单个查询
 
-### `QueryCache.getQueries()` has been moved to `QueryCache.findAll()`.
+### `QueryCache.getQueries()` 合并进 `QueryCache.findAll()`
 
-`QueryCache.findAll()` should now be used to look up multiple queries from a cache
+`QueryCache.findAll()` 现在用于从一个缓存中查找多个查询
 
-### `QueryCache.isFetching` has been moved to `QueryClient.isFetching()`.
+### `QueryCache.isFetching` 合并进 `QueryClient.isFetching()`
 
-**Notice that it's now a function instead of a property**
+**请注意，它现在是作为函数而不是属性存在**
 
-### The `useQueryCache` hook has been replaced by the `useQueryClient` hook.
+### `useQueryCache` hook 被 `useQueryClient` hook 替代
 
-It returns the provided `queryClient` for its component tree and shouldn't need much tweaking beyond a rename.
+它返回为组件树中提供的 `queryClient`，除了重命名外无需进行太多调整。
 
-### Query key parts/pieces are no longer automatically spread to the query function.
+### 查询的键值部分不再作为参数自动传递到查询函数
 
-Inline functions are now the suggested way of passing parameters to your query functions:
+现在建议使用闭包将参数传递给查询函数：
 
 ```js
 // Old
@@ -132,15 +136,15 @@ useQuery(['post', id], (_key, id) => fetchPost(id))
 useQuery(['post', id], () => fetchPost(id))
 ```
 
-If you still insist on not using inline functions, you can use the newly passed `QueryFunctionContext`:
+如果仍然坚持不使用闭包，则可以使用新的 `QueryFunctionContext`：
 
 ```js
-useQuery(['post', id], context => fetchPost(context.queryKey[1]))
+useQuery(['post', id], (context) => fetchPost(context.queryKey[1]))
 ```
 
-### Infinite Query Page params are now passed via `QueryFunctionContext.pageParam`
+### 无限查询的分页参数现在使用 `QueryFunctionContext.pageParam` 传递
 
-They were previously added as the last query key parameter in your query function, but this proved to be difficult for some patterns
+它们以前是作为查询函数中的最后一个参数添加的，但事实证明，这对于实现某些模式很是困难
 
 ```js
 // Old
@@ -150,9 +154,9 @@ useInfiniteQuery(['posts'], (_key, pageParam = 0) => fetchPosts(pageParam))
 useInfiniteQuery(['posts'], ({ pageParam = 0 }) => fetchPost(pageParam))
 ```
 
-### usePaginatedQuery() has been deprecated in favor of the `keepPreviousData` option
+### 不推荐使用 `usePaginatedQuery()`，而是应该选择 `keepPreviousData` 参数
 
-The new `keepPreviousData` options is available for both `useQuery` and `useInfiniteQuery` and will have the same "lagging" effect on your data:
+新的 `keepPreviousData` 选项可用于 `useQuery` 和 `useInfiniteQuery`，它们对于数据具有相同的“滞后”效果：
 
 ```js
 import { useQuery } from 'react-query'
@@ -164,21 +168,21 @@ function Page({ page }) {
 }
 ```
 
-### useInfiniteQuery() is now bi-directional
+### `useInfiniteQuery()` 现在是双向的
 
-The `useInfiniteQuery()` interface has changed to fully support bi-directional infinite lists.
+`useInfiniteQuery()` 的相关接口已更改为完全支持双向无限列表。
 
-- `options.getFetchMore` has been renamed to `options.getNextPageParam`
-- `queryResult.canFetchMore` has been renamed to `queryResult.hasNextPage`
-- `queryResult.fetchMore` has been renamed to `queryResult.fetchNextPage`
-- `queryResult.isFetchingMore` has been renamed to `queryResult.isFetchingNextPage`
-- Added the `options.getPreviousPageParam` option
-- Added the `queryResult.hasPreviousPage` property
-- Added the `queryResult.fetchPreviousPage` property
-- Added the `queryResult.isFetchingPreviousPage`
-- The `data` of an infinite query is now an object containing the `pages` and the `pageParams` used to fetch the pages: `{ pages: [data, data, data], pageParams: [...]}`
+- `options.getFetchMore` 重命名为 `options.getNextPageParam`
+- `queryResult.canFetchMore` 重命名为 `queryResult.hasNextPage`
+- `queryResult.fetchMore` 重命名为 `queryResult.fetchNextPage`
+- `queryResult.isFetchingMore` 重命名为 `queryResult.isFetchingNextPage`
+- 添加新的 `options.getPreviousPageParam` 选项
+- 添加新的 `queryResult.hasPreviousPage` 属性
+- 添加新的 `queryResult.fetchPreviousPage` 属性
+- 添加新的 `queryResult.isFetchingPreviousPage`
+- 无尽查询的 `data` 现在是一个包裹了 `pages` 和 `pageParams` 的**对象**，用于获取分页数据： `{ pages: [data, data, data], pageParams: [...]}`
 
-One direction:
+一个方向：
 
 ```js
 const {
@@ -191,11 +195,11 @@ const {
   ({ pageParam = 0 }) => fetchProjects(pageParam),
   {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  }
+  },
 )
 ```
 
-Both directions:
+双向：
 
 ```js
 const {
@@ -212,11 +216,11 @@ const {
   {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
     getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor,
-  }
+  },
 )
 ```
 
-One direction reversed:
+反向：
 
 ```js
 const {
@@ -228,29 +232,30 @@ const {
   'projects',
   ({ pageParam = 0 }) => fetchProjects(pageParam),
   {
-    select: data => ({
+    select: (data) => ({
       pages: [...data.pages].reverse(),
       pageParams: [...data.pageParams].reverse(),
     }),
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  }
+  },
 )
 ```
 
-### Infinite Query data now contains the array of pages and pageParams used to fetch those pages.
+### 现在，无限查询数据包含页面数组和用于获取这些页面的 pageParams
 
-This allows for easier manipulation of the data and the page params, like, for example, removing the first page of data along with it's params:
+这样可以更轻松地操作数据和页面参数，例如，删除数据的第一页及其相关的参数：
 
 ```js
-queryClient.setQueryData('projects', data => ({
+queryClient.setQueryData('projects', (data) => ({
   pages: data.pages.slice(1),
   pageParams: data.pageParams.slice(1),
 }))
 ```
 
-### useMutation now returns an object instead of an array
+### `useMutation` 现在返回一个对象而不是一个数组
 
-Though the old way gave us warm fuzzy feelings of when we first discovered `useState` for the first time, they didn't last long. Now the mutation return is a single object.
+尽管旧的接口给我们带来了类似于初次发现 `useState` 时产生的那种温暖但模糊的感觉，但是这种感觉并没有持续多久。
+现在，它返回是单个对象。
 
 ```js
 // Old:
@@ -260,25 +265,25 @@ const [mutate, { status, reset }] = useMutation()
 const { mutate, status, reset } = useMutation()
 ```
 
-### `mutation.mutate` no longer return a promise
+### `mutation.mutate` 不再返回一个 Promise
 
-- The `[mutate]` variable has been changed to the `mutation.mutate` function
-- Added the `mutation.mutateAsync` function
+- `[mutate]` 变量已替换为 `mutation.mutate` 函数
+- 添加新的 `mutation.mutateAsync` 函数
 
-We got a lot of questions regarding this behavior as users expected the promise to behave like a regular promise.
+我们收到了许多问题反馈，因为用户希望这个 Promise 的行为表现得像一个正常的 Promise
 
-Because of this the `mutate` function is now split into a `mutate` and `mutateAsync` function.
+现在这个 `mutate` 函数被分解为 `mutate` 和 `mutateAsync` 函数
 
-The `mutate` function can be used when using callbacks:
+因而，现在 `mutate` 函数的接口为回调函数式：
 
 ```js
 const { mutate } = useMutation(addTodo)
 
 mutate('todo', {
-  onSuccess: data => {
+  onSuccess: (data) => {
     console.log(data)
   },
-  onError: error => {
+  onError: (error) => {
     console.error(error)
   },
   onSettled: () => {
@@ -287,7 +292,7 @@ mutate('todo', {
 })
 ```
 
-The `mutateAsync` function can be used when using async/await:
+异步时，考虑使用 `mutateAsync` 函数：
 
 ```js
 const { mutateAsync } = useMutation(addTodo)
@@ -302,7 +307,7 @@ try {
 }
 ```
 
-### The object syntax for useQuery now uses a collapsed config:
+### `useQuery` 配置方式改变
 
 ```js
 // Old:
@@ -320,37 +325,37 @@ useQuery({
 })
 ```
 
-### If set, the QueryOptions.enabled option must be a boolean (`true`/`false`)
+### 如果设置，则 `QueryOptions.enabled` 选项必须为布尔值 (`true`/`false`)
 
-The `enabled` query option will now only disable a query when the value is `false`.
-If needed, values can be casted with `!!userId` or `Boolean(userId)` and a handy error will be thrown if a non-boolean value is passed.
+现在，`enabled` 的查询选项将仅在值为 `false` 时禁用。
+如果需要，可以使用 `!!userId` 或 `Boolean(userId)` 强制转换值，如果传递了非布尔值，则会抛出一个明显的语法的错误。
 
-### The QueryOptions.initialStale option has been removed
+### `QueryOptions.initialStale` 选项已被移除
 
-The `initialStale` query option has been removed and initial data is now treated as regular data.
-Which means that if `initialData` is provided, the query will refetch on mount by default.
-If you do not want to refetch immediately, you can define a `staleTime`.
+`initialStale` 选项已被移除，初始的数据现在被视为常规数据。
+这意味着，如果提供 `initialData`，则默认查询将在挂载时重新获取。
+如果您不想该动作被立即执行，则可以定义一个 `staleTime`。
 
-### The `QueryOptions.forceFetchOnMount` option has been replaced by `refetchOnMount: 'always'`
+### `QueryOptions.forceFetchOnMount` 选项被 `refetchOnMount: 'always'` 替代
 
-Honestly, we were acruing way too many `refetchOn____` options, so this should clean things up.
+说实话，我们增加了太多的 `refetchOn____` 选项，所以这应该能解决问题。
 
-### The `QueryOptions.refetchOnMount` options now only applies to its parent component instead of all query observers
+### `QueryOptions.refetchOnMount` 选项现在仅适用于其父组件，而不是所有查询观察者
 
-When `refetchOnMount` was set to `false` any additional components were prevented from refetching on mount.
-In version 3 only the component where the option has been set will not refetch on mount.
+当 `refetchOnMount` 设置为 `false` 时，任何其他组件都不能在挂载时重新获取数据。
+在 v3 中，只有设置了该选项的组件不会在挂载时重新获取。
 
-### The `QueryOptions.queryFnParamsFilter` has been removed in favor of the new `QueryFunctionContext` object.
+### `QueryOptions.queryFnParamsFilter` 已被删除，以支持新的 `QueryFunctionContext` 对象
 
-The `queryFnParamsFilter` option has been removed because query functions now get a `QueryFunctionContext` object instead of the query key.
+`queryFnParamsFilter` 选项已删除，因为查询函数现在通过获取 `QueryFunctionContext` 对象而不是通过查询键值。
 
-Parameters can still be filtered within the query function itself as the `QueryFunctionContext` also contains the query key.
+由于 `QueryFunctionContext` 还包含查询键值，因此仍可以在查询函数本身中过滤参数。
 
-### The `QueryOptions.notifyOnStatusChange` option has been superceded by the new `notifyOnChangeProps` and `notifyOnChangePropsExclusions` options.
+### `QueryOptions.notifyOnStatusChange` 选项已被 `notifyOnChangeProps` 和 `notifyOnChangePropsExclusions` 选项替代
 
-With these new options it is possible to configure when a component should re-render on a granular level.
+有了这些新选项，可以在更细腻的程度上来配置组件重新渲染的逻辑。
 
-Only re-render when the `data` or `error` properties change:
+只有当 `data` 或 `error` 被改变时重新渲染：
 
 ```js
 import { useQuery } from 'react-query'
@@ -363,7 +368,7 @@ function User() {
 }
 ```
 
-Prevent re-render when the `isStale` property changes:
+在 `isStale` 改变时忽略，不进行重新渲染：
 
 ```js
 import { useQuery } from 'react-query'
@@ -376,33 +381,34 @@ function User() {
 }
 ```
 
-### The `QueryResult.clear()` function has been renamed to `QueryResult.remove()`
+### `QueryResult.clear()` 方法重命名为 `QueryResult.remove()`
 
-Although it was called `clear`, it really just removed the query from the cache. The name now matches the functionality.
+尽管它被称为“clear”，但实际上只是从高速缓存中删除了单个查询。
+现在，该名称与其功能匹配。
 
-### The `QueryResult.updatedAt` property has been split into `QueryResult.dataUpdatedAt` and `QueryResult.errorUpdatedAt` properties
+### `QueryResult.updatedAt` 拆分为 `QueryResult.dataUpdatedAt` 和 `QueryResult.errorUpdatedAt` 属性
 
-Because data and errors can be present at the same time, the `updatedAt` property has been split into `dataUpdatedAt` and `errorUpdatedAt`.
+由于可以同时显示数据和错误，因此 `updatedAt` 属性已拆分为 `dataUpdatedAt` 和 `errorUpdatedAt`。
 
-### `setConsole()` has been replaced by the new `setLogger()` function
+### `setConsole()` 被新函数 `setLogger()` 替代
 
 ```js
 import { setLogger } from 'react-query'
 
-// Log with Sentry
+// 使用 Sentry
 setLogger({
-  error: error => {
+  error: (error) => {
     Sentry.captureException(error)
   },
 })
 
-// Log with Winston
+// 使用 Winston
 setLogger(winston.createLogger())
 ```
 
-### React Native no longer requires overriding the logger
+### React Native 不再需要重写 Logger
 
-To prevent showing error screens in React Native when a query fails it was necessary to manually change the Console:
+为了防止查询失败时在 React Native 中显示错误的界面，必须手动更改控制台：
 
 ```js
 import { setConsole } from 'react-query'
@@ -414,30 +420,31 @@ setConsole({
 })
 ```
 
-In version 3 **this is done automatically when React Query is used in React Native**.
+在 v3 中，**React Query 在 React Native 中使用时，会自动做到上面这点**
 
-## New features
+## 新特性
 
-#### Query Data Selectors
+### 查询数据选择器
 
-The `useQuery` and `useInfiniteQuery` hooks now have a `select` option to select or transform parts of the query result.
+现在，`useQuery` 和 `useInfiniteQuery` Hook 分别带有一个 `select` 选项，用于选择或转换部分查询结果。
 
 ```js
 import { useQuery } from 'react-query'
 
 function User() {
   const { data } = useQuery('user', fetchUser, {
-    select: user => user.username,
+    select: (user) => user.username,
   })
   return <div>Username: {data}</div>
 }
 ```
 
-Set the `notifyOnChangeProps` option to `['data', 'error']` to only re-render when the selected data changes.
+将 `notifyOnChangeProps` 选项设置为 `['data'，'error']` ，使得仅在所选数据更改时重新渲染。
 
-#### The useQueries() hook, for variable-length parallel query execution
+### `useQueries()` hook，用于可变长度的并行查询
 
-Wish you could run `useQuery` in a loop? The rules of hooks say no, but with the new `useQueries()` hook, you can!
+想在循环内运行 `useQuery` 吗？
+Hook 规则说不，但是有了新的 `useQueries()` hook，可以了！
 
 ```js
 import { useQueries } from 'react-query'
@@ -455,9 +462,9 @@ function Overview() {
 }
 ```
 
-#### Retry/offline mutations
+### 修改对重试/离线的支持
 
-By default React Query will not retry a mutation on error, but it is possible with the `retry` option:
+默认情况下，React Query 不会自动重试错误的修改，但是可以使用 `retry` 选项：
 
 ```js
 const mutation = useMutation(addTodo, {
@@ -465,20 +472,22 @@ const mutation = useMutation(addTodo, {
 })
 ```
 
-If mutations fail because the device is offline, they will be retried in the same order when the device reconnects.
+**如果由于设备离线而导致修改失败，那么当设备重新连接时，它们将以相同的顺序重新尝试。**
 
-#### Persist mutations
+### 持久化修改
 
-Mutations can now be persisted to storage and resumed at a later point. More information can be found in the mutations documentation.
+现在可以将修改持久化到数据库或其他什么存储方式中，并在以后恢复。更多信息可以在[修改](./mutations)中找到。
+
+### Observer
 
 #### QueryObserver
 
-A `QueryObserver` can be used to create and/or watch a query:
+QueryObserver 可以用来创建和/或监视一个查询：
 
 ```js
 const observer = new QueryObserver(queryClient, { queryKey: 'posts' })
 
-const unsubscribe = observer.subscribe(result => {
+const unsubscribe = observer.subscribe((result) => {
   console.log(result)
   unsubscribe()
 })
@@ -486,7 +495,7 @@ const unsubscribe = observer.subscribe(result => {
 
 #### InfiniteQueryObserver
 
-A `InfiniteQueryObserver` can be used to create and/or watch an infinite query:
+InfiniteQueryObserver 可以用来创建和/或监视一个无限查询：
 
 ```js
 const observer = new InfiniteQueryObserver(queryClient, {
@@ -496,7 +505,7 @@ const observer = new InfiniteQueryObserver(queryClient, {
   getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
 })
 
-const unsubscribe = observer.subscribe(result => {
+const unsubscribe = observer.subscribe((result) => {
   console.log(result)
   unsubscribe()
 })
@@ -504,7 +513,7 @@ const unsubscribe = observer.subscribe(result => {
 
 #### QueriesObserver
 
-A `QueriesObserver` can be used to create and/or watch multiple queries:
+QueriesObserver 可以用来创建和/或监视多个查询：
 
 ```js
 const observer = new QueriesObserver(queryClient, [
@@ -512,15 +521,17 @@ const observer = new QueriesObserver(queryClient, [
   { queryKey: ['post', 2], queryFn: fetchPost },
 ])
 
-const unsubscribe = observer.subscribe(result => {
+const unsubscribe = observer.subscribe((result) => {
   console.log(result)
   unsubscribe()
 })
 ```
 
-#### Set default options for specific queries
+### 为特定查询/修改设置默认选项
 
-The `QueryClient.setQueryDefaults()` method can be used to set default options for specific queries:
+#### 查询
+
+`QueryClient.setQueryDefaults()` 方法可用于为特定查询设置默认选项：
 
 ```js
 queryClient.setQueryDefaults('posts', { queryFn: fetchPosts })
@@ -530,9 +541,9 @@ function Component() {
 }
 ```
 
-#### Set default options for specific mutations
+#### 修改
 
-The `QueryClient.setMutationDefaults()` method can be used to set default options for specific mutations:
+`QueryClient.setMutationDefaults()` 方法可用于为特定修改设置默认选项：
 
 ```js
 queryClient.setMutationDefaults('addPost', { mutationFn: addPost })
@@ -542,22 +553,24 @@ function Component() {
 }
 ```
 
-#### useIsFetching()
+### useIsFetching()
 
-The `useIsFetching()` hook now accepts filters which can be used to for example only show a spinner for certain type of queries:
+现在，`useIsFetching()` Hook 可以接收一些过滤器，这些过滤器可用于例如仅显示某些查询类型的微调：
 
 ```js
 const fetches = useIsFetching(['posts'])
 ```
 
-#### Core separation
+## 分离
 
-The core of React Query is now fully separated from React, which means it can also be used standalone or in other frameworks. Use the `react-query/core` entrypoint to only import the core functionality:
+现在，React Query 的核心与 React 完全分离，这意味着它也可以**独立使用或在其他框架中使用**。
+使用 `react-query/core` 入口点仅导入核心功能：
 
 ```js
 import { QueryClient } from 'react-query/core'
 ```
 
-### Devtools are now part of the main repo and npm package
+## Devtools 现在是主仓库和 npm 软件包的一部分
 
-The devtools are now included in the `react-query` package itself under the import `react-query/devtools`. Simply replace `react-query-devtools` imports with `react-query/devtools`
+devtools现在包含在 `react-query` 下的 `react-query/devtools` 中。
+只需将 `react-query-devtools` 导入替换为 `react-query/devtools` 即可

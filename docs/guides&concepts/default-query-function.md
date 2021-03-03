@@ -1,18 +1,20 @@
 ---
 id: default-query-function
-title: Default Query Function
+title: 默认的查询函数
 ---
 
-If you find yourself wishing for whatever reason that you could just share the same query function for your entire app and just use query keys to identify what it should fetch, you can do that by providing a **default query function** to React Query:
+如果出于某种原因，您希望在整个应用中共享相同的查询功能，并且可以仅靠查询键值来标识应获取的内容。则可以通过重写 React Query 提供的**默认查询函数**来做到这一点：
 
 ```js
-// Define a default query function that will receive the query key
+// 定义一个参数为查询键值的默认查询函数
 const defaultQueryFn = async ({ queryKey }) => {
-  const { data } = await axios.get(`https://jsonplaceholder.typicode.com${queryKey[0]}`);
-  return data;
-};
+  const { data } = await axios.get(
+    `https://jsonplaceholder.typicode.com${queryKey[0]}`,
+  )
+  return data
+}
 
-// provide the default query function to your app with defaultOptions
+// 使用 defaultOptions 向您的应用提供默认查询函数
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -29,14 +31,14 @@ function App() {
   )
 }
 
-// All you have to do now is pass a key!
+// 现在，只需要传入一个键值就行了!
 function Posts() {
   const { status, data, error, isFetching } = useQuery('/posts')
 
   // ...
 }
 
-// You can even leave out the queryFn and just go straight into options
+// 你也可以传入一些参数
 function Post({ postId }) {
   const { status, data, error, isFetching } = useQuery(`/posts/${postId}`, {
     enabled: !!postId,
@@ -46,4 +48,4 @@ function Post({ postId }) {
 }
 ```
 
-If you ever want to override the default queryFn, you can just provide your own like you normally would.
+如果您想覆盖默认的 queryFn，像平常一样提供一个函数即可。
