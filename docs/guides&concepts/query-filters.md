@@ -1,41 +1,42 @@
 ---
 id: query-filters
-title: Query Filters
+title: 查询过滤
 ---
 
-Some methods within React Query accept a `QueryFilters` object. A query filter is an object with certain conditions to match a query with:
+React Query 中的某些方法可以接受 `QueryFilters` 对象。
+一个查询过滤器是具有特定条件的对象，可将查询与以下各项进行匹配：
 
 ```js
-// Cancel all queries
+// 取消所有查询
 await queryClient.cancelQueries()
 
-// Remove all inactive queries
+// 删除所有非活动查询
 queryClient.removeQueries('posts', { inactive: true })
 
-// Refetch all active queries
+// 重新获取所有活动查询
 await queryClient.refetchQueries({ active: true })
 
-// Refetch all active queries that begin with `post` in the key
+// 重新获取键中以`post`开头的所有活动查询
 await queryClient.refetchQueries('posts', { active: true })
 ```
 
-A query filter object supports the following properties:
+查询过滤器对象支持以下属性：
 
 - `exact?: boolean`
-  - If you don't want to search queries inclusively by query key, you can pass the `exact: true` option to return only the query with the exact query key you have passed.
+  - 如果您不想按查询键值来模糊搜索所有查询（search queries inclusively），则可以传递 `exact: true` 选项，以仅返回具有您已传递的精确查询键的查询
 - `active?: boolean`
-  - When set to `true` it will match active queries.
-  - When set to `false` it will match inactive queries.
+  - 当设置为 `true` 时，它将匹配活动查询
+  - 当设置为 `false` 时，它将匹配非活动查询
 - `inactive?: boolean`
-  - When set to `true` it will match inactive queries.
-  - When set to `false` it will match active queries.
+  - 当设置为 `true` 时，它将匹配非活动查询
+  - 当设置为 `false` 时，它将匹配活动查询
 - `stale?: boolean`
-  - When set to `true` it will match stale queries.
-  - When set to `false` it will match fresh queries.
+  - 设置为 `true` 时，它将匹配过时（staled）的查询
+  - 设置为 `false` 时，它将匹配没过时（fresh）的查询
 - `fetching?: boolean`
-  - When set to `true` it will match queries that are currently fetching.
-  - When set to `false` it will match queries that are not fetching.
+  - 设置为 `true` 时，它将匹配当前正在获取的查询
+  - 设置为 `false` 时，它将匹配当前没有正在获取的查询
 - `predicate?: (query: Query) => boolean`
-  - This predicate function will be called for every single query in the cache and be expected to return truthy for queries that are `found`.
+  - 对于缓存中的每个查询，都会调用此函数，并且对于匹配（found）的查询，该函数返回 `true`
 - `queryKey?: QueryKey`
-  - Set this property to define a query key to match on.
+  - 设置此属性以定义要匹配的查询键值

@@ -1,8 +1,13 @@
 ---
 id: scroll-restoration
-title: Scroll Restoration
+title: 滚动恢复
 ---
 
-Traditionally, when you navigate to a previously visited page on a web browser, you would find that the page would be scrolled to the exact position where you were before you navigated away from that page. This is called **scroll restoration** and has been in a bit of a regression since web applications have started moving towards client side data fetching. With React Query however, that's no longer the case.
+传统上，当您在 Web 浏览器中导航到先前访问的页面时，您会发现该页面将滚动到离开该页面时的确切位置。
+这被称为**滚动恢复**。
+由于 Web 应用已开始向客户端数据获取转移，因此已经有点退步了。
+但是，使用 React Query 不再是这种情况。
 
-Out of the box, "scroll restoration" for all queries (including paginated and infinite queries) Just Works™️ in React Query. The reason for this is that query results are cached and able to be retrieved synchronously when a query is rendered. As long as your queries are being cached long enough (the default time is 5 minutes) and have not been garbage collected, scroll restoration will work out of the box all the time.
+开箱即用，对所有查询（包括分页查询和无限查询）进行“滚动恢复”，这是 React Query 中的 Just Works™️。
+这样做的原因是查询结果被正确缓存，并且能够在呈现查询时同步检索。
+只要您的查询被缓存了足够长的时间（默认时间是 5 分钟）并且还没有被垃圾回收，滚动恢复将一直有效。

@@ -1,31 +1,34 @@
 ---
 id: query-cancellation
-title: Query Cancellation
+title: 查询取消
 ---
 
-By default, queries that unmount or become unused before their promises are resolved are simply ignored instead of canceled. Why is this?
+默认情况下，在返回的 Promise 解析之前，卸载或不再使用的查询将被忽略而不是取消。这是为什么？
 
-- For most applications, ignoring out-of-date queries is sufficient.
-- Cancellation APIs may not be available for every query function.
-- If cancellation APIs are available, they typically vary in implementation between utilities/libraries (eg. Fetch vs Axios vs XMLHttpRequest).
+- 对于大多数应用程序而言，过时的查询可以简单的忽略掉
+- 取消相关的 API 可能不是对每个查询函数都可用
+- 如果有取消相关的 API，则它们在程序/库之间的实现方式通常会有所不同（例如，Fetch，Axios 和 XMLHttpRequest）
 
-But don't worry! If your queries are high-bandwidth or potentially very expensive to download, React Query exposes a generic way to **cancel** query requests using a cancellation token or other related API. To integrate with this feature, attach a `cancel` function to the promise returned by your query that implements your request cancellation. When a query becomes out-of-date or inactive, this `promise.cancel` function will be called (if available):
+但是不用担心！
+如果您的查询需要高带宽（high-bandwidth）或者下载成本非常之高，那么 React Query 提供了一个通过令牌（或与之相关的东西的 API）来取消查询的请求（**cancel** query requests）的通用方法。
+要使用该特性，请将一个 `cancel` 函数附加到相关请求返回的 Promise 上。
+当查询过期或不活动时，`promise.cancel` 函数将被调用（如果可用）。
 
-## Using `axios`
+## 使用 `axios`
 
 ```js
 import { CancelToken } from 'axios'
 
 const query = useQuery('todos', () => {
-  // Create a new CancelToken source for this request
+  // 为此请求创建一个新的 CancelToken 源
   const source = CancelToken.source()
 
   const promise = axios.get('/todos', {
-    // Pass the source token to your request
+    // 传入该源到 cancelToken
     cancelToken: source.token,
   })
 
-  // Cancel the request if React Query calls the `promise.cancel` method
+  // 如果 React Query 调用 `promise.cancel` 方法，则取消请求
   promise.cancel = () => {
     source.cancel('Query was cancelled by React Query')
   }
@@ -34,33 +37,36 @@ const query = useQuery('todos', () => {
 })
 ```
 
-## Using `fetch`
+## 使用 `fetch`
 
 ```js
 const query = useQuery('todos', () => {
-  // Create a new AbortController instance for this request
+  // 创建一个新的 AbortController 实例
   const controller = new AbortController()
-  // Get the abortController's signal
+  // 获取 abortController 的信号(signal)
   const signal = controller.signal
 
   const promise = fetch('/todos', {
     method: 'get',
-    // Pass the signal to your request
+    // 传入信号
     signal,
   })
 
-  // Cancel the request if React Query calls the `promise.cancel` method
+  // 如果 React Query 调用 `promise.cancel` 方法，则取消请求
   promise.cancel = () => controller.abort()
 
   return promise
 })
 ```
 
-## Manual Cancellation
+## 手动取消
 
-You might want to cancel a query manually. For example, if the request takes a long time to finish, you can allow the user to click a cancel button to stop the request. To do this, you just need to call `queryClient.cancelQueries(key)`. If `promise.cancel` is available, React Query will cancel the request.
+有时，您想要手动取消。
+例如，如果请求需要很长时间才能完成，则可以允许用户单击“取消”按钮来停止请求。
+为此，您只需要使用 `queryClient.cancelQueries(key)`。
+如果 `promise.cancel` 可用，React Query 将取消请求。
 
-```js
+```jsx
 const [queryKey] = useState('todos')
 
 const query = useQuery(queryKey, () => {
@@ -72,18 +78,23 @@ const query = useQuery(queryKey, () => {
     signal,
   })
 
-  // Cancel the request if React Query calls the `promise.cancel` method
+  // 如果 React Query 调用 `promise.cancel` 方法，则取消请求
   promise.cancel = () => controller.abort()
 
   return promise
 })
 
-const queryClient = useQueryClient();
+const queryClient = useQueryClient()
 
 return (
-  <button onClick={(e) => {
-    e.preventDefault();
-    queryClient.cancelQueries(queryKey);
-   }}>Cancel</button>
+  <button
+    onClick={(e) => {
+      e.preventDefault()
+      //取消请求
+      queryClient.cancelQueries(queryKey)
+    }}
+  >
+    Cancel
+  </button>
 )
 ```

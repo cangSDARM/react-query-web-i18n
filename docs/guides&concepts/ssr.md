@@ -3,26 +3,28 @@ id: ssr
 title: SSR
 ---
 
-React Query supports two ways of prefetching data on the server and passing that to the queryClient.
+React Query 支持两种在服务器上预取数据并将其传递给 queryClient 的方式。
 
-- Prefetch the data yourself and pass it in as `initialData`
-  - Quick to set up for simple cases
-  - Has some caveats
-- Prefetch the query on the server, dehydrate the cache and rehydrate it on the client
-  - Requires slightly more setup up front
+- 自己预取数据并将其作为 `initialData` 传递
+  - 对于简单情况可以快速设置
+  - 但有一些注意事项
+- 在服务器上预取查询，对缓存进行 dehydrate，然后在客户端上对其进行 rehydrate
+  - 需要预先进行更多设置
 
-## Using Next.js
+## 在 Next.js 中
 
-The exact implementation of these mechanisms may vary from platform to platform, but we recommend starting with Next.js which supports [2 forms of pre-rendering](https://nextjs.org/docs/basic-features/data-fetching):
+这些机制的具体实现可能因平台而异，但我们建议从支持[两种形式的预渲染](https://nextjs.org/docs/basic-features/data-fetching)的 _Next.js_ 开始
 
-- Static Generation (SSG)
-- Server-side Rendering (SSR)
+- 静态生成 (SSG)
+- 服务端渲染 (SSR)
 
-React Query supports both of these forms of pre-rendering regardless of what platform you may be using
+无论您使用什么平台，React Query 都支持这两种形式的预渲染
 
-### Using `initialData`
+### 使用 `initialData`
 
-Together with Next.js's [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation) or [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering), you can pass the data you fetch in either method to `useQuery`'s' `initialData` option. From React Query's perspective, these integrate in the same way, `getStaticProps` is shown below:
+与 Next.js 的 [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation) 或 [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering) 一起，您可以将通过两种方法获取的数据传递给 `useQuery` 的 `initialData` 选项。
+从 React Query 的角度来看，这些可以以相同的方式集成。
+`getStaticProps` 如下所示：
 
 ```js
 export async function getStaticProps() {
@@ -37,23 +39,25 @@ function Posts(props) {
 }
 ```
 
-The setup is minimal and this can be a quick solution for some cases, but there are a **few tradeoffs to consider** when compared to the full approach:
+这种设置是最少的，在某些情况下这可以是一种快速的解决方案，但是与完整方法相比，需要**权衡一些注意事项**：
 
-- If you are calling `useQuery` in a component deeper down in the tree you need to pass the `initialData` down to that point
-- If you are calling `useQuery` with the same query in multiple locations, you need to pass `initialData` to all of them
-- There is no way to know at what time the query was fetched on the server, so `dataUpdatedAt` and determining if the query needs refetching is based on when the page loaded instead
+- 如果要在组件树中更深的组件中调用 `useQuery`，则需要将 `initialData` 向下透传到该处
+- 如果要在多个位置使用相同的查询调用 `useQuery`，则需要将 `initialData` 广播到所有位置
+- 由于无法知道什么时候需要在服务器上获取查询数据，因此 `dataUpdatedAt` 以及确定查询是否需要重新获取的时间取决于加载页面的时间
 
-### Using Hydration
+### 使用 Hydration
 
-React Query supports prefetching multiple queries on the server in Next.js and then _dehydrating_ those queries to the queryClient. This means the server can prerender markup that is immediately available on page load and as soon as JS is available, React Query can upgrade or _hydrate_ those queries with the full functionality of the library. This includes refetching those queries on the client if they have become stale since the time they were rendered on the server.
+React Query 支持在 Next.js 中预取服务器上的多个查询，然后将这些查询 _dehydrating_ 到 queryClient。
+这意味着服务器可以预渲染那些在页面加载时立即可用的标记，并且一旦 JS 可用，React Query 就可以使用库的全部功能来升级或合并这些查询。
+这包括在客户端重新获取某些查询，如果它们在服务器渲染后变得过时的话。
 
-To support caching queries on the server and set up hydration:
+要支持在服务器上缓存查询并设置 hydration，请执行以下操作：
 
-- Create a new `QueryClient` instance **inside of your app, and on an instance ref. This ensures that data is not shared between different users and requests.**
-- Wrap your app component with `<QueryClientProvider>` and pass it the client instance
-- Wrap your app component with `<Hydrate>` and pass it the `dehydratedState` prop from `pageProps`
+- **在您的应用内部以及实例 ref 上创建一个新的 `QueryClient` 实例**。 这样可以确保**不同的用户和请求之间不会共享数据**
+- 用 `<QueryClientProvider>` 包装您的应用组件，并将其传递给客户端实例
+- 用 `<Hydrate>` 包装您的应用组件，并将 `pageProps` 的 `dehydratedState` 传递给它
 
-```js
+```jsx
 // _app.jsx
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
@@ -74,11 +78,14 @@ export default function MyApp({ Component, pageProps }) {
 }
 ```
 
-Now you are ready to prefetch some data in your pages with either [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation) (for SSG) or [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering) (for SSR). From React Query's perspective, these integrate in the same way, `getStaticProps` is shown below.
+现在，您可以使用 [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching#getstaticprops-static-generation)（用于 SSG）或 [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching#getserversideprops-server-side-rendering)（用于 SSR）在页面中预取一些数据了。
+从 React Query 的角度来看，这些可以以相同的方式集成。
 
-- Create a new `QueryClient` instance **for each page request. This ensures that data is not shared between users and requests.**
-- Prefetch the data using the clients `prefetchQuery` method and wait for it to complete
-- Use `dehydrate` to dehydrate the query cache and pass it to the page via the `dehydratedState` prop. This is the same prop that the cache will be picked up from in your `_app.js`
+下面展示了 `getStaticProps` 的例子。
+
+- 为**每个页面请求**创建一个新的 `QueryClient` 实例。 这确保了**数据不会在不同的用户和请求之间共享**
+- 使用客户端的 `prefetchQuery` 方法预取数据，并等待其完成
+- 使用 `dehydrate` 使查询缓存 dehydrate，并通过 `dehydratedState` 属性将其传递到页面。 这与从 `_app.js` 中提取缓存的方式相同
 
 ```js
 // pages/posts.jsx
@@ -98,37 +105,37 @@ export async function getStaticProps() {
 }
 
 function Posts() {
-  // This useQuery could just as well happen in some deeper child to
-  // the "Posts"-page, data will be available immediately either way
+  // 这种useQuery也可能发生在 `Posts` 页面的更深层子目录中，无论哪种方式，数据都将立即可用
   const { data } = useQuery('posts', getPosts)
 
-  // This query was not prefetched on the server and will not start
-  // fetching until on the client, both patterns are fine to mix
+  // 这个查询不是在服务器上预取的，而是直到在客户端上才开始取，这两种模式可以混合使用
   const { data: otherData } = useQuery('posts-2', getPosts)
 
   // ...
 }
 ```
 
-As demonstrated, it's fine to prefetch some queries and let others fetch on the queryClient. This means you can control what content server renders or not by adding or removing `prefetchQuery` for a specific query.
+如前所述，可以预取一些查询，然后让其他查询在 queryClient 上获取。
+这意味着您可以通过为特定查询添加或删除 `prefetchQuery` 来控制内容服务器需要渲染的内容。
 
-## Using Other Frameworks or Custom SSR Frameworks
+## 使用其他或自定义的 SSR 框架
 
-This guide is at-best, a high level overview of how SSR with React Query should work. Your mileage may vary since there are many different possible setups for SSR.
+本指南充其量是对带有 React Query 的 SSR 应该如何工作的高级概述。
+由于有许多不同的可能的 SSR 的设置，您的需求和实现方法可能有所不同。
 
-> If you can, please contribution your findings back to this page for any framework specific guidance!
+> 如果可以的话，请把您的发现贡献到此页面，以获取任何框架特定的指导！
 
-### On the Server
+### 在服务器上
 
-- Create a new `QueryClient` instance **inside of your request handler. This ensures that data is not shared between different users and requests.**
-- Using the client, prefetch any data you need
-- Dehydrate the client
-- Render your app with the client provider and also **using the dehydrated state. This is extremely important! You must render both server and client using the same dehydrated state to ensure hydration on the client produces the exact same markup as the server.**
-- Serialize and embed the dehydrated cache to be sent to the client with the HTML
+- **在您的请求处理程序中创建一个新的 `QueryClient` 实例**。 这样可以**确保不同的用户和请求之间不会共享数据**。
+- 在客户端代码中，预取您需要的任何数据
+- Dehydrate 客户端
+- **与客户端的 Provider 一起使用 dehydrated 状态渲染您的应用**。这是**非常重要**的！您必须使用**相同的 dehydrated 状态渲染服务器和客户端**，以确保**客户端上的 hydration 产生与服务器完全相同的标记**。
+- 序列化并嵌入 dehydrated 缓存，以使用 HTML 发送给客户端
 
-> SECURITY NOTE: Serializing data with `JSON.stringify` can put you at risk for XSS-vulnerabilities, [this blog post explains why and how to solve it](https://medium.com/node-security/the-most-common-xss-vulnerability-in-react-js-applications-2bdffbcc1fa0)
+> 安全说明：使用 `JSON.stringify` 序列化数据可能使您面临 XSS 攻击的风险，[此博客文章](https://medium.com/node-security/the-most-common-xss-vulnerability-in-react-js-applications-2bdffbcc1fa0)解释了为什么以及如何解决它
 
-```js
+```jsx
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { dehydrate, Hydrate } from 'react-query/hydration'
 
@@ -158,13 +165,13 @@ function handleRequest (req, res) {
 }
 ```
 
-### Client
+### 客户端
 
-- Parse the dehydrated cache state that was sent to the client with the HTML
-- Create a new `QueryClient` instance
-- Render your app with the client provider and also **using the dehydrated state. This is extremely important! You must render both server and client using the same dehydrated state to ensure hydration on the client produces the exact same markup as the server.**
+- 解析使用 HTML 发送给客户端缓存的 dehydrated 状态
+- 创建一个新的 `QueryClient` 实例
+- 和服务端类似，**与客户端的 Provider 一起使用 dehydrated 状态渲染您的应用**。这是**非常重要**的！您必须使用**相同的 dehydrated 状态渲染服务器和客户端**，以确保**客户端上的 hydration 产生与服务器完全相同的标记**。
 
-```js
+```jsx
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 
@@ -178,22 +185,31 @@ ReactDOM.hydrate(
       <App />
     </Hydrate>
   </QueryClientProvider>,
-  document.getElementById('root')
+  document.getElementById('root'),
 )
 ```
 
-## Tips, Tricks and Caveats
+## 提示、技巧和注意事项
 
-### Only successful queries are included in dehydration
+### 只有成功的查询才包括在 dehydration 中
 
-Any query with an error is automatically excluded from dehydration. This means that the default behaviour is to pretend these queries were never loaded on the server, usually showing a loading state instead, and retrying the queries on the queryClient. This happens regardless of error.
+任何有错误的查询都会**自动**从 dehydration 中排除。
+这意味着默认行为是假装这些查询从未在服务器上加载过，通常显示加载状态，然后在 queryClient 上重新查询。
+**无论发生什么错误**，都会发生这种情况。
 
-Sometimes this behavior is not desirable, maybe you want to render an error page with a correct status code instead on certain errors or queries. In those cases, use `fetchQuery` and catch any errors to handle those manually.
+有时，这种行为是不可取的。
+也许您希望在某些错误或查询上呈现一个带有正确状态代码的错误页面。
+在这些情况下，使用 `fetchQuery` 捕获任何错误并**手动处理这些错误**。
 
-### Staleness is measured from when the query was fetched on the server
+### 数据何时过时，在服务端上获取了查询数据时就开始度量
 
-A query is considered stale depending on when it was `dataUpdatedAt`. A caveat here is that the server needs to have the correct time for this to work properly, but UTC time is used, so timezones do not factor into this.
+一个查询被认为是过时的，这取决于它是何时被标记为 `dataUpdatedAt` 的。
+这里需要注意的是，服务器需要有正确的时间才能正常工作。
+React Query **使用的是UTC时间**，所以时区不需要考虑在内。
 
-Because `staleTime` defaults to `0`, queries will be refetched in the background on page load by default. You might want to use a higher `staleTime` to avoid this double fetching, especially if you don't cache your markup.
+由于 `staleTime` 默认为 `0`，因此默认情况下，在页面加载时，查询就将在后台重新获取。
+您可能希望使用较高的过期时间来避免这种双重获取，特别是在不缓存标记的情况下。
 
-This refetching of stale queries is a perfect match when caching markup in a CDN! You can set the cache time of the page itself decently high to avoid having to re-render pages on the server, but configure the `staleTime` of the queries lower to make sure data is refetched in the background as soon as a user visits the page. Maybe you want to cache the pages for a week, but refetch the data automatically on page load if it's older than a day?
+在CDN中缓存标记时，这种对陈旧查询的重新获取是完美的选择！
+您可以将页面本身的缓存时间设置得相当高，以避免不得不在服务器上重新渲染页面，但是可以将查询的 `staleTime` 配置得较低，以确保用户访问该页面后立即在后台重新获取数据。
+当然，或许您可以设置得将页面缓存一周，但如果数据大于一天，则在页面加载时自动重新获取数据？
