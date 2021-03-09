@@ -49,12 +49,27 @@ const plugins = [
   'persist-query-client',
 ].map((item) => 'plugins/' + item)
 
+const reference = ['useQuery', 'useQueries'].map((item) => 'reference/' + item)
+
 module.exports = {
   zhCN: {
     准备开始: started,
     '指南&概念': guide,
-    范例: ['doc_template'],
+    范例: [
+      {
+        type: 'link',
+        label: '官方示例',
+        href: 'https://react-query.tanstack.com/examples/simple',
+      },
+    ],
     插件: plugins,
-    API参考: ['doc_template'],
+    API参考: [
+      {
+        type: 'link',
+        label: '等待翻译...',
+        href: 'https://react-query.tanstack.com/reference/useQuery',
+      },
+      'doc_template',
+    ],
   },
 }

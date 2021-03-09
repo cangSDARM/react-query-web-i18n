@@ -1,7 +1,7 @@
 ---
 id: doc_template
 title: Document Template
-sidebar_label: Document Template For Writers
+sidebar_label: 对贡献者写的文档规范
 ---
 
 You can write content using [GitHub-flavored Markdown syntax](https://github.github.com/gfm/).
