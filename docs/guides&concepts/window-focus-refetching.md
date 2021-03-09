@@ -1,6 +1,6 @@
 ---
 id: window-focus-refetching
-title: 窗口焦点的重新获取数据
+title: 窗口焦点影响的数据刷新
 ---
 
 如果用户离开您的应用程序时数据是标记为过时的，**React Query 会自动在后台为您请求新的数据**。

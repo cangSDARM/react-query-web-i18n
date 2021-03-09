@@ -1,97 +1,92 @@
 ---
 id: testing
-title: Testing
+title: 测试
 ---
 
-React Query works by means of hooks - either the ones we offer or custom ones that wrap around them.
+React Query 是通过 hook 工作的——要么是我们提供的 hook，要么是围绕它们定制的 hook。
 
-Writing unit tests for these custom hooks can be done by means of the [React Hooks Testing Library](https://react-hooks-testing-library.com/) library.
+如有需要为这些自定义 hook 编写单元测试，你可以通过[React Hooks Testing Library](https://react-hooks-testing-library.com/)库来完成。
 
-Install this by running:
+通过运行以下命令进行安装：
 
 ```sh
 npm install @testing-library/react-hooks react-test-renderer --save-dev
 ```
 
-(The `react-test-renderer` library is needed as a peer dependency of `@testing-library/react-hooks`, and needs to correspond to the version of React that you are using.)
+(`react-test-renderer` 是 `@testing-library/react-hooks` 的对等依赖项，它需要与您使用的 React 版本相对应。)
 
-## Our First Test
+## 我们的第一个测试
 
-Once installed, a simple test can be written. Given the following custom hook:
+一旦安装，就可以编写一个简单的测试。给定下面的自定义钩子：
 
-```
+```js
 export function useCustomHook() {
-  return useQuery('customHook', () => 'Hello');
+  return useQuery('customHook', () => 'Hello')
 }
 ```
 
-We can write a test for this as follows:
+我们可以为此编写一个测试，如下所示：
 
-```
-const queryClient = new QueryClient();
+```jsx
+const queryClient = new QueryClient()
 const wrapper = ({ children }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
-);
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+)
 
-const { result, waitFor } = renderHook(() => useCustomHook(), { wrapper });
+const { result, waitFor } = renderHook(() => useCustomHook(), { wrapper })
 
-await waitFor(() => result.current.isSuccess);
+await waitFor(() => result.current.isSuccess)
 
-expect(result.current.data).toEqual("Hello");
+expect(result.current.data).toEqual('Hello')
 ```
 
-Note that we provide a custom wrapper that builds the `QueryClient` and `QueryClientProvider`. This helps to ensure that our test is completely isolated from any other tests.
+注意，我们提供了一个自定义包装器，用于构建 `QueryClient` 和 `QueryClientProvider`。这有助于确保我们的测试与任何其他测试完全隔离。
 
-It is possible to write this wrapper only once, but if so we need to ensure that the `QueryClient` gets cleared before every test, and that tests don't run in parallel otherwise one test will influence the results of others.
+可以只编写一次该包装器，但是如果是这样，在每次测试之前，我们都需要清除 `QueryClient` ，并且测试不能并行运行，否则一个测试会影响其他测试的结果。
 
-## Testing Network Calls
+## 测试网络调用
 
-The primary use for React Query is to cache network requests, so it's important that we can test our code is making the correct network requests in the first place.
+React Query 的主要用途是缓存网络请求，因此，首先测试我们的代码是否发出了正确的网络请求是很重要的。
 
-There are plenty of ways that these can be tested, but for this example we are going to use [nock](https://www.npmjs.com/package/nock).
+有很多方法可以用来测试，但是对于这个例子，我们将使用 [nock](https://www.npmjs.com/package/nock)。
 
-Given the following custom hook:
+给定下面的自定义钩子：
 
-```
+```js
 function useFetchData() {
-  return useQuery('fetchData', () => request('/api/data'));
+  return useQuery('fetchData', () => request('/api/data'))
 }
 ```
 
-We can write a test for this as follows:
+我们可以为此编写一个测试，如下所示：
 
-```
-const queryClient = new QueryClient();
+```jsx
+const queryClient = new QueryClient()
 const wrapper = ({ children }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
-);
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+)
 
-const expectation = nock('http://example.com')
-  .get('/api/data')
-  .reply(200, {
-    answer: 42
-  });
+const expectation = nock('http://example.com').get('/api/data').reply(200, {
+  answer: 42,
+})
 
-const { result, waitFor } = renderHook(() => useFetchData(), { wrapper });
+const { result, waitFor } = renderHook(() => useFetchData(), { wrapper })
 
 await waitFor(() => {
-  return result.current.isSuccess;
-});
+  return result.current.isSuccess
+})
 
-expect(result.current).toEqual({answer: 42});
+expect(result.current).toEqual({ answer: 42 })
 ```
 
-Here we are making use of `waitFor` and waiting until our the query status indicates that the request has succeeded. This way we know that our hook has finished and should have the correct data.
+在这里，我们使用 `waitFor` 并等待，直到查询状态表明请求已成功。
+这样我们就知道 hook 已经完成并且应该具有正确的数据。
 
-## Testing Load More / Infinite Scroll
+## 测试 加载更多/无限滚动
 
-First we need to mock our API response
+首先，我们需要模拟我们的API响应
 
-```
+```js
 function generateMockedResponse(page) {
   return {
     page: page,
@@ -100,10 +95,10 @@ function generateMockedResponse(page) {
 }
 ```
 
-Then, our `nock` configuration needs to differentiate responses based on the page, and we'll be using `uri` to do this.
-`uri`'s value here will be something like `"/?page=1` or `/?page=2`
+然后，我们的 `nock` 配置需要根据页面区分响应，我们将使用 `uri` 来做到这一点。
+`uri` 的值在这里将是类似 `"/?page=1` 或 `/?page=2` 这种。
 
-```
+```js
 const expectation = nock('http://example.com')
   .persist()
   .query(true)
@@ -115,11 +110,11 @@ const expectation = nock('http://example.com')
   });
 ```
 
-(Notice the `.persist()`, because we'll be calling from this endpoint multiple times)
+(请注意 `.persist()`，因为我们将从这个接口多次调用它)
 
-Now we can safely run our tests, the trick here is to await both `isFetching` and then `!isFetching` after calling `fetchMore()`:
+现在我们可以安全地运行我们的测试了，这里的技巧是在调用 `fetchMore()` 之后等待 `isFetching` 和 `!isFetching` ：
 
-```
+```js
 const { result, waitFor } = renderHook(() => useInfiniteQueryCustomHook(), { wrapper });
 
 await waitFor(() => result.current.isSuccess);
