@@ -3,6 +3,7 @@
 This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
 [Github 版本](https://cangsdarm.github.io/react-query-web-i18n/)
+
 [Gitee 版本](https://alleneyes.gitee.io/react-query-web-i18n/)
 
 该 Repo 为 React-Query 的中文文档。
