@@ -25,7 +25,7 @@ queryClient.invalidateQueries('todos')
 ## 查询的匹配
 
 当使用像 `invalidateQueries` 和 `removeQueries` 之类的 API（以及其他支持部分查询匹配的API）时，您可以按其前缀匹配多个查询，或者通过配置获得特定的查询。
-有关可以使用的用于过滤匹配的内容，请参阅[查询过滤](./query-filters)。
+有关可以使用的用于过滤匹配的内容，请参阅[查询过滤器](./filters#查询过滤器)。
 
 在此示例中，我们可以使用 `todos` 前缀使在其查询键值中以 `todos` 开头的所有查询无效：
 

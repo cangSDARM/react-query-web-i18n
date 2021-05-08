@@ -5,9 +5,9 @@ title: 快速入门
 
 该示例非常简要地说明了 React Query 的 3 个核心概念：
 
-- 查询 Queries
-- 修改 Mutations
-- 查询错误处理 Query Invalidation
+- [查询 Queries](../guides&concepts/queries.md)
+- [修改 Mutations](../guides&concepts/mutations.md)
+- [查询错误处理 Query Invalidation](../guides&concepts/query-invalidation.md)
 
 ```js
 import {

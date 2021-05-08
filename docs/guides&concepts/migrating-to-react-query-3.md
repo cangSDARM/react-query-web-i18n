@@ -422,6 +422,36 @@ setConsole({
 
 在 v3 中，**React Query 在 React Native 中使用时，会自动做到上面这点**
 
+
+### Typescript 的类型
+#### `QueryStatus` 的类型已经从 [enum](https://www.typescriptlang.org/docs/handbook/enums.html#string-enums) 切换为 [union type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types)
+
+因此，如果您要根据`QueryStatus`枚举属性检查查询或修改的状态，你现在必须检查其字符串字面量，而不是以前的枚举值。
+
+因此，您必须将枚举属性更改为其等效的字符串文字，如下所示：
+
+- `QueryStatus.Idle` -> `'idle'`
+- `QueryStatus.Loading` -> `'loading'`
+- `QueryStatus.Error` -> `'error'`
+- `QueryStatus.Success` -> `'success'`
+
+```diff
+- import { useQuery, QueryStatus } from 'react-query';
++ import { useQuery } from 'react-query';
+
+const { data, status } = useQuery(['post', id], () => fetchPost(id));
+
+- if (status === QueryStatus.Loading) {
++ if (status === 'loading') {
+  ...
+}
+
+- if (status === QueryStatus.Error) {
++ if (status === 'error') {
+  ...
+}
+```
+
 ## 新特性
 
 ### 查询数据选择器
