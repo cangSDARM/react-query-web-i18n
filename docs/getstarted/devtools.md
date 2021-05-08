@@ -22,9 +22,9 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 ## 浮动模式
 
-浮动模式将 devtools 作为一个固定的浮动元素挂载在应用程序中，并在屏幕一角提供一个切换按钮以显示和隐藏 devtools。此切换状态将在重新加载时存储并记忆在 localStorage 中。
+浮动模式将 devtools 作为一个固定的浮动元素挂载在应用中，并在屏幕一角提供一个切换按钮以显示和隐藏 devtools。此切换状态将在重新加载时存储并记忆在 localStorage 中。
 
-将以下代码尽可能地放在 React 应用程序的顶部。它离页面的根元素越近，它工作得越好!
+将以下代码尽可能地放在 React 应用的顶部。它离页面的根元素越近，它工作得越好!
 
 ```js
 import { ReactQueryDevtools } from 'react-query/devtools'
@@ -55,7 +55,7 @@ function App() {
 
 ## 嵌入模式
 
-嵌入式模式会将 devtools 作为常规组件嵌入到您的应用程序中。 您可以根据需要设置样式！
+嵌入式模式会将 devtools 作为常规组件嵌入到您的应用中。 您可以根据需要设置样式！
 
 ```js
 import { ReactQueryDevtoolsPanel } from 'react-query/devtools'

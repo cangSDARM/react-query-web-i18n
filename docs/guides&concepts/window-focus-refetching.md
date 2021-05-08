@@ -3,7 +3,7 @@ id: window-focus-refetching
 title: 窗口焦点影响的数据刷新
 ---
 
-如果用户离开您的应用程序时数据是标记为过时的，**React Query 会自动在后台为您请求新的数据**。
+如果用户离开您的应用时数据是标记为过时的，**React Query 会自动在后台为您请求新的数据**。
 您可以使用`refetchOnWindowFocus`选项在全局或每个查询中禁用此选项。
 
 #### 全局禁用
@@ -54,7 +54,7 @@ focusManager.setEventListener((handleFocus) => {
 ## 忽略 Iframe 的 Focus 事件
 
 替换焦点处理函数的一个很好的用例是 iframe 的事件。
-当在应用程序中聚焦或使用 iframe 时，iframe 会通过两次触发事件(both double-firing events)以及触发假阳性事件(false-positive events)来检测窗口焦点，从而带来某些潜在的问题。
+当在应用中聚焦或使用 iframe 时，iframe 会通过两次触发事件(both double-firing events)以及触发假阳性事件(false-positive events)来检测窗口焦点，从而带来某些潜在的问题。
 如果遇到这种情况，你应该使用一个尽可能忽略这些事件的事件处理函数。例如使用[这个 Gist](https://gist.github.com/tannerlinsley/1d3a2122332107fcd8c9cc379be10d88)：
 
 ```js
@@ -66,7 +66,7 @@ focusManager.setEventListener(onWindowFocus) // Boom!
 
 ## 在 React Native 中管理焦点
 
-React Native 通过[`AppState`模块](https://reactnative.dev/docs/appstate#app-states)提供焦点信息，而不是窗口上的事件侦听器。当应用程序状态更改为“active”时，可以使用`AppState`的“change”事件来触发更新：
+React Native 通过[`AppState`模块](https://reactnative.dev/docs/appstate#app-states)提供焦点信息，而不是窗口上的事件侦听器。当应用状态更改为“active”时，可以使用`AppState`的“change”事件来触发更新：
 
 ```js
 import { AppState } from 'react-native'

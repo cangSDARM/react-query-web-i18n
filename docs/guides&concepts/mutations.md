@@ -262,10 +262,10 @@ const mutation = useMutation('addTodo')
 mutation.mutate({ title: 'title' })
 
 // 如果因为设备离线而暂停了修改，
-// 然后，当应用程序退出时，可以使暂停的修改变为 dehydrated 的
+// 然后，当程序退出时，可以使暂停的修改变为 dehydrated 的
 const state = dehydrate(queryClient)
 
-// 当应用程序启动时，修改再次启动
+// 当程序启动时，修改再次启动
 hydrate(queryClient, state)
 
 // 重启修改
