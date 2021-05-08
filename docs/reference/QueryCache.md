@@ -45,7 +45,7 @@ const query = queryCache.find(queryKey)
 **Options**
 
 - `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/query-filters)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters.md)
 
 **Returns**
 
@@ -65,7 +65,7 @@ const queries = queryCache.findAll(queryKey)
 **Options**
 
 - `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/query-filters)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters.md)
 
 **Returns**
 
