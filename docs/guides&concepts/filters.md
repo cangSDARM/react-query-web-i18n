@@ -13,13 +13,13 @@ React Query 中的某些方法可以接受 `QueryFilters` 或者 `MutationFilter
 // 取消所有查询
 await queryClient.cancelQueries()
 
-// 删除所有非活动查询
+// 删除所有以`posts`开头的键值的非活动查询
 queryClient.removeQueries('posts', { inactive: true })
 
 // 重新获取所有活动查询
 await queryClient.refetchQueries({ active: true })
 
-// 重新获取键中以`post`开头的所有活动查询
+// 重新获取键中以`posts`开头的所有活动查询
 await queryClient.refetchQueries('posts', { active: true })
 ```
 

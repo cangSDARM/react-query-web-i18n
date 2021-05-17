@@ -21,7 +21,7 @@ npm install @testing-library/react-hooks react-test-renderer --save-dev
 
 ```js
 export function useCustomHook() {
-  return useQuery('customHook', () => 'Hello')
+  return useQuery('customHook', () => 'Hello');
 }
 ```
 
@@ -112,21 +112,21 @@ const expectation = nock('http://example.com')
 
 (请注意 `.persist()`，因为我们将从这个接口多次调用它)
 
-现在我们可以安全地运行我们的测试了，这里的技巧是在调用 `fetchMore()` 之后等待 `isFetching` 和 `!isFetching` ：
+现在我们可以安全地运行我们的测试了，这里的技巧是在调用 `fetchNextPage()` 之后等待 `isFetching` 和 `!isFetching` ：
 
 ```js
 const { result, waitFor } = renderHook(() => useInfiniteQueryCustomHook(), { wrapper });
 
 await waitFor(() => result.current.isSuccess);
 
-expect(result.current.data).toStrictEqual(generateMockedResponse(1));
+expect(result.current.data.pages).toStrictEqual(generateMockedResponse(1));
 
-result.current.fetchMore();
+result.current.fetchNextPage();
 
 await waitFor(() => result.current.isFetching);
 await waitFor(() => !result.current.isFetching);
 
-expect(result.current.data).toStrictEqual([
+expect(result.current.data.pages).toStrictEqual([
   ...generateMockedResponse(1),
   ...generateMockedResponse(2),
 ]);

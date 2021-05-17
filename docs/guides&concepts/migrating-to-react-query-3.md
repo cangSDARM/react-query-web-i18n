@@ -50,6 +50,8 @@ const queryClient = new QueryClient()
 
 现在可以在 `QueryClient` 中指定查询和修改的默认参数：
 
+**注意，现在这是一个默认选项(defaultOptions)，而不是一个默认配置(defaultConfig)**
+
 ```js
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -151,7 +153,7 @@ useQuery(['post', id], (context) => fetchPost(context.queryKey[1]))
 useInfiniteQuery(['posts'], (_key, pageParam = 0) => fetchPosts(pageParam))
 
 // New
-useInfiniteQuery(['posts'], ({ pageParam = 0 }) => fetchPost(pageParam))
+useInfiniteQuery(['posts'], ({ pageParam = 0 }) => fetchPosts(pageParam))
 ```
 
 ### 不推荐使用 `usePaginatedQuery()`，而是应该选择 `keepPreviousData` 参数
@@ -383,7 +385,7 @@ function User() {
 
 ### `QueryResult.clear()` 方法重命名为 `QueryResult.remove()`
 
-尽管它被称为“clear”，但实际上只是从高速缓存中删除了单个查询。
+尽管它被称为"clear"，但实际上只是从高速缓存中删除了单个查询。
 现在，该名称与其功能匹配。
 
 ### `QueryResult.updatedAt` 拆分为 `QueryResult.dataUpdatedAt` 和 `QueryResult.errorUpdatedAt` 属性

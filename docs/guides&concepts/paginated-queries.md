@@ -3,7 +3,7 @@ id: paginated-queries
 title: 分页/滞后查询
 ---
 
-呈现分页数据是一种非常常见的 UI 模式，在 React Query 中，它通过在查询键中包含页面信息来“正常工作”：
+呈现分页数据是一种非常常见的 UI 模式，在 React Query 中，它通过在查询键中包含页面信息来"正常工作"：
 
 ```js
 const result = useQuery(['projects', page], fetchProjects)
@@ -15,7 +15,7 @@ const result = useQuery(['projects', page], fetchProjects)
 
 这种体验并不是最佳的，不幸的是，今天有不少工具在坚持使用。
 但不是 React Query！
-您可能已经猜到了，React Query 带有一个称为`keepPreviousData`的强大功能，使我们可以解决这个问题。
+您可能已经猜到了，React Query 带有一个称为`keepPreviousData`的强大功能，从而使得这个问题可以被轻易的解决。
 
 ## 使用`keepPreviousData`的更好的分页查询
 
@@ -31,7 +31,7 @@ const result = useQuery(['projects', page], fetchProjects)
 function Todos() {
   const [page, setPage] = React.useState(0)
 
-  const fetchProjects = (page = 0) => fetch('/api/projects?page=' + page)
+  const fetchProjects = (page = 0) => fetch('/api/projects?page=' + page).then((res) => res.json())
 
   const {
     isLoading,

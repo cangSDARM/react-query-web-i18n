@@ -56,11 +56,11 @@ function App() {
 
 即使只有变量，修改也没有那么特别，但是当与 `onSuccess` 回调，[Query Client 的 `invalidateQueries` 方法](../reference/QueryClient#queryclientinvalidatequeries)和 [Query Client 的 `setQueryData` 方法](../reference/QueryClient#queryclientsetquerydata)一起使用时，修改就成为了一个非常强大的工具。
 
-> 重要说明：`mutate` 函数是一个异步函数，这意味着您不能在事件回调中直接使用它。
+> 重要说明：`mutate` 函数是一个异步函数，这意味着您不能在事件回调中直接使用它 (**React16及之前版本**)。
 > 如果您需要在 `onSubmit` 中访问事件，则需要将 `mutate` 包装在另一个函数中。 这是由于 [React 事件池](https://reactjs.org/docs/events.html#event-pooling)限制。
 
 ```js
-// 这将无法工作
+// 在React16及之前的版本，这将无法正常工作
 const CreateTodo = () => {
   const mutation = useMutation((event) => {
     event.preventDefault()

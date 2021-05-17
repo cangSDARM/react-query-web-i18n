@@ -53,21 +53,21 @@ function Todos() {
   }
   ```
 
-- 那么，如果您的`initialData`并不完全新鲜怎么办？这就给我们留下了最后一个配置，它实际上是最准确的，使用了一个名为`initialDataUpdatedAt`的选项。这个选项允许你传递一个数值型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。请注意，如果您使用的是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳。
+- 那么，如果您的`initialData`并不完全新鲜怎么办？这就引出了最后一个配置项，它实际上是最准确的，使用了一个名为`initialDataUpdatedAt`的选项。该选项允许你传递一个`Number`类型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。(请注意，如果您使用的是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳。)
 
   ```js
   function Todos() {
     // 立即显示 initialTodos，但是直到 1000 ms 之后遇到另一个交互事件时才重新获取数据
     const result = useQuery('todos', () => fetch('/todos'), {
       initialData: initialTodos,
-      staleTime: 60 * 1000 // 1 minute
+      staleTime: 60 * 1000, // 1 minute
       // 这可能是10秒前或10分钟前
       initialDataUpdatedAt: initialTodosUpdatedTimestamp // eg. 1608412420052
     })
   }
   ```
 
-  此选项允许将 staleTime 用于其“原始”用途，以确定数据需要有多新鲜，同时还允许：如果 `initialData` 早于 `staleTime`，则在挂载时重新获取数据。在上面的示例中，我们的数据需要在 1 分钟内刷新，我们可以在`initialData`最后一次更新时提示查询，以便查询自己决定是否需要重新获取数据。
+  此选项允许将 staleTime 用于其"原始"用途，以确定数据需要有多新鲜，同时还允许：如果 `initialData` 早于 `staleTime`，则在挂载时重新获取数据。在上面的示例中，我们的数据需要在 1 分钟内刷新，我们可以在`initialData`最后一次更新时提示查询，以便查询自己决定是否需要重新获取数据。
 
 > 如果您希望将数据视为**预取数据**，建议您使用`prefetchQuery`或`fetchQuery` API 来预先填充缓存，从而独立于`initialData`配置`staleTime`。
 
@@ -102,12 +102,12 @@ function Todo({ todoId }) {
 
 ### 来自带有`InitialDataUpdatedAt`的缓存的初始数据
 
-从缓存中获取初始数据意味着，您用来从中查询初始数据的源查询可能很旧，但是`initialData`而不是使用手动的`staleTime`来阻止查询被立即重新返回，因此建议传递源查询的`dataUpdatedAt`给`initialDataUpdatedAt`。
+从缓存中获取初始数据意味着，哪怕使用了`initialData`，用来查询初始数据的源查询还是有可能很旧。建议不要手动设置`staleTime`来阻止查询被立即重新获取，而应该将源查询的`dataUpdatedAt`传给`initialDataUpdatedAt`参数。
 这为查询实例提供了所需的所有信息，以确定是否以及何时需要重新获取查询，而不管是否提供了初始数据。
 
 ```js
 function Todo({ todoId }) {
-  const result = useQuery(['todo', todoId], () => fetch('/todos'), {
+  const result = useQuery(['todo', todoId], () => fetch(`/todos/${todoId}`), {
     initialData: () =>
       queryClient.getQueryData('todos')?.find((d) => d.id === todoId),
     initialDataUpdatedAt: () =>
@@ -119,7 +119,7 @@ function Todo({ todoId }) {
 ### 来自缓存的有条件的初始数据
 
 如果您要用来查找初始数据的源查询过旧，则可能根本不想使用缓存的数据，而只是从服务器中获取数据。
-为了使此决定更容易，您可以改用`queryClient.getQueryState`方法来获取关于源查询的更多信息，包括`state.dataUpdatedAt`时间戳。您可以以此确定查询是否足够“新鲜”以满足您的需求：
+为了使此决定更容易，您可以改用`queryClient.getQueryState`方法来获取关于源查询的更多信息，包括`state.dataUpdatedAt`时间戳。您可以以此确定查询是否足够"新鲜"以满足您的需求：
 
 ```js
 function Todo({ todoId }) {
@@ -128,7 +128,7 @@ function Todo({ todoId }) {
       // 获取查询状态
       const state = queryClient.getQueryState('todos')
 
-      // 如果查询存在并且数据“老得”不超过10秒...
+      // 如果查询存在并且数据"老得"不超过10秒...
       if (state && Date.now() - state.dataUpdatedAt <= 10 * 1000) {
         // 返回单个todo
         return state.data.find((d) => d.id === todoId)

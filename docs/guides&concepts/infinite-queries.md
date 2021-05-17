@@ -3,7 +3,7 @@ id: infinite-queries
 title: 无限查询
 ---
 
-可以将附加数据“加载”更多数据到现有数据集，或者是“无限滚动”上的呈现列表也是一种非常常见的 UI 模式。React Query 支持一个有用的`useQuery`版本，称为`useInfiniteQuery`，用于查询这些类型的列表。
+可以将附加数据"加载"更多数据到现有数据集，或者是"无限滚动"上的呈现列表也是一种非常常见的 UI 模式。React Query 支持一个有用的`useQuery`版本，称为`useInfiniteQuery`，用于查询这些类型的列表。
 
 使用`useInfiniteQuery`时，需要注意一些不同之处：
 
@@ -33,7 +33,7 @@ fetch('/api/projects?cursor=9')
 // { data: [...] }
 ```
 
-有了这些信息，我们可以通过以下方式创建“加载更多”的 UI：
+有了这些信息，我们可以通过以下方式创建"加载更多"的 UI：
 
 - 默认情况下，等待`useInfiniteQuery`请求第一组数据
 - 返回`getNextPageParam`中下一个查询的信息
@@ -94,7 +94,7 @@ function Projects() {
 
 ## 当无限查询需要重新获取时会发生什么？
 
-当无限查询变得陈旧且需要重新获取时，将从第一个查询开始按顺序获取每个组。
+当无限查询变得陈旧(`stale`)且需要重新获取时，将从第一个查询开始，按照对应顺序获取每个组。
 这样可以确保即使基础数据发生了修改，我们也不会使用过时的游标，也不会得到重复的记录或跳过记录。如果从 queryCache 中删除了无限查询的结果，则分页将在初始状态下重新启动，仅请求初始组。
 
 ## 如果我需要将自定义信息传递给查询功能怎么办？
@@ -163,8 +163,8 @@ queryClient.setQueryData('projects', (data) => ({
 ```js
 const newPagesArray = []
 oldPagesArray?.pages.forEach((page) => {
-  const newData = page.data.filter((val) => val.id !== updatedId)
-  newPagesArray.push({ data: newData, pageParam: page.pageParam })
+  const newData = page.filter(val => val.id !== updatedId)
+  newPagesArray.push(newData)
 })
 queryClient.setQueryData('projects', (data) => ({
   pages: newPagesArray,

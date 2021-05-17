@@ -10,7 +10,9 @@ When dealing with mutations that **update** objects on the server, 新对象通�
 const queryClient = useQueryClient()
 
 const mutation = useMutation(editTodo, {
-  onSuccess: (data) => queryClient.setQueryData(['todo', { id: 5 }], data),
+  onSuccess: (data) => {
+    queryClient.setQueryData(['todo', { id: 5 }], data)
+  },
 })
 
 mutation.mutate({

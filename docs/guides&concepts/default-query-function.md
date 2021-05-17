@@ -7,6 +7,7 @@ title: 默认的查询函数
 
 ```js
 // 定义一个参数为查询键值的默认查询函数
+// 假设这里的 queryKey 是一个数组
 const defaultQueryFn = async ({ queryKey }) => {
   const { data } = await axios.get(
     `https://jsonplaceholder.typicode.com${queryKey[0]}`,
