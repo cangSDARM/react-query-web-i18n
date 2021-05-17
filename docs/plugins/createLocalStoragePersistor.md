@@ -1,5 +1,5 @@
 ---
-id: create-localStorage-persistor
+id: createLocalStoragePersistor
 title: createLocalStoragePersistor (Experimental)
 ---
 

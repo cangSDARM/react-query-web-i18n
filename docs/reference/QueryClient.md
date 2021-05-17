@@ -168,8 +168,8 @@ const data = queryClient.getQueryData(queryKey)
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
 
 **Returns**
 
@@ -188,7 +188,7 @@ queryClient.setQueryData(queryKey, updater)
 
 **Options**
 
-- `queryKey: QueryKey`: [Query Keys](../guides/query-keys)
+- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys)
 - `updater: TData | (oldData: TData | undefined) => TData`
   - If non-function is passed, the data will be updated to this value
   - If a function is passed, it will receive the old data value and be expected to return a new one.
@@ -218,8 +218,8 @@ console.log(state.dataUpdatedAt)
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
 
 ## `queryClient.setQueriesData`
 
@@ -231,7 +231,7 @@ queryClient.setQueriesData(queryKey | filters, updater)
 
 **Options**
 
-- `queryKey: QueryKey`: [Query Keys](../guides/query-keys) | `filters: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys) | `filters: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
   - if a queryKey is passed as first argument, queryKeys fuzzily matching this param will be updated
   - if a filter is passed, queryKeys matching the filter will be updated
 - `updater: TData | (oldData: TData | undefined) => TData`
@@ -254,8 +254,8 @@ await queryClient.invalidateQueries('posts', {
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
   - `refetchActive: Boolean`
     - Defaults to `true`
     - When set to `false`, queries that match the refetch predicate and are actively being rendered via `useQuery` and friends will NOT be refetched in the background, and only marked as invalid.
@@ -288,8 +288,8 @@ await queryClient.refetchQueries(['posts', 1], { active: true, exact: true })
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
 - `refetchOptions?: RefetchOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
@@ -310,8 +310,8 @@ await queryClient.cancelQueries('posts', { exact: true })
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
 
 **Returns**
 
@@ -327,8 +327,8 @@ queryClient.removeQueries(queryKey, { exact: true })
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
 
 **Returns**
 
@@ -351,8 +351,8 @@ queryClient.resetQueries(queryKey, { exact: true })
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
 - `resetOptions?: ResetOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
@@ -375,8 +375,8 @@ React Query also exports a handy [`useIsFetching`](./useIsFetching) hook that wi
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
 
 **Returns**
 
@@ -396,7 +396,7 @@ React Query also exports a handy [`useIsMutating`](./useIsMutating) hook that wi
 
 **Options**
 
-- `filters: MutationFilters`: [Mutation Filters](../guides/filters#mutation-filters)
+- `filters: MutationFilters`: [Mutation Filters](../guides&concepts/filters#mutation-filters)
 
 **Returns**
 
@@ -443,7 +443,7 @@ function Component() {
 
 **Options**
 
-- `queryKey: QueryKey`: [Query Keys](../guides/query-keys)
+- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys)
 - `options: QueryOptions`
 
 ## `queryClient.getMutationDefaults`
