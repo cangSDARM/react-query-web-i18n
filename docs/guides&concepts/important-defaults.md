@@ -16,11 +16,13 @@ title: 重要的默认配置
   - 网络重新连接
   - 该查询可选地配置有重新获取数据间隔
 
+如果某些重新获取的数据不是你所期望的，那么很大可能是你重新获取了窗口焦点(此时React Query正在处理`refetchOnWindowFocus`)。*在开发模式下，这可能会更频繁地触发*，特别是在浏览器的Devtools和你的应用之间互相切换也会导致获取，所以请额外注意。
+
 > 要更改此功能，可以配置`refetchOnMount`, `refetchOnWindowFocus`, `refetchOnReconnect`和`refetchInterval`之类的选项。
 
-- 当查询结果不再具有`useQuery`, `useInfiniteQuery`或查询观察者(query observers)的活动实例(active instances)时，该查询结果将被标记为“非活动”，并保留在缓存中，以防以后再次使用。
+- 当查询结果不再具有`useQuery`, `useInfiniteQuery`或查询观察者(query observers)的活动实例(active instances)时，该查询结果将被标记为"非活动"，并保留在缓存中，以防以后再次使用。
 
-- 默认情况下，“非活动”查询会在**5 分钟**后被垃圾收集。
+- 默认情况下，"非活动"查询会在**5 分钟**后被垃圾收集。
 
 > 要更改此设置，可以将查询的默认`cacheTime`更改为`1000 * 60 * 5`毫秒以外的其他值。
 

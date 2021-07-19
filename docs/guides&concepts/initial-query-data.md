@@ -100,7 +100,7 @@ function Todo({ todoId }) {
 }
 ```
 
-### 来自带有`InitialDataUpdatedAt`的缓存的初始数据
+### 来自配置`InitialDataUpdatedAt`的缓存的初始数据
 
 从缓存中获取初始数据意味着，哪怕使用了`initialData`，用来查询初始数据的源查询还是有可能很旧。建议不要手动设置`staleTime`来阻止查询被立即重新获取，而应该将源查询的`dataUpdatedAt`传给`initialDataUpdatedAt`参数。
 这为查询实例提供了所需的所有信息，以确定是否以及何时需要重新获取查询，而不管是否提供了初始数据。
@@ -123,7 +123,7 @@ function Todo({ todoId }) {
 
 ```js
 function Todo({ todoId }) {
-  const result = useQuery(['todo', todoId], () => fetch('/todos'), {
+  const result = useQuery(['todo', todoId], () => fetch(`/todos/${todoId}`), {
     initialData: () => {
       // 获取查询状态
       const state = queryClient.getQueryState('todos')

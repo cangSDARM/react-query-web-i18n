@@ -45,7 +45,8 @@ const guide = [
 
 const plugins = [
   "broadcast-query-client",
-  "createLocalStoragePersistor",
+  "createAsyncStoragePersistor",
+  "createWebStoragePersistor",
   "persist-query-client",
 ].map((item) => "plugins/" + item);
 

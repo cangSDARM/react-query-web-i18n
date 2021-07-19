@@ -53,23 +53,20 @@ React Query 支持在 Next.js 中预取服务器上的多个查询，然后将�
 
 要支持在服务器上缓存查询并设置 hydration，请执行以下操作：
 
-- **在您的应用内部以及实例 ref 上创建一个新的 `QueryClient` 实例**。 这样可以确保**不同的用户和请求之间不会共享数据**
+- **在应用内部创建一个新的 ref/state 用来保存`QueryClient` 实例**。 这样可以确保**不同的用户和请求之间不会共享数据，而且在每个组件的生命周期中只用创建一次`QueryClient`**
 - 用 `<QueryClientProvider>` 包装您的应用组件，并将其传递给客户端实例
 - 用 `<Hydrate>` 包装您的应用组件，并将 `pageProps` 的 `dehydratedState` 传递给它
 
 ```jsx
-// _app.jsx
+// 以下是state的例子，ref类似
 import { QueryClient, QueryClientProvider } from 'react-query'
 import { Hydrate } from 'react-query/hydration'
 
 export default function MyApp({ Component, pageProps }) {
-  const queryClientRef = React.useRef()
-  if (!queryClientRef.current) {
-    queryClientRef.current = new QueryClient()
-  }
+  const [queryClient] = React.useState(() => new QueryClient())
 
   return (
-    <QueryClientProvider client={queryClientRef.current}>
+    <QueryClientProvider client={queryClient}>
       <Hydrate state={pageProps.dehydratedState}>
         <Component {...pageProps} />
       </Hydrate>

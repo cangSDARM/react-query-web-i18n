@@ -22,7 +22,7 @@ v3 版本 merge 了许多性能优化和 API 调优的内容。
 - 修改/查询可以在 React 之外实现观察者模式
 - 随时随地使用 React Query 核心逻辑！
 - 通过使用`react-query/devtools`，随时享受 Devtools
-- 持久化缓存到 localstorage 中 (_实验性_， `react-query/persistQueryClient-experimental` 和 `react-query/createLocalStoragePersistor-experimental`)
+- 持久化缓存到 web的存储 中 (_实验性_， `react-query/persistQueryClient-experimental` 和 `react-query/createWebStoragePersistor-experimental`)
 
 ## 破坏性修改
 

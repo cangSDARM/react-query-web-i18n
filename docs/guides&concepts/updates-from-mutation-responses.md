@@ -12,7 +12,7 @@ const queryClient = useQueryClient()
 const mutation = useMutation(editTodo, {
   onSuccess: (data) => {
     queryClient.setQueryData(['todo', { id: 5 }], data)
-  },
+  }
 })
 
 mutation.mutate({

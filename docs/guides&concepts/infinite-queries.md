@@ -158,14 +158,13 @@ queryClient.setQueryData('projects', (data) => ({
 }))
 ```
 
-从单个页面中手动删除单个值：
+从单独页面中手动删除单个值：
 
 ```js
-const newPagesArray = []
-oldPagesArray?.pages.forEach((page) => {
-  const newData = page.filter(val => val.id !== updatedId)
-  newPagesArray.push(newData)
-})
+const newPagesArray = oldPagesArray?.pages.map((page) =>
+  page.filter((val) => val.id !== updatedId)
+) ?? []
+
 queryClient.setQueryData('projects', (data) => ({
   pages: newPagesArray,
   pageParams: data.pageParams,

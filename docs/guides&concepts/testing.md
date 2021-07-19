@@ -44,6 +44,28 @@ expect(result.current.data).toEqual('Hello')
 
 可以只编写一次该包装器，但是如果是这样，在每次测试之前，我们都需要清除 `QueryClient` ，并且测试不能并行运行，否则一个测试会影响其他测试的结果。
 
+## 关闭重试机制
+
+React Query 底层默认以指数回退的形式重试三次，这也意味着要处理*应该错误的测试*时有可能会遇到超时等情况。关闭重试机制的最简单的方法是通过`QueryClientProvider`。让我们对上面的示例进行简单的扩展：
+
+```jsx
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      // ✅ turns retries off
+      retry: false,
+    },
+  },
+})
+const wrapper = ({ children }) => (
+  <QueryClientProvider client={queryClient}>
+    {children}
+  </QueryClientProvider>
+);
+```
+
+这将全局的设置所有查询都是"无重试"的。在`useQuery`显示的启用了重试时，这不会生效。如你在一次查询中设置了需要5次重试时，这不会生效，因为默认的全局配置只是作为 fallback 存在。
+
 ## 测试网络调用
 
 React Query 的主要用途是缓存网络请求，因此，首先测试我们的代码是否发出了正确的网络请求是很重要的。

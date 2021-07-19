@@ -8,12 +8,13 @@ title: 查询函数
 以下所有都是有效的查询函数配置：
 
 ```js
-useQuery(['todos', todoId], fetchTodoById)
+useQuery(['todos'], fetchAllTodos)
 useQuery(['todos', todoId], () => fetchTodoById(todoId))
 useQuery(['todos', todoId], async () => {
   const data = await fetchTodoById(todoId)
   return data
 })
+useQuery(['todos', todoId], ({ queryKey }) => fetchTodoById(queryKey[1]))
 ```
 
 ## 处理和抛出错误
