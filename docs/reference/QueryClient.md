@@ -8,7 +8,7 @@ title: QueryClient
 The `QueryClient` can be used to interact with a cache:
 
 ```js
-import { QueryClient } from 'react-query'
+import { QueryClient } from "react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,19 +16,19 @@ const queryClient = new QueryClient({
       staleTime: Infinity,
     },
   },
-})
+});
 
-await queryClient.prefetchQuery('posts', fetchPosts)
+await queryClient.prefetchQuery("posts", fetchPosts);
 ```
 
 Its available methods are:
 
-- [`QueryClient`](#queryclient)
 - [`queryClient.fetchQuery`](#queryclientfetchquery)
 - [`queryClient.fetchInfiniteQuery`](#queryclientfetchinfinitequery)
 - [`queryClient.prefetchQuery`](#queryclientprefetchquery)
 - [`queryClient.prefetchInfiniteQuery`](#queryclientprefetchinfinitequery)
 - [`queryClient.getQueryData`](#queryclientgetquerydata)
+- [`queryClient.getQueriesData`](#queryclientgetqueriesdata)
 - [`queryClient.setQueryData`](#queryclientsetquerydata)
 - [`queryClient.getQueryState`](#queryclientgetquerystate)
 - [`queryClient.setQueriesData`](#queryclientsetqueriesdata)
@@ -71,9 +71,9 @@ If the query exists and the data is not invalidated or older than the given `sta
 
 ```js
 try {
-  const data = await queryClient.fetchQuery(queryKey, queryFn)
+  const data = await queryClient.fetchQuery(queryKey, queryFn);
 } catch (error) {
-  console.log(error)
+  console.log(error);
 }
 ```
 
@@ -83,9 +83,9 @@ Specify a `staleTime` to only fetch when the data is older than a certain amount
 try {
   const data = await queryClient.fetchQuery(queryKey, queryFn, {
     staleTime: 10000,
-  })
+  });
 } catch (error) {
-  console.log(error)
+  console.log(error);
 }
 ```
 
@@ -103,10 +103,10 @@ The options for `fetchQuery` are exactly the same as those of [`useQuery`](./use
 
 ```js
 try {
-  const data = await queryClient.fetchInfiniteQuery(queryKey, queryFn)
-  console.log(data.pages)
+  const data = await queryClient.fetchInfiniteQuery(queryKey, queryFn);
+  console.log(data.pages);
 } catch (error) {
-  console.log(error)
+  console.log(error);
 }
 ```
 
@@ -123,13 +123,13 @@ The options for `fetchInfiniteQuery` are exactly the same as those of [`fetchQue
 `prefetchQuery` is an asynchronous method that can be used to prefetch a query before it is needed or rendered with `useQuery` and friends. The method works the same as `fetchQuery` except that it will not throw or return any data.
 
 ```js
-await queryClient.prefetchQuery(queryKey, queryFn)
+await queryClient.prefetchQuery(queryKey, queryFn);
 ```
 
 You can even use it with a default queryFn in your config!
 
 ```js
-await queryClient.prefetchQuery(queryKey)
+await queryClient.prefetchQuery(queryKey);
 ```
 
 **Options**
@@ -146,7 +146,7 @@ The options for `prefetchQuery` are exactly the same as those of [`fetchQuery`](
 `prefetchInfiniteQuery` is similar to `prefetchQuery` but can be used to prefetch and cache an infinite query.
 
 ```js
-await queryClient.prefetchInfiniteQuery(queryKey, queryFn)
+await queryClient.prefetchInfiniteQuery(queryKey, queryFn);
 ```
 
 **Options**
@@ -163,7 +163,7 @@ The options for `prefetchInfiniteQuery` are exactly the same as those of [`fetch
 `getQueryData` is a synchronous function that can be used to get an existing query's cached data. If the query does not exist, `undefined` will be returned.
 
 ```js
-const data = queryClient.getQueryData(queryKey)
+const data = queryClient.getQueryData(queryKey);
 ```
 
 **Options**
@@ -176,6 +176,31 @@ const data = queryClient.getQueryData(queryKey)
 - `data: TData | undefined`
   - The data for the cached query, or `undefined` if the query does not exist.
 
+## `queryClient.getQueriesData`
+
+`getQueriesData` is a synchronous function that can be used to get the cached data of multiple queries. Only queries that match the passed queryKey or queryFilter will be returned. If there are no matching queries, an empty array will be returned.
+
+```js
+const data = queryClient.getQueriesData(queryKey | filters);
+```
+
+**Options**
+
+- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys) | `filters: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+  - if a queryKey is passed as the argument, the data with queryKeys fuzzily matching this param will be returned
+  - if a filter is passed, the data with queryKeys matching the filter will be returned
+
+**Returns**
+
+- `[queryKey:QueryKey, data:TData | unknown][]`
+  - An array of tuples for the matched query keys, or `[]` if there are no matches. The tuples are the query key and its associated data.
+
+**Caveats**
+
+Because the returned data in each tuple can be of varying structures (i.e. using a filter to return "active" queries can return different data types), the `TData` generic defaults to `unknown`. If you provide a more specific type to `TData` it is assumed that you are certain each tuple's data entry is all the same type.
+
+This distinction is more a "convenience" for ts devs that know which structure will be returned.
+
 ## `queryClient.setQueryData`
 
 `setQueryData` is a synchronous function that can be used to immediately update a query's cached data. If the query does not exist, it will be created. **If the query is not utilized by a query hook in the default `cacheTime` of 5 minutes, the query will be garbage collected**.
@@ -183,7 +208,7 @@ const data = queryClient.getQueryData(queryKey)
 > The difference between using `setQueryData` and `fetchQuery` is that `setQueryData` is sync and assumes that you already synchronously have the data available. If you need to fetch the data asynchronously, it's suggested that you either refetch the query key or use `fetchQuery` to handle the asynchronous fetch.
 
 ```js
-queryClient.setQueryData(queryKey, updater)
+queryClient.setQueryData(queryKey, updater);
 ```
 
 **Options**
@@ -196,7 +221,7 @@ queryClient.setQueryData(queryKey, updater)
 **Using an updater value**
 
 ```js
-setQueryData(queryKey, newData)
+setQueryData(queryKey, newData);
 ```
 
 **Using an updater function**
@@ -204,7 +229,7 @@ setQueryData(queryKey, newData)
 For convenience in syntax, you can also pass an updater function which receives the current data value and returns the new one:
 
 ```js
-setQueryData(queryKey, oldData => newData)
+setQueryData(queryKey, (oldData) => newData);
 ```
 
 ## `queryClient.getQueryState`
@@ -212,8 +237,8 @@ setQueryData(queryKey, oldData => newData)
 `getQueryState` is a synchronous function that can be used to get an existing query's state. If the query does not exist, `undefined` will be returned.
 
 ```js
-const state = queryClient.getQueryState(queryKey)
-console.log(state.dataUpdatedAt)
+const state = queryClient.getQueryState(queryKey);
+console.log(state.dataUpdatedAt);
 ```
 
 **Options**
@@ -226,7 +251,7 @@ console.log(state.dataUpdatedAt)
 `setQueriesData` is a synchronous function that can be used to immediately update cached data of multiple queries. Only queries that match the passed queryKey or queryFilter will be updated - no new cache entries will be created. Under the hood, [`setQueryData`](#queryclientsetquerydata) is called for each query.
 
 ```js
-queryClient.setQueriesData(queryKey | filters, updater)
+queryClient.setQueriesData(queryKey | filters, updater);
 ```
 
 **Options**
@@ -245,11 +270,15 @@ The `invalidateQueries` method can be used to invalidate and refetch single or m
 - If you **want inactive queries to refetch** as well, use the `refetchInactive: true` option
 
 ```js
-await queryClient.invalidateQueries('posts', {
-  exact,
-  refetchActive: true,
-  refetchInactive: false
-}, { throwOnError })
+await queryClient.invalidateQueries(
+  "posts",
+  {
+    exact,
+    refetchActive: true,
+    refetchInactive: false,
+  },
+  { throwOnError }
+);
 ```
 
 **Options**
@@ -262,6 +291,9 @@ await queryClient.invalidateQueries('posts', {
   - `refetchInactive: Boolean`
     - Defaults to `false`
     - When set to `true`, queries that match the refetch predicate and are not being rendered via `useQuery` and friends will be both marked as invalid and also refetched in the background
+  - `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
+    - Only for [Infinite Queries](../guides&concepts/infinite-queries#refetchpage)
+    - Use this function to specify which pages should be refetched
 - `refetchOptions?: RefetchOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
@@ -274,22 +306,25 @@ Examples:
 
 ```js
 // refetch all queries:
-await queryClient.refetchQueries()
+await queryClient.refetchQueries();
 
 // refetch all stale queries:
-await queryClient.refetchQueries({ stale: true })
+await queryClient.refetchQueries({ stale: true });
 
 // refetch all active queries partially matching a query key:
-await queryClient.refetchQueries(['posts'], { active: true })
+await queryClient.refetchQueries(["posts"], { active: true });
 
 // refetch all active queries exactly matching a query key:
-await queryClient.refetchQueries(['posts', 1], { active: true, exact: true })
+await queryClient.refetchQueries(["posts", 1], { active: true, exact: true });
 ```
 
 **Options**
 
 - `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
 - `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+  - `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
+    - Only for [Infinite Queries](../guides&concepts/infinite-queries#refetchpage)
+    - Use this function to specify which pages should be refetched
 - `refetchOptions?: RefetchOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
@@ -305,7 +340,7 @@ The `cancelQueries` method can be used to cancel outgoing queries based on their
 This is most useful when performing optimistic updates since you will likely need to cancel any outgoing query refetches so they don't clobber your optimistic update when they resolve.
 
 ```js
-await queryClient.cancelQueries('posts', { exact: true })
+await queryClient.cancelQueries("posts", { exact: true });
 ```
 
 **Options**
@@ -322,7 +357,7 @@ This method does not return anything
 The `removeQueries` method can be used to remove queries from the cache based on their query keys or any other functionally accessible property/state of the query.
 
 ```js
-queryClient.removeQueries(queryKey, { exact: true })
+queryClient.removeQueries(queryKey, { exact: true });
 ```
 
 **Options**
@@ -346,13 +381,16 @@ subscribers &mdash; and reset the query to its pre-loaded state &mdash; unlike
 reset to that. If a query is active, it will be refetched.
 
 ```js
-queryClient.resetQueries(queryKey, { exact: true })
+queryClient.resetQueries(queryKey, { exact: true });
 ```
 
 **Options**
 
 - `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
 - `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+  - `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
+    - Only for [Infinite Queries](../guides&concepts/infinite-queries#refetchpage)
+    - Use this function to specify which pages should be refetched
 - `resetOptions?: ResetOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
@@ -367,7 +405,7 @@ This `isFetching` method returns an `integer` representing how many queries, if 
 
 ```js
 if (queryClient.isFetching()) {
-  console.log('At least one query is fetching!')
+  console.log("At least one query is fetching!");
 }
 ```
 
@@ -388,7 +426,7 @@ This `isMutating` method returns an `integer` representing how many mutations, i
 
 ```js
 if (queryClient.isMutating()) {
-  console.log('At least one mutation is fetching!')
+  console.log("At least one mutation is fetching!");
 }
 ```
 
@@ -401,12 +439,13 @@ React Query also exports a handy [`useIsMutating`](./useIsMutating) hook that wi
 **Returns**
 
 This method returns the number of fetching mutations.
+
 ## `queryClient.getDefaultOptions`
 
 The `getDefaultOptions` method returns the default options which have been set when creating the client or with `setDefaultOptions`.
 
 ```js
-const defaultOptions = queryClient.getDefaultOptions()
+const defaultOptions = queryClient.getDefaultOptions();
 ```
 
 ## `queryClient.setDefaultOptions`
@@ -418,7 +457,7 @@ queryClient.setDefaultOptions({
   queries: {
     staleTime: Infinity,
   },
-})
+});
 ```
 
 ## `queryClient.getQueryDefaults`
@@ -426,7 +465,7 @@ queryClient.setDefaultOptions({
 The `getQueryDefaults` method returns the default options which have been set for specific queries:
 
 ```js
-const defaultOptions = queryClient.getQueryDefaults('posts')
+const defaultOptions = queryClient.getQueryDefaults("posts");
 ```
 
 ## `queryClient.setQueryDefaults`
@@ -434,10 +473,10 @@ const defaultOptions = queryClient.getQueryDefaults('posts')
 `setQueryDefaults` can be used to set default options for specific queries:
 
 ```js
-queryClient.setQueryDefaults('posts', { queryFn: fetchPosts })
+queryClient.setQueryDefaults("posts", { queryFn: fetchPosts });
 
 function Component() {
-  const { data } = useQuery('posts')
+  const { data } = useQuery("posts");
 }
 ```
 
@@ -451,7 +490,7 @@ function Component() {
 The `getMutationDefaults` method returns the default options which have been set for specific mutations:
 
 ```js
-const defaultOptions = queryClient.getMutationDefaults('addPost')
+const defaultOptions = queryClient.getMutationDefaults("addPost");
 ```
 
 ## `queryClient.setMutationDefaults`
@@ -459,10 +498,10 @@ const defaultOptions = queryClient.getMutationDefaults('addPost')
 `setMutationDefaults` can be used to set default options for specific mutations:
 
 ```js
-queryClient.setMutationDefaults('addPost', { mutationFn: addPost })
+queryClient.setMutationDefaults("addPost", { mutationFn: addPost });
 
 function Component() {
-  const { data } = useMutation('addPost')
+  const { data } = useMutation("addPost");
 }
 ```
 
@@ -476,7 +515,7 @@ function Component() {
 The `getQueryCache` method returns the query cache this client is connected to.
 
 ```js
-const queryCache = queryClient.getQueryCache()
+const queryCache = queryClient.getQueryCache();
 ```
 
 ## `queryClient.getMutationCache`
@@ -484,7 +523,7 @@ const queryCache = queryClient.getQueryCache()
 The `getMutationCache` method returns the mutation cache this client is connected to.
 
 ```js
-const mutationCache = queryClient.getMutationCache()
+const mutationCache = queryClient.getMutationCache();
 ```
 
 ## `queryClient.clear`
@@ -492,5 +531,5 @@ const mutationCache = queryClient.getMutationCache()
 The `clear` method clears all connected caches.
 
 ```js
-queryClient.clear()
+queryClient.clear();
 ```

@@ -21,23 +21,23 @@ npm install @testing-library/react-hooks react-test-renderer --save-dev
 
 ```js
 export function useCustomHook() {
-  return useQuery('customHook', () => 'Hello');
+  return useQuery("customHook", () => "Hello");
 }
 ```
 
 我们可以为此编写一个测试，如下所示：
 
 ```jsx
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 const wrapper = ({ children }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-)
+);
 
-const { result, waitFor } = renderHook(() => useCustomHook(), { wrapper })
+const { result, waitFor } = renderHook(() => useCustomHook(), { wrapper });
 
-await waitFor(() => result.current.isSuccess)
+await waitFor(() => result.current.isSuccess);
 
-expect(result.current.data).toEqual('Hello')
+expect(result.current.data).toEqual("Hello");
 ```
 
 注意，我们提供了一个自定义包装器，用于构建 `QueryClient` 和 `QueryClientProvider`。这有助于确保我们的测试与任何其他测试完全隔离。
@@ -56,15 +56,29 @@ const queryClient = new QueryClient({
       retry: false,
     },
   },
-})
+});
 const wrapper = ({ children }) => (
-  <QueryClientProvider client={queryClient}>
-    {children}
-  </QueryClientProvider>
+  <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
 );
 ```
 
-这将全局的设置所有查询都是"无重试"的。在`useQuery`显示的启用了重试时，这不会生效。如你在一次查询中设置了需要5次重试时，这不会生效，因为默认的全局配置只是作为 fallback 存在。
+这将全局的设置所有查询都是"无重试"的。在`useQuery`显示的启用了重试时，这不会生效。如你在一次查询中设置了需要 5 次重试时，这不会生效，因为默认的全局配置只是作为 fallback 存在。
+
+## 关闭关于网络的错误日志
+
+在测试时，通常我们会关闭关于网络错误的日志(文件/Console)。为此，我们可以使用`react-query`的`setLogger()`函数
+
+```js
+// 在你测试之前，设置它
+import { setLogger } from "react-query";
+
+setLogger({
+  log: console.log,
+  warn: console.warn,
+  // ✅ console 里没有错误记录了
+  error: () => {},
+});
+```
 
 ## 测试网络调用
 
@@ -76,29 +90,29 @@ React Query 的主要用途是缓存网络请求，因此，首先测试我们�
 
 ```js
 function useFetchData() {
-  return useQuery('fetchData', () => request('/api/data'))
+  return useQuery("fetchData", () => request("/api/data"));
 }
 ```
 
 我们可以为此编写一个测试，如下所示：
 
 ```jsx
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 const wrapper = ({ children }) => (
   <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
-)
+);
 
-const expectation = nock('http://example.com').get('/api/data').reply(200, {
+const expectation = nock("http://example.com").get("/api/data").reply(200, {
   answer: 42,
-})
+});
 
-const { result, waitFor } = renderHook(() => useFetchData(), { wrapper })
+const { result, waitFor } = renderHook(() => useFetchData(), { wrapper });
 
 await waitFor(() => {
-  return result.current.isSuccess
-})
+  return result.current.isSuccess;
+});
 
-expect(result.current).toEqual({ answer: 42 })
+expect(result.current).toEqual({ answer: 42 });
 ```
 
 在这里，我们使用 `waitFor` 并等待，直到查询状态表明请求已成功。
@@ -106,7 +120,7 @@ expect(result.current).toEqual({ answer: 42 })
 
 ## 测试 加载更多/无限滚动
 
-首先，我们需要模拟我们的API响应
+首先，我们需要模拟我们的 API 响应
 
 ```js
 function generateMockedResponse(page) {
@@ -121,10 +135,10 @@ function generateMockedResponse(page) {
 `uri` 的值在这里将是类似 `"/?page=1` 或 `/?page=2` 这种。
 
 ```js
-const expectation = nock('http://example.com')
+const expectation = nock("http://example.com")
   .persist()
   .query(true)
-  .get('/api/data')
+  .get("/api/data")
   .reply(200, (uri) => {
     const url = new URL(`http://example.com${uri}`);
     const { page } = Object.fromEntries(url.searchParams);
@@ -137,7 +151,9 @@ const expectation = nock('http://example.com')
 现在我们可以安全地运行我们的测试了，这里的技巧是在调用 `fetchNextPage()` 之后等待 `isFetching` 和 `!isFetching` ：
 
 ```js
-const { result, waitFor } = renderHook(() => useInfiniteQueryCustomHook(), { wrapper });
+const { result, waitFor } = renderHook(() => useInfiniteQueryCustomHook(), {
+  wrapper,
+});
 
 await waitFor(() => result.current.isSuccess);
 

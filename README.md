@@ -1,5 +1,7 @@
 # React-Query 中文文档（非官方）
 
+Offical Repo: https://github.com/tannerlinsley/react-query
+
 This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
 [Github 版本](https://cangsdarm.github.io/react-query-web-i18n/)
@@ -13,6 +15,6 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 ### 关于 Gitee
 
-Gitee有时会404或者过旧，这是因为Gitee同步的问题。
+Gitee 有时会 404 或者过旧，这是因为 Gitee 同步的问题。
 
 请以 Github 版本为准

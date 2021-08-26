@@ -23,13 +23,13 @@ title: 无限查询
 假设我们有一个基于游标索引的，且每次返回`projects`第三页的 API，以及一个可用于获取下一组项目的游标：
 
 ```js
-fetch('/api/projects?cursor=0')
+fetch("/api/projects?cursor=0");
 // { data: [...], nextCursor: 3}
-fetch('/api/projects?cursor=3')
+fetch("/api/projects?cursor=3");
 // { data: [...], nextCursor: 6}
-fetch('/api/projects?cursor=6')
+fetch("/api/projects?cursor=6");
 // { data: [...], nextCursor: 9}
-fetch('/api/projects?cursor=9')
+fetch("/api/projects?cursor=9");
 // { data: [...] }
 ```
 
@@ -43,11 +43,11 @@ fetch('/api/projects?cursor=9')
 > 例如，不要这样做：`<button onClick={fetchNextPage} />`，因为这会将`onClick`事件发送到`fetchNextPage`函数。
 
 ```js
-import { useInfiniteQuery } from 'react-query'
+import { useInfiniteQuery } from "react-query";
 
 function Projects() {
   const fetchProjects = ({ pageParam = 0 }) =>
-    fetch('/api/projects?cursor=' + pageParam)
+    fetch("/api/projects?cursor=" + pageParam);
 
   const {
     data,
@@ -57,13 +57,13 @@ function Projects() {
     isFetching,
     isFetchingNextPage,
     status,
-  } = useInfiniteQuery('projects', fetchProjects, {
+  } = useInfiniteQuery("projects", fetchProjects, {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  })
+  });
 
-  return status === 'loading' ? (
+  return status === "loading" ? (
     <p>Loading...</p>
-  ) : status === 'error' ? (
+  ) : status === "error" ? (
     <p>Error: {error.message}</p>
   ) : (
     <>
@@ -80,22 +80,43 @@ function Projects() {
           disabled={!hasNextPage || isFetchingNextPage}
         >
           {isFetchingNextPage
-            ? 'Loading more...'
+            ? "Loading more..."
             : hasNextPage
-            ? 'Load More'
-            : 'Nothing more to load'}
+            ? "Load More"
+            : "Nothing more to load"}
         </button>
       </div>
-      <div>{isFetching && !isFetchingNextPage ? 'Fetching...' : null}</div>
+      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
     </>
-  )
+  );
 }
 ```
 
 ## 当无限查询需要重新获取时会发生什么？
 
 当无限查询变得陈旧(`stale`)且需要重新获取时，将从第一个查询开始，按照对应顺序获取每个组。
-这样可以确保即使基础数据发生了修改，我们也不会使用过时的游标，也不会得到重复的记录或跳过记录。如果从 queryCache 中删除了无限查询的结果，则分页将在初始状态下重新启动，仅请求初始组。
+这样可以确保即使基础数据发生了修改，我们也不会使用过时的游标，也不会得到重复的记录或跳过记录。如果从 queryCache 中删除了无限查询的结果，则分页将在初始状态下重新启动，仅请求初始组(initial group)。
+
+### 重新获取页面
+
+如果你只想主动重新获取某一部分页面，可以通过传递给`refetch`(从`useInfiniteQuery`返回的)一个`refetchPage`函数来做到
+
+```js
+const { refetch } = useInfiniteQuery("projects", fetchProjects, {
+  getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+});
+
+// 只重新获取 index===0 的页面
+refetch({ refetchPage: (page, index) => index === 0 });
+```
+
+你也可以将该方法作为第二个参数(`queryFilters`)传递给[queryClient.refetchQueries](../reference/QueryClient#queryclientrefetchqueries), [queryClient.invalidateQueries](../reference/QueryClient#queryclientinvalidatequeries) 或者 [queryClient.resetQueries](../reference/QueryClient#queryclientresetqueries) 来做到同样的效果
+
+**函数签名**
+
+- `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
+
+该函数对每个页面执行一次，只有返回`true`的页面才会被重新获取。
 
 ## 如果我需要将自定义信息传递给查询功能怎么办？
 
@@ -105,7 +126,7 @@ function Projects() {
 ```js
 function Projects() {
   const fetchProjects = ({ pageParam = 0 }) =>
-    fetch('/api/projects?cursor=' + pageParam)
+    fetch("/api/projects?cursor=" + pageParam);
 
   const {
     status,
@@ -114,12 +135,12 @@ function Projects() {
     isFetchingNextPage,
     fetchNextPage,
     hasNextPage,
-  } = useInfiniteQuery('projects', fetchProjects, {
+  } = useInfiniteQuery("projects", fetchProjects, {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  })
+  });
 
   // 传递您自己的页面参数
-  const skipToCursor50 = () => fetchNextPage({ pageParam: 50 })
+  const skipToCursor50 = () => fetchNextPage({ pageParam: 50 });
 }
 ```
 
@@ -128,10 +149,10 @@ function Projects() {
 双向列表可以通过使用`getPreviousPageParam`，`fetchPreviousPage`，`hasPreviousPage`和`isFetchingPreviousPage`属性和函数来实现。
 
 ```js
-useInfiniteQuery('projects', fetchProjects, {
+useInfiniteQuery("projects", fetchProjects, {
   getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
   getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor,
-})
+});
 ```
 
 ## 如果我想以相反的顺序显示页面呢？
@@ -139,12 +160,12 @@ useInfiniteQuery('projects', fetchProjects, {
 有时您可能想以相反的顺序显示页面。 在这种情况下，可以使用`select`选项：
 
 ```js
-useInfiniteQuery('projects', fetchProjects, {
+useInfiniteQuery("projects", fetchProjects, {
   select: (data) => ({
     pages: [...data.pages].reverse(),
     pageParams: [...data.pageParams].reverse(),
   }),
-})
+});
 ```
 
 ## 如果要手动更新无限查询该怎么办
@@ -152,23 +173,24 @@ useInfiniteQuery('projects', fetchProjects, {
 手动删除第一页：
 
 ```js
-queryClient.setQueryData('projects', (data) => ({
+queryClient.setQueryData("projects", (data) => ({
   pages: data.pages.slice(1),
   pageParams: data.pageParams.slice(1),
-}))
+}));
 ```
 
 从单独页面中手动删除单个值：
 
 ```js
-const newPagesArray = oldPagesArray?.pages.map((page) =>
-  page.filter((val) => val.id !== updatedId)
-) ?? []
+const newPagesArray =
+  oldPagesArray?.pages.map((page) =>
+    page.filter((val) => val.id !== updatedId)
+  ) ?? [];
 
-queryClient.setQueryData('projects', (data) => ({
+queryClient.setQueryData("projects", (data) => ({
   pages: newPagesArray,
   pageParams: data.pageParams,
-}))
+}));
 ```
 
 确保分页页面和`pageParams`保持相同的数据结构！
