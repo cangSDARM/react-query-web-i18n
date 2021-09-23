@@ -28,12 +28,12 @@ React Query 支持两种在服务器上预取数据并将其传递给 queryClien
 
 ```js
 export async function getStaticProps() {
-  const posts = await getPosts()
-  return { props: { posts } }
+  const posts = await getPosts();
+  return { props: { posts } };
 }
 
 function Posts(props) {
-  const { data } = useQuery('posts', getPosts, { initialData: props.posts })
+  const { data } = useQuery("posts", getPosts, { initialData: props.posts });
 
   // ...
 }
@@ -49,21 +49,21 @@ function Posts(props) {
 
 React Query 支持在 Next.js 中预取服务器上的多个查询，然后将这些查询 _dehydrating_ 到 queryClient。
 这意味着服务器可以预渲染那些在页面加载时立即可用的标记，并且一旦 JS 可用，React Query 就可以使用库的全部功能来升级或合并这些查询。
-这包括在客户端重新获取某些查询，如果它们在服务器渲染后变得过时的话。
+这包括在客户端重新获取某些查询，如果它们在服务器渲染后已经过时的话。
 
 要支持在服务器上缓存查询并设置 hydration，请执行以下操作：
 
 - **在应用内部创建一个新的 ref/state 用来保存`QueryClient` 实例**。 这样可以确保**不同的用户和请求之间不会共享数据，而且在每个组件的生命周期中只用创建一次`QueryClient`**
-- 用 `<QueryClientProvider>` 包装您的应用组件，并将其传递给客户端实例
+- 用 `<QueryClientProvider>` 包装您的应用组件，并传递给它 `QueryClient` 实例
 - 用 `<Hydrate>` 包装您的应用组件，并将 `pageProps` 的 `dehydratedState` 传递给它
 
 ```jsx
 // 以下是state的例子，ref类似
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { Hydrate } from 'react-query/hydration'
+// _app.jsx
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 
 export default function MyApp({ Component, pageProps }) {
-  const [queryClient] = React.useState(() => new QueryClient())
+  const [queryClient] = React.useState(() => new QueryClient());
 
   return (
     <QueryClientProvider client={queryClient}>
@@ -71,7 +71,7 @@ export default function MyApp({ Component, pageProps }) {
         <Component {...pageProps} />
       </Hydrate>
     </QueryClientProvider>
-  )
+  );
 }
 ```
 
@@ -86,27 +86,26 @@ export default function MyApp({ Component, pageProps }) {
 
 ```js
 // pages/posts.jsx
-import { QueryClient, useQuery } from 'react-query'
-import { dehydrate } from 'react-query/hydration'
+import { dehydrate, QueryClient, useQuery } from "react-query";
 
 export async function getStaticProps() {
-  const queryClient = new QueryClient()
+  const queryClient = new QueryClient();
 
-  await queryClient.prefetchQuery('posts', getPosts)
+  await queryClient.prefetchQuery("posts", getPosts);
 
   return {
     props: {
       dehydratedState: dehydrate(queryClient),
     },
-  }
+  };
 }
 
 function Posts() {
   // 这种useQuery也可能发生在 `Posts` 页面的更深层子目录中，无论哪种方式，数据都将立即可用
-  const { data } = useQuery('posts', getPosts)
+  const { data } = useQuery("posts", getPosts);
 
   // 这个查询不是在服务器上预取的，而是直到在客户端上才开始取，这两种模式可以混合使用
-  const { data: otherData } = useQuery('posts-2', getPosts)
+  const { data: otherData } = useQuery("posts-2", getPosts);
 
   // ...
 }
@@ -133,13 +132,17 @@ function Posts() {
 > 安全说明：使用 `JSON.stringify` 序列化数据可能使您面临 XSS 攻击的风险，[此博客文章](https://medium.com/node-security/the-most-common-xss-vulnerability-in-react-js-applications-2bdffbcc1fa0)解释了为什么以及如何解决它
 
 ```jsx
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { dehydrate, Hydrate } from 'react-query/hydration'
+import {
+  dehydrate,
+  Hydrate,
+  QueryClient,
+  QueryClientProvider,
+} from "react-query";
 
-function handleRequest (req, res) {
-  const queryClient = new QueryClient()
-  await queryClient.prefetchQuery('key', fn)
-  const dehydratedState = dehydrate(queryClient)
+function handleRequest(req, res) {
+  const queryClient = new QueryClient();
+  await queryClient.prefetchQuery("key", fn);
+  const dehydratedState = dehydrate(queryClient);
 
   const html = ReactDOM.renderToString(
     <QueryClientProvider client={queryClient}>
@@ -147,7 +150,7 @@ function handleRequest (req, res) {
         <App />
       </Hydrate>
     </QueryClientProvider>
-  )
+  );
 
   res.send(`
     <html>
@@ -158,7 +161,7 @@ function handleRequest (req, res) {
         </script>
       </body>
     </html>
-  `)
+  `);
 }
 ```
 
@@ -169,12 +172,11 @@ function handleRequest (req, res) {
 - 和服务端类似，**与客户端的 Provider 一起使用 dehydrated 状态渲染您的应用**。这是**非常重要**的！您必须使用**相同的 dehydrated 状态渲染服务器和客户端**，以确保**客户端上的 hydration 产生与服务器完全相同的标记**。
 
 ```jsx
-import { QueryClient, QueryClientProvider } from 'react-query'
-import { Hydrate } from 'react-query/hydration'
+import { Hydrate, QueryClient, QueryClientProvider } from "react-query";
 
-const dehydratedState = window.__REACT_QUERY_STATE__
+const dehydratedState = window.__REACT_QUERY_STATE__;
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 ReactDOM.hydrate(
   <QueryClientProvider client={queryClient}>
@@ -182,8 +184,8 @@ ReactDOM.hydrate(
       <App />
     </Hydrate>
   </QueryClientProvider>,
-  document.getElementById('root'),
-)
+  document.getElementById("root")
+);
 ```
 
 ## 提示、技巧和注意事项
@@ -202,11 +204,11 @@ ReactDOM.hydrate(
 
 一个查询被认为是过时的，这取决于它是何时被标记为 `dataUpdatedAt` 的。
 这里需要注意的是，服务器需要有正确的时间才能正常工作。
-React Query **使用的是UTC时间**，所以时区不需要考虑在内。
+React Query **使用的是 UTC 时间**，所以时区不需要考虑在内。
 
 由于 `staleTime` 默认为 `0`，因此默认情况下，在页面加载时，查询就将在后台重新获取。
 您可能希望使用较高的过期时间来避免这种双重获取，特别是在不缓存标记的情况下。
 
-在CDN中缓存标记时，这种对陈旧查询的重新获取是完美的选择！
+在 CDN 中缓存标记时，这种对陈旧查询的重新获取是完美的选择！
 您可以将页面本身的缓存时间设置得相当高，以避免不得不在服务器上重新渲染页面，但是可以将查询的 `staleTime` 配置得较低，以确保用户访问该页面后立即在后台重新获取数据。
 当然，或许您可以设置得将页面缓存一周，但如果数据大于一天，则在页面加载时自动重新获取数据？

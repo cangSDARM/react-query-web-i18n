@@ -4,7 +4,7 @@ title: Suspense
 ---
 
 > 注意：React Query 的 Suspense 模式是实验性的，与数据获取本身的 Suspense 模式相同。
-> 除非您将 React 和 React Query 版本都**锁定为彼此兼容的补丁级别**，否则这些 API 将会**更改**，并且**不应在生产中使用**。
+> 除非您将 React 和 React Query 版本都**锁定为彼此兼容的补丁级别**，否则这些 API 将会**更改**，且**不应在生产中使用**。
 
 React Query 也可以与 React 的新 Suspense for Data Fetching API 一起使用。
 要启用此模式，可以将全局或查询级别配置的 `suspense` 选项设置为 `true`。
@@ -12,7 +12,7 @@ React Query 也可以与 React 的新 Suspense for Data Fetching API 一起使�
 全局配置：
 
 ```jsx
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from "react-query";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -20,23 +20,23 @@ const queryClient = new QueryClient({
       suspense: true,
     },
   },
-})
+});
 
 function Root() {
   return (
     <QueryClientProvider client={queryClient}>
       <App />
     </QueryClientProvider>
-  )
+  );
 }
 ```
 
 单独配置
 
 ```js
-import { useQuery } from 'react-query'
+import { useQuery } from "react-query";
 
-useQuery(queryKey, queryFn, { suspense: true })
+useQuery(queryKey, queryFn, { suspense: true });
 ```
 
 使用 Suspense 模式时，不需要 `status` 状态和 `error` 对象。
@@ -57,8 +57,8 @@ useQuery(queryKey, queryFn, { suspense: true })
 使用组件时，它将重置组件范围内的所有查询错误：
 
 ```jsx
-import { QueryErrorResetBoundary } from 'react-query'
-import { ErrorBoundary } from 'react-error-boundary'
+import { QueryErrorResetBoundary } from "react-query";
+import { ErrorBoundary } from "react-error-boundary";
 
 const App: React.FC = () => (
   <QueryErrorResetBoundary>
@@ -76,18 +76,18 @@ const App: React.FC = () => (
       </ErrorBoundary>
     )}
   </QueryErrorResetBoundary>
-)
+);
 ```
 
 当使用该 hook 时，它将重置最近的 `QueryErrorResetBoundary` 内的任何查询错误。
 如果没有定义边界，它将全局重置它们：
 
 ```jsx
-import { useQueryErrorResetBoundary } from 'react-query'
-import { ErrorBoundary } from 'react-error-boundary'
+import { useQueryErrorResetBoundary } from "react-query";
+import { ErrorBoundary } from "react-error-boundary";
 
 const App: React.FC = () => {
-  const { reset } = useQueryErrorResetBoundary()
+  const { reset } = useQueryErrorResetBoundary();
   return (
     <ErrorBoundary
       onReset={reset}
@@ -100,8 +100,8 @@ const App: React.FC = () => {
     >
       <Page />
     </ErrorBoundary>
-  )
-}
+  );
+};
 ```
 
 ## 渲染时获取 vs 按需渲染

@@ -8,8 +8,8 @@ title: 查询数据占位符
 占位数据使查询的行为就像已具有数据一样，类似于`initialData`选项，但是**数据不会持久保存到缓存中**。
 如果有足够多的部分(或虚假)数据来成功地呈现查询，而实际数据是在后台获取的，那么这就很方便了。
 
-> 示例：单个博客帖子查询可以从博客帖子的父列表中提取"预览"数据，该列表仅包括标题和帖子正文的一小段。
-> 您可能不希望将此部分数据持久化到单个查询的查询结果中，但是它对于在实际查询中完成获取整个对象时尽可能快地显示内容布局非常有用。
+> 示例：单个博客帖子查询可以看作是：从博客帖子的父列表中提取"预览"数据，该列表仅包括标题和帖子正文的一小段。
+> 此时，您可能不希望将此部分数据持久化到单个查询的查询结果中，但是它对于在实际查询中完成获取整个对象时尽可能快地显示内容布局非常有用。
 
 有几种在需要之前将查询的占位数据提供给缓存的方法：
 
@@ -22,9 +22,9 @@ title: 查询数据占位符
 
 ```js
 function Todos() {
-  const result = useQuery('todos', () => fetch('/todos'), {
+  const result = useQuery("todos", () => fetch("/todos"), {
     placeholderData: placeholderTodos,
-  })
+  });
 }
 ```
 
@@ -34,8 +34,8 @@ function Todos() {
 
 ```js
 function Todos() {
-  const placeholderData = useMemo(() => generateFakeTodos(), [])
-  const result = useQuery('todos', () => fetch('/todos'), { placeholderData })
+  const placeholderData = useMemo(() => generateFakeTodos(), []);
+  const result = useQuery("todos", () => fetch("/todos"), { placeholderData });
 }
 ```
 
@@ -45,13 +45,21 @@ function Todos() {
 
 ```js
 function Todo({ blogPostId }) {
-  const result = useQuery(['blogPost', blogPostId], () => fetch(`/blogPosts/${blogPostId}`), {
-    placeholderData: () => {
-      // 使用 `blogPosts` 查询中的预览版(较小的)作为这个blogPost查询的占位数据
-      return queryClient
-        .getQueryData('blogPosts')
-        ?.find((d) => d.id === blogPostId)
-    },
-  })
+  const result = useQuery(
+    ["blogPost", blogPostId],
+    () => fetch(`/blogPosts/${blogPostId}`),
+    {
+      placeholderData: () => {
+        // 使用 `blogPosts` 查询中的预览版(较小的)作为这个blogPost查询的占位数据
+        return queryClient
+          .getQueryData("blogPosts")
+          ?.find((d) => d.id === blogPostId);
+      },
+    }
+  );
 }
 ```
+
+## 延伸阅读
+
+如果对于`Initial Data`和`Placeholder Data`有困惑的话，请参考[此社区内容(英文)](https://react-query.tanstack.com/community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)

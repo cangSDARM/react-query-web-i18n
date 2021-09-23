@@ -20,9 +20,9 @@ title: 初始化的查询数据
 
 ```js
 function Todos() {
-  const result = useQuery('todos', () => fetch('/todos'), {
+  const result = useQuery("todos", () => fetch("/todos"), {
     initialData: initialTodos,
-  })
+  });
 }
 ```
 
@@ -35,9 +35,9 @@ function Todos() {
   ```js
   function Todos() {
     // 将立即显示 initialTodos，但在挂载后也将立即重新显示TODOS
-    const result = useQuery('todos', () => fetch('/todos'), {
+    const result = useQuery("todos", () => fetch("/todos"), {
       initialData: initialTodos,
-    })
+    });
   }
   ```
 
@@ -46,24 +46,24 @@ function Todos() {
   ```js
   function Todos() {
     // 立即显示 initialTodos，但是直到 1000 ms 之后遇到另一个交互事件时才重新获取数据
-    const result = useQuery('todos', () => fetch('/todos'), {
+    const result = useQuery("todos", () => fetch("/todos"), {
       initialData: initialTodos,
       staleTime: 1000,
-    })
+    });
   }
   ```
 
-- 那么，如果您的`initialData`并不完全新鲜怎么办？这就引出了最后一个配置项，它实际上是最准确的，使用了一个名为`initialDataUpdatedAt`的选项。该选项允许你传递一个`Number`类型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。(请注意，如果您使用的是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳。)
+- 那么，如果您的`initialData`并不完全新鲜怎么办？这就引出了最后一个配置项，它实际上是最准确的，使用了一个名为`initialDataUpdatedAt`的选项。该选项允许你传递一个`Number`类型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。(请注意，如果您使用的是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳)
 
   ```js
   function Todos() {
     // 立即显示 initialTodos，但是直到 1000 ms 之后遇到另一个交互事件时才重新获取数据
-    const result = useQuery('todos', () => fetch('/todos'), {
+    const result = useQuery("todos", () => fetch("/todos"), {
       initialData: initialTodos,
       staleTime: 60 * 1000, // 1 minute
       // 这可能是10秒前或10分钟前
-      initialDataUpdatedAt: initialTodosUpdatedTimestamp // eg. 1608412420052
-    })
+      initialDataUpdatedAt: initialTodosUpdatedTimestamp, // eg. 1608412420052
+    });
   }
   ```
 
@@ -77,11 +77,11 @@ function Todos() {
 
 ```js
 function Todos() {
-  const result = useQuery('todos', () => fetch('/todos'), {
+  const result = useQuery("todos", () => fetch("/todos"), {
     initialData: () => {
-      return getExpensiveTodos()
+      return getExpensiveTodos();
     },
-  })
+  });
 }
 ```
 
@@ -91,12 +91,12 @@ function Todos() {
 
 ```js
 function Todo({ todoId }) {
-  const result = useQuery(['todo', todoId], () => fetch('/todos'), {
+  const result = useQuery(["todo", todoId], () => fetch("/todos"), {
     initialData: () => {
       // 将 `todos` 查询中的 TODOs 用作此 TODOs 查询的初始数据
-      return queryClient.getQueryData('todos')?.find((d) => d.id === todoId)
+      return queryClient.getQueryData("todos")?.find((d) => d.id === todoId);
     },
-  })
+  });
 }
 ```
 
@@ -107,12 +107,12 @@ function Todo({ todoId }) {
 
 ```js
 function Todo({ todoId }) {
-  const result = useQuery(['todo', todoId], () => fetch(`/todos/${todoId}`), {
+  const result = useQuery(["todo", todoId], () => fetch(`/todos/${todoId}`), {
     initialData: () =>
-      queryClient.getQueryData('todos')?.find((d) => d.id === todoId),
+      queryClient.getQueryData("todos")?.find((d) => d.id === todoId),
     initialDataUpdatedAt: () =>
-      queryClient.getQueryState('todos')?.dataUpdatedAt,
-  })
+      queryClient.getQueryState("todos")?.dataUpdatedAt,
+  });
 }
 ```
 
@@ -123,19 +123,23 @@ function Todo({ todoId }) {
 
 ```js
 function Todo({ todoId }) {
-  const result = useQuery(['todo', todoId], () => fetch(`/todos/${todoId}`), {
+  const result = useQuery(["todo", todoId], () => fetch(`/todos/${todoId}`), {
     initialData: () => {
       // 获取查询状态
-      const state = queryClient.getQueryState('todos')
+      const state = queryClient.getQueryState("todos");
 
       // 如果查询存在并且数据"老得"不超过10秒...
       if (state && Date.now() - state.dataUpdatedAt <= 10 * 1000) {
         // 返回单个todo
-        return state.data.find((d) => d.id === todoId)
+        return state.data.find((d) => d.id === todoId);
       }
 
       // 否则，返回undefined并让它从硬加载状态获取!
     },
-  })
+  });
 }
 ```
+
+## 延伸阅读
+
+如果对于`Initial Data`和`Placeholder Data`有困惑的话，请参考[此社区内容(英文)](https://react-query.tanstack.com/community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)

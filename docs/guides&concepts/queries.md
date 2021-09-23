@@ -17,10 +17,10 @@ title: 查询
   - 抛出错误
 
 ```js
-import { useQuery } from 'react-query'
+import { useQuery } from "react-query";
 
 function App() {
-  const info = useQuery('todos', fetchTodoList)
+  const info = useQuery("todos", fetchTodoList);
 }
 ```
 
@@ -29,7 +29,7 @@ function App() {
 `useQuery`返回的查询结果将包含有所有关于排版(templating)和数据所需要的信息：
 
 ```js
-const result = useQuery('todos', fetchTodoList)
+const result = useQuery("todos", fetchTodoList);
 ```
 
 `result`对象包含一些非常重要的状态，您需要注意这些状态才能提高工作效率。
@@ -50,14 +50,14 @@ const result = useQuery('todos', fetchTodoList)
 
 ```js
 function Todos() {
-  const { isLoading, isError, data, error } = useQuery('todos', fetchTodoList)
+  const { isLoading, isError, data, error } = useQuery("todos", fetchTodoList);
 
   if (isLoading) {
-    return <span>Loading...</span>
+    return <span>Loading...</span>;
   }
 
   if (isError) {
-    return <span>Error: {error.message}</span>
+    return <span>Error: {error.message}</span>;
   }
 
   // 现在我们可以假设 `isSuccess === true`
@@ -67,7 +67,7 @@ function Todos() {
         <li key={todo.id}>{todo.title}</li>
       ))}
     </ul>
-  )
+  );
 }
 ```
 
@@ -75,14 +75,14 @@ function Todos() {
 
 ```js
 function Todos() {
-  const { status, data, error } = useQuery('todos', fetchTodoList)
+  const { status, data, error } = useQuery("todos", fetchTodoList);
 
-  if (status === 'loading') {
-    return <span>Loading...</span>
+  if (status === "loading") {
+    return <span>Loading...</span>;
   }
 
-  if (status === 'error') {
-    return <span>Error: {error.message}</span>
+  if (status === "error") {
+    return <span>Error: {error.message}</span>;
   }
 
   // 也是 `status ==='success'`，但是 “else” 逻辑也起作用
@@ -92,6 +92,10 @@ function Todos() {
         <li key={todo.id}>{todo.title}</li>
       ))}
     </ul>
-  )
+  );
 }
 ```
+
+## 延伸阅读
+
+对于执行状态检查的另一种方法感兴趣的话，请参阅[此社区资源](https://react-query.tanstack.com/community/tkdodos-blog#4-status-checks-in-react-query)

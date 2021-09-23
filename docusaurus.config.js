@@ -13,7 +13,6 @@ module.exports = {
   },
   ssrTemplate: require("./ssr-template.js").default,
   themeConfig: {
-    sidebarCollapsible: false,
     navbar: {
       title: "React Query 中文文档",
       logo: {
@@ -68,6 +67,7 @@ module.exports = {
           editUrl: "https://github.com/cangSDARM/react-query-web-i18n",
           routeBasePath: "/",
           showLastUpdateTime: true,
+          sidebarCollapsible: false,
         },
         blog: false,
         theme: {

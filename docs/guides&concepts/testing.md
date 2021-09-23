@@ -112,7 +112,7 @@ await waitFor(() => {
   return result.current.isSuccess;
 });
 
-expect(result.current).toEqual({ answer: 42 });
+expect(result.current.data).toEqual({ answer: 42 });
 ```
 
 在这里，我们使用 `waitFor` 并等待，直到查询状态表明请求已成功。
@@ -171,3 +171,7 @@ expect(result.current.data.pages).toStrictEqual([
 
 expectation.done();
 ```
+
+## 延伸阅读
+
+有关如何通过`mock-service-worker`的相关设置来进行测试，请参阅[此社区资源](https://react-query.tanstack.com/community/tkdodos-blog#5-testing-react-query)

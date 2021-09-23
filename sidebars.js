@@ -63,6 +63,13 @@ module.exports = {
         href: "https://react-query.tanstack.com/examples/simple",
       },
     ],
+    "社区教程/博客": [
+      {
+        type: "link",
+        label: "TkDodo's Blog",
+        href: "https://react-query.tanstack.com/community/tkdodos-blog",
+      },
+    ],
     插件: plugins,
     API参考: [
       {

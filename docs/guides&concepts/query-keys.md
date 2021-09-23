@@ -68,6 +68,10 @@ useQuery(['todos', undefined, page, status], ...)
 
 ```js
 function Todos({ todoId }) {
-  const result = useQuery(['todos', todoId], () => fetchTodoById(todoId))
+  const result = useQuery(["todos", todoId], () => fetchTodoById(todoId));
 }
 ```
+
+## 延伸阅读
+
+在大型应用程序中如何组织你的查询键值？请参阅[此社区资源](https://react-query.tanstack.com/community/tkdodos-blog#8-effective-react-query-keys)
