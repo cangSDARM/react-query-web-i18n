@@ -16,17 +16,17 @@ const queryClient = new QueryClient({
       refetchOnWindowFocus: false,
     },
   },
-})
+});
 
 function App() {
-  return <QueryClientProvider client={queryClient}>...</QueryClientProvider>
+  return <QueryClientProvider client={queryClient}>...</QueryClientProvider>;
 }
 ```
 
 #### 单独禁用
 
 ```js
-useQuery('todos', fetchTodos, { refetchOnWindowFocus: false })
+useQuery("todos", fetchTodos, { refetchOnWindowFocus: false });
 ```
 
 ## 自定义窗口 Focus 事件
@@ -38,17 +38,17 @@ useQuery('todos', fetchTodos, { refetchOnWindowFocus: false })
 ```js
 focusManager.setEventListener((handleFocus) => {
   // 监听可见的变化和焦点
-  if (typeof window !== 'undefined' && window.addEventListener) {
-    window.addEventListener('visibilitychange', handleFocus, false)
-    window.addEventListener('focus', handleFocus, false)
+  if (typeof window !== "undefined" && window.addEventListener) {
+    window.addEventListener("visibilitychange", handleFocus, false);
+    window.addEventListener("focus", handleFocus, false);
   }
 
   return () => {
     // 如果设置了新的处理程序，确保取消订阅
-    window.removeEventListener('visibilitychange', handleFocus)
-    window.removeEventListener('focus', handleFocus)
-  }
-})
+    window.removeEventListener("visibilitychange", handleFocus);
+    window.removeEventListener("focus", handleFocus);
+  };
+});
 ```
 
 ## 忽略 Iframe 的 Focus 事件
@@ -58,10 +58,10 @@ focusManager.setEventListener((handleFocus) => {
 如果遇到这种情况，你应该使用一个尽可能忽略这些事件的事件处理函数。例如使用[这个 Gist](https://gist.github.com/tannerlinsley/1d3a2122332107fcd8c9cc379be10d88)：
 
 ```js
-import { focusManager } from 'react-query'
-import onWindowFocus from './onWindowFocus' // The gist
+import { focusManager } from "react-query";
+import onWindowFocus from "./onWindowFocus"; // The gist
 
-focusManager.setEventListener(onWindowFocus) // Boom!
+focusManager.setEventListener(onWindowFocus); // Boom!
 ```
 
 ## 在 React Native 中管理焦点
@@ -69,26 +69,32 @@ focusManager.setEventListener(onWindowFocus) // Boom!
 React Native 通过[`AppState`模块](https://reactnative.dev/docs/appstate#app-states)提供焦点信息，而不是窗口上的事件侦听器。当应用状态更改为“active”时，可以使用`AppState`的“change”事件来触发更新：
 
 ```js
-import { AppState } from 'react-native'
-import { focusManager } from 'react-query'
+import { AppState } from "react-native";
+import { focusManager } from "react-query";
 
 focusManager.setEventListener((handleFocus) => {
-  AppState.addEventListener('change', handleFocus)
+  AppState.addEventListener("change", handleFocus);
 
   return () => {
-    AppState.removeEventListener('change', handleFocus)
-  }
-})
+    AppState.removeEventListener("change", handleFocus);
+  };
+});
 ```
 
 ## 管理焦点状态
 
 ```js
-import { focusManager } from 'react-query'
+import { focusManager } from "react-query";
 
 // 覆盖默认的焦点状态
-focusManager.setFocused(true)
+focusManager.setFocused(true);
 
 // 回退到默认的焦点检查
-focusManager.setFocused(undefined)
+focusManager.setFocused(undefined);
 ```
+
+## 陷阱和警告
+
+一些浏览器内部的对话窗口——如 `alert()` 或文件上传(`<input type="file" />`) 之类的产生的，也可能在它们关闭后触发窗口焦点的数据获取动作。
+这可能会导致不必要的副作用，因为数据的重新获取可能会触发组件卸载或重新挂载，甚至远在执行文件上传处理的步骤之前。
+请查看[此 Issue](https://github.com/tannerlinsley/react-query/issues/2960) 以了解背景及相关的解决办法

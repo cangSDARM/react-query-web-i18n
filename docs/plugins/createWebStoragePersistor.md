@@ -16,8 +16,8 @@ This utility comes packaged with `react-query` and is available under the `react
 - Pass it to the [`persistQueryClient`](./persist-query-client.md) function
 
 ```ts
-import { persistQueryClient } from 'react-query/persistQueryClient-experimental'
-import { createWebStoragePersistor } from 'react-query/createWebStoragePersistor-experimental'
+import { persistQueryClient } from "react-query/persistQueryClient-experimental";
+import { createWebStoragePersistor } from "react-query/createWebStoragePersistor-experimental";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -25,15 +25,17 @@ const queryClient = new QueryClient({
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
-})
+});
 
-const localStoragePersistor = createWebStoragePersistor({ storage: window.localStorage })
+const localStoragePersistor = createWebStoragePersistor({
+  storage: window.localStorage,
+});
 // const sessionStoragePersistor = createWebStoragePersistor({ storage: window.sessionStorage })
 
 persistQueryClient({
   queryClient,
   persistor: localStoragePersistor,
-})
+});
 ```
 
 ## API
@@ -51,12 +53,16 @@ createWebStoragePersistor(options: CreateWebStoragePersistorOptions)
 ```ts
 interface CreateWebStoragePersistorOptions {
   /** The storage client used for setting an retrieving items from cache (window.localStorage or window.sessionStorage) */
-  storage: Storage
+  storage: Storage;
   /** The key to use when storing the cache */
-  key?: string
+  key?: string;
   /** To avoid spamming,
    * pass a time in ms to throttle saving the cache to disk */
-  throttleTime?: number
+  throttleTime?: number;
+  /** How to serialize the data to storage */
+  serialize?: (client: PersistedClient) => string;
+  /** How to deserialize the data from storage */
+  deserialize?: (cachedString: string) => PersistedClient;
 }
 ```
 
@@ -66,5 +72,7 @@ The default options are:
 {
   key = `REACT_QUERY_OFFLINE_CACHE`,
   throttleTime = 1000,
+  serialize = JSON.stringify,
+  deserialize = JSON.parse,
 }
 ```

@@ -272,3 +272,7 @@ hydrate(queryClient, state)
 // 重启修改
 queryClient.resumePausedMutations()
 ```
+
+## 衍生阅读
+
+要了解更多关于修改的信息，请查看[此社区内容(英文)](https://react-query.tanstack.com/community/tkdodos-blog#12-mastering-mutations-in-react-query)

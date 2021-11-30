@@ -8,18 +8,18 @@ The `QueryCache` is the storage mechanism for React Query. It stores all the dat
 **Normally, you will not interact with the QueryCache directly and instead use the `QueryClient` for a specific cache.**
 
 ```js
-import { QueryCache } from 'react-query'
+import { QueryCache } from "react-query";
 
 const queryCache = new QueryCache({
-  onError: error => {
-    console.log(error)
+  onError: (error) => {
+    console.log(error);
   },
-  onSuccess: data => {
-    console.log(data)
-  }
-})
+  onSuccess: (data) => {
+    console.log(data);
+  },
+});
 
-const query = queryCache.find('posts')
+const query = queryCache.find("posts");
 ```
 
 Its available methods are:
@@ -42,6 +42,7 @@ Its available methods are:
 ## Global callbacks
 
 The `onError` and `onSuccess` callbacks on the QueryCache can be used to handle these events on a global level. They are different to `defaultOptions` provided to the QueryClient because:
+
 - `defaultOptions` can be overridden by each Query - the global callbacks will **always** be called.
 - `defaultOptions` callbacks will be called once for each Observer, while the global callbacks will only be called once per Query.
 
@@ -52,7 +53,7 @@ The `onError` and `onSuccess` callbacks on the QueryCache can be used to handle 
 > Note: This is not typically needed for most applications, but can come in handy when needing more information about a query in rare scenarios (eg. Looking at the query.state.dataUpdatedAt timestamp to decide whether a query is fresh enough to be used as an initial value)
 
 ```js
-const query = queryCache.find(queryKey)
+const query = queryCache.find(queryKey);
 ```
 
 **Options**
@@ -72,7 +73,7 @@ const query = queryCache.find(queryKey)
 > Note: This is not typically needed for most applications, but can come in handy when needing more information about a query in rare scenarios
 
 ```js
-const queries = queryCache.findAll(queryKey)
+const queries = queryCache.findAll(queryKey);
 ```
 
 **Options**
@@ -90,11 +91,11 @@ const queries = queryCache.findAll(queryKey)
 The `subscribe` method can be used to subscribe to the query cache as a whole and be informed of safe/known updates to the cache like query states changing or queries being updated, added or removed
 
 ```js
-const callback = query => {
-  console.log(query)
-}
+const callback = (event) => {
+  console.log(event.type, event.query);
+};
 
-const unsubscribe = queryCache.subscribe(callback)
+const unsubscribe = queryCache.subscribe(callback);
 ```
 
 **Options**
@@ -113,5 +114,5 @@ const unsubscribe = queryCache.subscribe(callback)
 The `clear` method can be used to clear the cache entirely and start fresh.
 
 ```js
-queryCache.clear()
+queryCache.clear();
 ```

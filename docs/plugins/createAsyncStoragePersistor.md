@@ -17,9 +17,9 @@ This utility comes packaged with `react-query` and is available under the `react
 - Pass it to the [`persistQueryClient`](./persist-query-client.md) function
 
 ```ts
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { persistQueryClient } from 'react-query/persistQueryClient-experimental'
-import { createAsyncStoragePersistor } from 'react-query/createAsyncStoragePersistor-experimental'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persistQueryClient } from "react-query/persistQueryClient-experimental";
+import { createAsyncStoragePersistor } from "react-query/createAsyncStoragePersistor-experimental";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -27,23 +27,23 @@ const queryClient = new QueryClient({
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
-})
+});
 
 const asyncStoragePersistor = createAsyncStoragePersistor({
-  storage: AsyncStorage
-})
+  storage: AsyncStorage,
+});
 
 persistQueryClient({
   queryClient,
   persistor: asyncStoragePersistor,
-})
+});
 ```
 
 ## API
 
 ### `createAsyncStoragePersistor`
 
-Call this function to create an asyncStoragePersistor that you can use later with `persisteQueryClient`.
+Call this function to create an asyncStoragePersistor that you can use later with `persistQueryClient`.
 
 ```js
 createAsyncStoragePersistor(options: CreateAsyncStoragePersistorOptions)
@@ -54,18 +54,22 @@ createAsyncStoragePersistor(options: CreateAsyncStoragePersistorOptions)
 ```ts
 interface CreateAsyncStoragePersistorOptions {
   /** The storage client used for setting an retrieving items from cache */
-  storage: AsyncStorage
-  /** The key to use when storing the cache to localstorage */
-  key?: string
-  /** To avoid localstorage spamming,
+  storage: AsyncStorage;
+  /** The key to use when storing the cache to localStorage */
+  key?: string;
+  /** To avoid localStorage spamming,
    * pass a time in ms to throttle saving the cache to disk */
-  throttleTime?: number
+  throttleTime?: number;
+  /** How to serialize the data to storage */
+  serialize?: (client: PersistedClient) => string;
+  /** How to deserialize the data from storage */
+  deserialize?: (cachedString: string) => PersistedClient;
 }
 
 interface AsyncStorage {
-  getItem: (key: string) => Promise<string>
-  setItem: (key: string, value: string) => Promise<unknown>
-  removeItem: (key: string) => Promise<unknown>
+  getItem: (key: string) => Promise<string>;
+  setItem: (key: string, value: string) => Promise<unknown>;
+  removeItem: (key: string) => Promise<unknown>;
 }
 ```
 
@@ -75,5 +79,7 @@ The default options are:
 {
   key = `REACT_QUERY_OFFLINE_CACHE`,
   throttleTime = 1000,
+  serialize = JSON.stringify,
+  deserialize = JSON.parse,
 }
 ```

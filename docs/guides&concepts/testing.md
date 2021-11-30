@@ -80,6 +80,11 @@ setLogger({
 });
 ```
 
+## 在 Jest 中将 `cacheTime` 设置为 Infinity
+
+默认情况下，`cacheTime` 设置为 5 分钟。这意味着缓存的 GC 计时器会每 5 分钟触发一次。
+如果使用 Jest，可以将 `cacheTime` 设置为 Infinity，以防止出现“Jest did not exit one second after the test run completed”的错误消息。
+
 ## 测试网络调用
 
 React Query 的主要用途是缓存网络请求，因此，首先测试我们的代码是否发出了正确的网络请求是很重要的。
