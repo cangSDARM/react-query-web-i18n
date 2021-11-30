@@ -1,6 +1,6 @@
 ---
 id: parallel-queries
-title: 并行查询
+title: 并行查询 parallel-queries
 ---
 
 “并行”查询是并行执行的查询，或者是同时执行的查询。用以最大化查询并发性。
@@ -33,10 +33,10 @@ function App({ users }) {
   const userQueries = useQueries(
     users.map((user) => {
       return {
-        queryKey: ['user', user.id],
+        queryKey: ["user", user.id],
         queryFn: () => fetchUserById(user.id),
-      }
+      };
     }),
-  )
+  );
 }
 ```

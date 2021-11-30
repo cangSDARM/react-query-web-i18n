@@ -1,6 +1,6 @@
 ---
 id: query-cancellation
-title: 查询取消
+title: 查询取消 query-cancellation
 ---
 
 [以前的方法需要一个`cancel`函数](#旧的-cancel-函数)

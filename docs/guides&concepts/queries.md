@@ -1,6 +1,6 @@
 ---
 id: queries
-title: 查询
+title: 查询 queries
 ---
 
 ## 查询基础

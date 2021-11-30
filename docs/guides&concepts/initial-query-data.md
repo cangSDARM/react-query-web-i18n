@@ -1,6 +1,6 @@
 ---
 id: initial-query-data
-title: 初始化的查询数据
+title: 初始化的查询数据 initial-query-data
 ---
 
 在需要查询之前，有很多方法可以向缓存提供初始数据：

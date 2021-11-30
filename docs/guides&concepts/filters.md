@@ -1,6 +1,6 @@
 ---
 id: filters
-title: 过滤器
+title: 过滤器 filters
 ---
 
 React Query 中的某些方法可以接受 `QueryFilters` 或者 `MutationFilters` 对象。
@@ -11,16 +11,16 @@ React Query 中的某些方法可以接受 `QueryFilters` 或者 `MutationFilter
 
 ```js
 // 取消所有查询
-await queryClient.cancelQueries()
+await queryClient.cancelQueries();
 
 // 删除所有以`posts`开头的键值的非活动查询
-queryClient.removeQueries('posts', { inactive: true })
+queryClient.removeQueries("posts", { inactive: true });
 
 // 重新获取所有活动查询
-await queryClient.refetchQueries({ active: true })
+await queryClient.refetchQueries({ active: true });
 
 // 重新获取键中以`posts`开头的所有活动查询
-await queryClient.refetchQueries('posts', { active: true })
+await queryClient.refetchQueries("posts", { active: true });
 ```
 
 查询过滤器对象支持以下属性：
@@ -45,18 +45,22 @@ await queryClient.refetchQueries('posts', { active: true })
   - 设置此属性以定义要匹配的查询键值
 
 ## 修改过滤器
+
 修改的过滤器是具有特定条件的对象，可将修改与以下条件进行匹配：
 
 ```js
 // 获取所有正在获取的修改的数量
-await queryClient.isMutating()
+await queryClient.isMutating();
 // 通过 mutationKey 过滤
-await queryClient.isMutating({ mutationKey: "post" })
+await queryClient.isMutating({ mutationKey: "post" });
 // 使用谓词函数过滤
-await queryClient.isMutating({ predicate: (mutation) => mutation.options.variables?.id === 1 })
+await queryClient.isMutating({
+  predicate: (mutation) => mutation.options.variables?.id === 1,
+});
 ```
 
 修改过滤器对象支持以下属性：
+
 - `exact?: boolean`
   - 如果您不想对键值做模糊查询，你可以设置 `exact: true` 选项来返回且只返回完整匹配的
 - `fetching?: boolean`

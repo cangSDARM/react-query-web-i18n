@@ -1,6 +1,6 @@
 ---
 id: disabling-queries
-title: 禁用/暂停查询
+title: 禁用/暂停查询 disabling-queries
 ---
 
 如果要禁用自动运行的查询，则可以使用`enabled = false`选项。
@@ -18,24 +18,17 @@ title: 禁用/暂停查询
 
 ```js
 function Todos() {
-  const {
-    isIdle,
-    isLoading,
-    isError,
-    data,
-    error,
-    refetch,
-    isFetching,
-  } = useQuery('todos', fetchTodoList, {
-    enabled: false,
-  })
+  const { isIdle, isLoading, isError, data, error, refetch, isFetching } =
+    useQuery("todos", fetchTodoList, {
+      enabled: false,
+    });
 
   return (
     <>
       <button onClick={() => refetch()}>Fetch Todos</button>
 
       {isIdle ? (
-        'Not ready...'
+        "Not ready..."
       ) : isLoading ? (
         <span>Loading...</span>
       ) : isError ? (
@@ -47,10 +40,10 @@ function Todos() {
               <li key={todo.id}>{todo.title}</li>
             ))}
           </ul>
-          <div>{isFetching ? 'Fetching...' : null}</div>
+          <div>{isFetching ? "Fetching..." : null}</div>
         </>
       )}
     </>
-  )
+  );
 }
 ```

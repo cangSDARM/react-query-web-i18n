@@ -1,6 +1,6 @@
 ---
 id: query-invalidation
-title: 查询失效
+title: 查询失效 query-invalidation
 ---
 
 在再次获取数据查询之前，等待查询变得过时并不总是可行的。
@@ -9,9 +9,9 @@ title: 查询失效
 
 ```js
 // 使缓存中的每个查询都无效
-queryClient.invalidateQueries()
+queryClient.invalidateQueries();
 // 无效每个查询键值以 `todos` 开头的查询
-queryClient.invalidateQueries('todos')
+queryClient.invalidateQueries("todos");
 ```
 
 > 注意：在其他使用归一化缓存的库试图强制性地，或通过模式推断来使用新数据更新本地查询的情况下，
@@ -24,47 +24,47 @@ queryClient.invalidateQueries('todos')
 
 ## 查询的匹配
 
-当使用像 `invalidateQueries` 和 `removeQueries` 之类的 API（以及其他支持部分查询匹配的API）时，您可以按其前缀匹配多个查询，或者通过配置获得特定的查询。
+当使用像 `invalidateQueries` 和 `removeQueries` 之类的 API（以及其他支持部分查询匹配的 API）时，您可以按其前缀匹配多个查询，或者通过配置获得特定的查询。
 有关可以使用的用于过滤匹配的内容，请参阅[查询过滤器](./filters#查询过滤器)。
 
 在此示例中，我们可以使用 `todos` 前缀使在其查询键值中以 `todos` 开头的所有查询无效：
 
 ```js
-import { useQuery, useQueryClient } from 'react-query'
+import { useQuery, useQueryClient } from "react-query";
 
 // 从上下文中获取 QueryClient
-const queryClient = useQueryClient()
+const queryClient = useQueryClient();
 
-queryClient.invalidateQueries('todos')
+queryClient.invalidateQueries("todos");
 
 // 下面的两个查询都会被无效
-const todoListQuery = useQuery('todos', fetchTodoList)
-const todoListQuery = useQuery(['todos', { page: 1 }], fetchTodoList)
+const todoListQuery = useQuery("todos", fetchTodoList);
+const todoListQuery = useQuery(["todos", { page: 1 }], fetchTodoList);
 ```
 
 您甚至可以通过将更特定的键值传递给 `invalidateQueries` 方法来使具有特定变量的查询无效：
 
 ```js
-queryClient.invalidateQueries(['todos', { type: 'done' }])
+queryClient.invalidateQueries(["todos", { type: "done" }]);
 
 // 该查询会被无效
-const todoListQuery = useQuery(['todos', { type: 'done' }], fetchTodoList)
+const todoListQuery = useQuery(["todos", { type: "done" }], fetchTodoList);
 
 // 该查询不会被无效
-const todoListQuery = useQuery('todos', fetchTodoList)
+const todoListQuery = useQuery("todos", fetchTodoList);
 ```
 
 `invalidateQueries` API 非常灵活，因此，即使您*只想*使不再具有任何变量或子键的 `todos` 查询无效，
 也可以将 `exact: true` 选项传递给 `invalidateQueries` 方法：
 
 ```js
-queryClient.invalidateQueries('todos', { exact: true })
+queryClient.invalidateQueries("todos", { exact: true });
 
 // 该查询会被无效
-const todoListQuery = useQuery(['todos'], fetchTodoList)
+const todoListQuery = useQuery(["todos"], fetchTodoList);
 
 // 该查询不会被无效
-const todoListQuery = useQuery(['todos', { type: 'done' }], fetchTodoList)
+const todoListQuery = useQuery(["todos", { type: "done" }], fetchTodoList);
 ```
 
 如果您发现自己需要**更细的粒度**，可以将 `predicate` 函数传递给 `invalidateQueries` 方法。
@@ -72,16 +72,16 @@ const todoListQuery = useQuery(['todos', { type: 'done' }], fetchTodoList)
 
 ```js
 queryClient.invalidateQueries({
-  predicate: query =>
-    query.queryKey[0] === 'todos' && query.queryKey[1]?.version >= 10,
-})
+  predicate: (query) =>
+    query.queryKey[0] === "todos" && query.queryKey[1]?.version >= 10,
+});
 
 // 该查询会被无效
-const todoListQuery = useQuery(['todos', { version: 20 }], fetchTodoList)
+const todoListQuery = useQuery(["todos", { version: 20 }], fetchTodoList);
 
 // 该查询会被无效
-const todoListQuery = useQuery(['todos', { version: 10 }], fetchTodoList)
+const todoListQuery = useQuery(["todos", { version: 10 }], fetchTodoList);
 
 // 该查询不会被无效
-const todoListQuery = useQuery(['todos', { version: 5 }], fetchTodoList)
+const todoListQuery = useQuery(["todos", { version: 5 }], fetchTodoList);
 ```

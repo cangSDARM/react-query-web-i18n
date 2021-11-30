@@ -1,6 +1,6 @@
 ---
 id: important-defaults
-title: 重要的默认配置
+title: 重要的默认配置 important-defaults
 ---
 
 在开箱即用的情况下，React Query 配置了**激进但还算理智**的默认值。有时，这些默认值有时会让新用户措手不及，或者说如果用户不知道它们，则会**使学习/调试变得困难**。

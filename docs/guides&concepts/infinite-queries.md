@@ -1,6 +1,6 @@
 ---
 id: infinite-queries
-title: 无限查询
+title: 无限查询 infinite-queries
 ---
 
 可以将附加数据"加载"更多数据到现有数据集，或者是"无限滚动"上的呈现列表也是一种非常常见的 UI 模式。React Query 支持一个有用的`useQuery`版本，称为`useInfiniteQuery`，用于查询这些类型的列表。
@@ -184,7 +184,7 @@ queryClient.setQueryData("projects", (data) => ({
 ```js
 const newPagesArray =
   oldPagesArray?.pages.map((page) =>
-    page.filter((val) => val.id !== updatedId)
+    page.filter((val) => val.id !== updatedId),
   ) ?? [];
 
 queryClient.setQueryData("projects", (data) => ({

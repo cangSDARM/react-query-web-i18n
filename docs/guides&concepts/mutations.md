@@ -1,6 +1,6 @@
 ---
 id: mutations
-title: 修改
+title: 修改 mutations
 ---
 
 与查询不同，修改通常意味着用于创建/更新/删除数据或执行服务器命令等副作用。
@@ -12,12 +12,12 @@ title: 修改
 
 ```js
 function App() {
-  const mutation = useMutation((newTodo) => axios.post('/todos', newTodo))
+  const mutation = useMutation((newTodo) => axios.post("/todos", newTodo));
 
   return (
     <div>
       {mutation.isLoading ? (
-        'Adding todo...'
+        "Adding todo..."
       ) : (
         <>
           {mutation.isError ? (
@@ -28,7 +28,7 @@ function App() {
 
           <button
             onClick={() => {
-              mutation.mutate({ id: new Date(), title: 'Do Laundry' })
+              mutation.mutate({ id: new Date(), title: "Do Laundry" });
             }}
           >
             Create Todo
@@ -36,7 +36,7 @@ function App() {
         </>
       )}
     </div>
-  )
+  );
 }
 ```
 
@@ -56,32 +56,32 @@ function App() {
 
 即使只有变量，修改也没有那么特别，但是当与 `onSuccess` 回调，[Query Client 的 `invalidateQueries` 方法](../reference/QueryClient#queryclientinvalidatequeries)和 [Query Client 的 `setQueryData` 方法](../reference/QueryClient#queryclientsetquerydata)一起使用时，修改就成为了一个非常强大的工具。
 
-> 重要说明：`mutate` 函数是一个异步函数，这意味着您不能在事件回调中直接使用它 (**React16及之前版本**)。
+> 重要说明：`mutate` 函数是一个异步函数，这意味着您不能在事件回调中直接使用它 (**React16 及之前版本**)。
 > 如果您需要在 `onSubmit` 中访问事件，则需要将 `mutate` 包装在另一个函数中。 这是由于 [React 事件池](https://reactjs.org/docs/events.html#event-pooling)限制。
 
 ```js
 // 在React16及之前的版本，这将无法正常工作
 const CreateTodo = () => {
   const mutation = useMutation((event) => {
-    event.preventDefault()
-    return fetch('/api', new FormData(event.target))
-  })
+    event.preventDefault();
+    return fetch("/api", new FormData(event.target));
+  });
 
-  return <form onSubmit={mutation.mutate}>...</form>
-}
+  return <form onSubmit={mutation.mutate}>...</form>;
+};
 
 // 这将正常工作
 const CreateTodo = () => {
   const mutation = useMutation((formData) => {
-    return fetch('/api', formData)
-  })
+    return fetch("/api", formData);
+  });
   const onSubmit = (event) => {
-    event.preventDefault()
-    mutation.mutate(new FormData(event.target))
-  }
+    event.preventDefault();
+    mutation.mutate(new FormData(event.target));
+  };
 
-  return <form onSubmit={onSubmit}>...</form>
-}
+  return <form onSubmit={onSubmit}>...</form>;
+};
 ```
 
 ## 重置修改的状态
@@ -91,13 +91,13 @@ const CreateTodo = () => {
 
 ```js
 const CreateTodo = () => {
-  const [title, setTitle] = useState('')
-  const mutation = useMutation(createTodo)
+  const [title, setTitle] = useState("");
+  const mutation = useMutation(createTodo);
 
   const onCreateTodo = (e) => {
-    e.preventDefault()
-    mutation.mutate({ title })
-  }
+    e.preventDefault();
+    mutation.mutate({ title });
+  };
 
   return (
     <form onSubmit={onCreateTodo}>
@@ -112,8 +112,8 @@ const CreateTodo = () => {
       <br />
       <button type="submit">Create Todo</button>
     </form>
-  )
-}
+  );
+};
 ```
 
 ## 副作用
@@ -128,11 +128,11 @@ useMutation(addTodo, {
     // 修改即将发生！
 
     // （可选）返回包含回滚时使用的数据的上下文
-    return { id: 1 }
+    return { id: 1 };
   },
   onError: (error, variables, context) => {
     // 错误触发！
-    console.log(`rolling back optimistic update with id ${context.id}`)
+    console.log(`rolling back optimistic update with id ${context.id}`);
   },
   onSuccess: (data, variables, context) => {
     // Boom baby!
@@ -140,7 +140,7 @@ useMutation(addTodo, {
   onSettled: (data, error, variables, context) => {
     // 错误或成功……这并不重要
   },
-})
+});
 ```
 
 当在任何回调函数中返回 promise 时，它将首先被等待，然后再调用下一个回调函数：
@@ -148,12 +148,12 @@ useMutation(addTodo, {
 ```js
 useMutation(addTodo, {
   onSuccess: async () => {
-    console.log("I'm first!")
+    console.log("I'm first!");
   },
   onSettled: async () => {
-    console.log("I'm second!")
+    console.log("I'm second!");
   },
-})
+});
 ```
 
 你可能会发现，在调用 `mutate` 时，**有额外的回调被触发**，而不仅仅是 `useMutation` 上定义的回调。
@@ -173,7 +173,7 @@ useMutation(addTodo, {
   onSettled: (data, error, variables, context) => {
     // I will fire first
   },
-})
+});
 
 mutate(todo, {
   onSuccess: (data, variables, context) => {
@@ -185,7 +185,7 @@ mutate(todo, {
   onSettled: (data, error, variables, context) => {
     // I will fire second!
   },
-})
+});
 ```
 
 ## Promises
@@ -194,15 +194,15 @@ mutate(todo, {
 例如，这可以用来组合副作用。
 
 ```js
-const mutation = useMutation(addTodo)
+const mutation = useMutation(addTodo);
 
 try {
-  const todo = await mutation.mutateAsync(todo)
-  console.log(todo)
+  const todo = await mutation.mutateAsync(todo);
+  console.log(todo);
 } catch (error) {
-  console.error(error)
+  console.error(error);
 } finally {
-  console.log('done')
+  console.log("done");
 }
 ```
 
@@ -213,7 +213,7 @@ try {
 ```js
 const mutation = useMutation(addTodo, {
   retry: 3,
-})
+});
 ```
 
 **如果由于设备离线而导致修改失败，那么当设备重新连接时，它们将以相同的顺序重新尝试。**
@@ -223,54 +223,54 @@ const mutation = useMutation(addTodo, {
 现在可以将修改持久化到数据库或其他什么存储方式中，并在以后恢复。这可以通过以下高阶函数实现：
 
 ```js
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 // 定义 "addTodo" 修改
-queryClient.setMutationDefaults('addTodo', {
+queryClient.setMutationDefaults("addTodo", {
   mutationFn: addTodo,
   onMutate: async (variables) => {
     // 取消 todos list 当前的查询
-    await queryClient.cancelQueries('todos')
+    await queryClient.cancelQueries("todos");
 
     // 创建一个对于 todo 的乐观修改
-    const optimisticTodo = { id: uuid(), title: variables.title }
+    const optimisticTodo = { id: uuid(), title: variables.title };
 
     // 添加到 todos list
-    queryClient.setQueryData('todos', (old) => [...old, optimisticTodo])
+    queryClient.setQueryData("todos", (old) => [...old, optimisticTodo]);
 
     // 返回包含乐观修改的上下文
-    return { optimisticTodo }
+    return { optimisticTodo };
   },
   onSuccess: (result, variables, context) => {
     // 成功，用正确内容替换掉
-    queryClient.setQueryData('todos', (old) =>
+    queryClient.setQueryData("todos", (old) =>
       old.map((todo) =>
         todo.id === context.optimisticTodo.id ? result : todo,
       ),
-    )
+    );
   },
   onError: (error, variables, context) => {
     // 清除掉添加失败的 todo
-    queryClient.setQueryData('todos', (old) =>
+    queryClient.setQueryData("todos", (old) =>
       old.filter((todo) => todo.id !== context.optimisticTodo.id),
-    )
+    );
   },
   retry: 3,
-})
+});
 
 // 在同一个组件内启动修改
-const mutation = useMutation('addTodo')
-mutation.mutate({ title: 'title' })
+const mutation = useMutation("addTodo");
+mutation.mutate({ title: "title" });
 
 // 如果因为设备离线而暂停了修改，
 // 然后，当程序退出时，可以使暂停的修改变为 dehydrated 的
-const state = dehydrate(queryClient)
+const state = dehydrate(queryClient);
 
 // 当程序启动时，修改再次启动
-hydrate(queryClient, state)
+hydrate(queryClient, state);
 
 // 重启修改
-queryClient.resumePausedMutations()
+queryClient.resumePausedMutations();
 ```
 
 ## 衍生阅读

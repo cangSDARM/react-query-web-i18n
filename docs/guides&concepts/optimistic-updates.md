@@ -1,6 +1,6 @@
 ---
 id: optimistic-updates
-title: 乐观更新
+title: 乐观更新 optimistic-updates
 ---
 
 在执行修改之前打算进行乐观更新时，修改有可能失败（可能性非零）。
@@ -14,32 +14,32 @@ title: 乐观更新
 ## 添加新的 todo 时更新 todos 列表
 
 ```js
-const queryClient = useQueryClient()
+const queryClient = useQueryClient();
 
 useMutation(updateTodo, {
   // 当 mutate 调用时
   onMutate: async (newTodo) => {
     // 撤销相关的查询（这样它们就不会覆盖我们的乐观更新）
-    await queryClient.cancelQueries('todos')
+    await queryClient.cancelQueries("todos");
 
     // 保存前一次状态的快照
-    const previousTodos = queryClient.getQueryData('todos')
+    const previousTodos = queryClient.getQueryData("todos");
 
     // 执行乐观更新
-    queryClient.setQueryData('todos', (old) => [...old, newTodo])
+    queryClient.setQueryData("todos", (old) => [...old, newTodo]);
 
     // 返回具有快照值的上下文对象
-    return { previousTodos }
+    return { previousTodos };
   },
   // 如果修改失败，则使用 onMutate 返回的上下文进行回滚
   onError: (err, newTodo, context) => {
-    queryClient.setQueryData('todos', context.previousTodos)
+    queryClient.setQueryData("todos", context.previousTodos);
   },
   // 总是在错误或成功之后重新获取：
   onSettled: () => {
-    queryClient.invalidateQueries('todos')
+    queryClient.invalidateQueries("todos");
   },
-})
+});
 ```
 
 ## 更新单个的 todo
@@ -49,29 +49,29 @@ useMutation(updateTodo, {
   // 当 mutate 调用时
   onMutate: async (newTodo) => {
     // 取消相关的获取数据逻辑（这样它们就不会覆盖我们的乐观更新）
-    await queryClient.cancelQueries(['todos', newTodo.id])
+    await queryClient.cancelQueries(["todos", newTodo.id]);
 
     // 保存前一次状态的快照
-    const previousTodo = queryClient.getQueryData(['todos', newTodo.id])
+    const previousTodo = queryClient.getQueryData(["todos", newTodo.id]);
 
     // 执行乐观更新
-    queryClient.setQueryData(['todos', newTodo.id], newTodo)
+    queryClient.setQueryData(["todos", newTodo.id], newTodo);
 
     // 返回具有快照值和修改值的上下文对象
-    return { previousTodo, newTodo }
+    return { previousTodo, newTodo };
   },
   // 如果修改失败，则使用 onMutate 返回的上下文
   onError: (err, newTodo, context) => {
     queryClient.setQueryData(
-      ['todos', context.newTodo.id],
+      ["todos", context.newTodo.id],
       context.previousTodo,
-    )
+    );
   },
   // 总是在错误或成功之后重新获取：
   onSettled: (newTodo) => {
-    queryClient.invalidateQueries(['todos', newTodo.id])
+    queryClient.invalidateQueries(["todos", newTodo.id]);
   },
-})
+});
 ```
 
 如果你愿意，你也可以使用 `onsettled` 函数来代替 `onError` 和 `onSuccess` 处理：
@@ -84,5 +84,5 @@ useMutation(updateTodo, {
       // do something
     }
   },
-})
+});
 ```

@@ -1,12 +1,12 @@
 ---
 id: paginated-queries
-title: 分页/滞后查询
+title: 分页/滞后查询 paginated-queries
 ---
 
 呈现分页数据是一种非常常见的 UI 模式，在 React Query 中，它通过在查询键中包含页面信息来"正常工作"：
 
 ```js
-const result = useQuery(['projects', page], fetchProjects)
+const result = useQuery(["projects", page], fetchProjects);
 ```
 
 但是，如果运行该示例，您可能会注意到一些奇怪的事情：
@@ -29,20 +29,15 @@ const result = useQuery(['projects', page], fetchProjects)
 
 ```js
 function Todos() {
-  const [page, setPage] = React.useState(0)
+  const [page, setPage] = React.useState(0);
 
-  const fetchProjects = (page = 0) => fetch('/api/projects?page=' + page).then((res) => res.json())
+  const fetchProjects = (page = 0) =>
+    fetch("/api/projects?page=" + page).then((res) => res.json());
 
-  const {
-    isLoading,
-    isError,
-    error,
-    data,
-    isFetching,
-    isPreviousData,
-  } = useQuery(['projects', page], () => fetchProjects(page), {
-    keepPreviousData: true,
-  })
+  const { isLoading, isError, error, data, isFetching, isPreviousData } =
+    useQuery(["projects", page], () => fetchProjects(page), {
+      keepPreviousData: true,
+    });
 
   return (
     <div>
@@ -63,11 +58,11 @@ function Todos() {
         disabled={page === 0}
       >
         Previous Page
-      </button>{' '}
+      </button>{" "}
       <button
         onClick={() => {
           if (!isPreviousData && data.hasMore) {
-            setPage((old) => old + 1)
+            setPage((old) => old + 1);
           }
         }}
         // Disable the Next Page button until we know a next page is available
@@ -75,9 +70,9 @@ function Todos() {
       >
         Next Page
       </button>
-      {isFetching ? <span> Loading...</span> : null}{' '}
+      {isFetching ? <span> Loading...</span> : null}{" "}
     </div>
-  )
+  );
 }
 ```
 

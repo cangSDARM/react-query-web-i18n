@@ -1,6 +1,6 @@
 ---
 id: caching
-title: 缓存示例
+title: 缓存示例 caching
 ---
 
 > 在阅读本篇文档之前，请认真阅读[重要的默认配置](./important-defaults)
@@ -29,5 +29,5 @@ title: 缓存示例
 - 在缓存超时完成之前，挂载另一个`useQuery('todos', fetchTodos)`实例
   - 当`fetchTodos`函数在后台运行时，该查询立即返回可用的缓存值，以用一个新值填充
 - `useQuery('todos', fetchTodos)`的最后一个实例卸载
-- **5分钟**内没有再出现`useQuery('todos', fetchTodos)`的实例
+- **5 分钟**内没有再出现`useQuery('todos', fetchTodos)`的实例
   - 该查询及其（缓存）数据将被删除并进行垃圾回收。

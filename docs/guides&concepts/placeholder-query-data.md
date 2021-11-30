@@ -1,6 +1,6 @@
 ---
 id: placeholder-query-data
-title: 查询数据占位符
+title: 查询数据占位符 placeholder-query-data
 ---
 
 ## 什么是占位数据？
@@ -55,7 +55,7 @@ function Todo({ blogPostId }) {
           .getQueryData("blogPosts")
           ?.find((d) => d.id === blogPostId);
       },
-    }
+    },
   );
 }
 ```
