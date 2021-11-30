@@ -28,3 +28,7 @@ node_modules
 *.log
 .DS_Store
 .vercel
+
+yarn.lock
+package-lock.json
+.npmrc
