@@ -55,7 +55,7 @@ focusManager.setEventListener((handleFocus) => {
 
 替换焦点处理函数的一个很好的用例是 iframe 的事件。
 当在应用中聚焦或使用 iframe 时，iframe 会通过两次触发事件(both double-firing events)以及触发假阳性事件(false-positive events)来检测窗口焦点，从而带来某些潜在的问题。
-如果遇到这种情况，你应该使用一个尽可能忽略这些事件的事件处理函数。例如使用[这个 Gist](https://gist.github.com/tannerlinsley/1d3a2122332107fcd8c9cc379be10d88)：
+如果遇到这种情况，你应该使用一个尽可能忽略这些事件的事件处理函数。例如使用 [这个 Gist](https://gist.github.com/tannerlinsley/1d3a2122332107fcd8c9cc379be10d88)：
 
 ```js
 import { focusManager } from "react-query";
@@ -66,17 +66,19 @@ focusManager.setEventListener(onWindowFocus); // Boom!
 
 ## 在 React Native 中管理焦点
 
-React Native 通过[`AppState`模块](https://reactnative.dev/docs/appstate#app-states)提供焦点信息，而不是窗口上的事件侦听器。当应用状态更改为“active”时，可以使用`AppState`的“change”事件来触发更新：
+React Native 通过 [`AppState`模块](https://reactnative.dev/docs/appstate#app-states) 提供焦点信息，而不是窗口上的事件侦听器。当应用状态更改为“active”时，可以使用`AppState`的“change”事件来触发更新：
 
 ```js
 import { AppState } from "react-native";
 import { focusManager } from "react-query";
 
 focusManager.setEventListener((handleFocus) => {
-  AppState.addEventListener("change", handleFocus);
+  const subscription = AppState.addEventListener("change", (state) => {
+    handleFocus(state === "active");
+  });
 
   return () => {
-    AppState.removeEventListener("change", handleFocus);
+    subscription.remove();
   };
 });
 ```
@@ -95,6 +97,6 @@ focusManager.setFocused(undefined);
 
 ## 陷阱和警告
 
-一些浏览器内部的对话窗口——如 `alert()` 或文件上传(`<input type="file" />`) 之类的产生的，也可能在它们关闭后触发窗口焦点的数据获取动作。
+一些浏览器内部的对话窗口——如 `alert()` 或文件上传(`<input type="file" />`)之类的产生的，也可能在它们关闭后触发窗口焦点的数据获取动作。
 这可能会导致不必要的副作用，因为数据的重新获取可能会触发组件卸载或重新挂载，甚至远在执行文件上传处理的步骤之前。
-请查看[此 Issue](https://github.com/tannerlinsley/react-query/issues/2960) 以了解背景及相关的解决办法
+请查看 [此 Issue](https://github.com/tannerlinsley/react-query/issues/2960) 以了解背景及相关的解决办法

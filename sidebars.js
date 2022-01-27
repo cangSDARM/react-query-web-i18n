@@ -62,12 +62,22 @@ module.exports = {
         label: "官方示例",
         href: "https://react-query.tanstack.com/examples/simple",
       },
+      {
+        type: "link",
+        label: "国内内容(Bilibili)",
+        href: "https://search.bilibili.com/all?keyword=react-query",
+      },
     ],
     "社区教程/博客": [
       {
         type: "link",
         label: "TkDodo's Blog",
         href: "https://react-query.tanstack.com/community/tkdodos-blog",
+      },
+      {
+        type: "link",
+        label: "入门教程(掘金)",
+        href: "https://juejin.cn/post/6937833844837974053",
       },
     ],
     插件: plugins,

@@ -1,6 +1,6 @@
 ---
 id: ssr
-title: SSR
+title: 服务端渲染 SSR
 ---
 
 React Query 支持两种在服务器上预取数据并将其传递给 queryClient 的方式。
@@ -114,6 +114,12 @@ function Posts() {
 如前所述，可以预取一些查询，然后让其他查询在 queryClient 上获取。
 这意味着您可以通过为特定查询添加或删除 `prefetchQuery` 来控制内容服务器需要渲染的内容。
 
+### 关于 Next.js rewrite 特性的警告
+
+有一个陷阱：如果你使用了 [Next.js' rewrites](https://nextjs.org/docs/api-reference/next.config.js/rewrites) 和[自动静态优化](https://nextjs.org/docs/advanced-features/automatic-static-optimization)特性的组合或者 `getStaticProps` 属性: 这会造成 React Query 的第二次 hydration。这是因为 [Next.js 需要确保 rewrites 在客户端上被正确的编译了](https://nextjs.org/docs/api-reference/next.config.js/rewrites#rewrite-parameters) 并正确收集在 hydration 后任何可能改动到的 params，这样它才能提供 `router.query`.
+
+这样的结果导致了所有 hydration 数据都丢失了引用相等性(referential equality)，会导致意料之外的结果。比如像是 React 中组件的 props 和 `useEffect`, `useMemo` 依赖数组中用到的数据.
+
 ## 使用其他或自定义的 SSR 框架
 
 本指南充其量是对带有 React Query 的 SSR 应该如何工作的高级概述。
@@ -149,7 +155,7 @@ function handleRequest(req, res) {
       <Hydrate state={dehydratedState}>
         <App />
       </Hydrate>
-    </QueryClientProvider>
+    </QueryClientProvider>,
   );
 
   res.send(`
@@ -184,7 +190,7 @@ ReactDOM.hydrate(
       <App />
     </Hydrate>
   </QueryClientProvider>,
-  document.getElementById("root")
+  document.getElementById("root"),
 );
 ```
 
