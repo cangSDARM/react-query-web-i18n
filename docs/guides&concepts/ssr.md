@@ -134,6 +134,7 @@ function Posts() {
 - Dehydrate 客户端
 - **与客户端的 Provider 一起使用 dehydrated 状态渲染您的应用**。这是**非常重要**的！您必须使用**相同的 dehydrated 状态渲染服务器和客户端**，以确保**客户端上的 hydration 产生与服务器完全相同的标记**。
 - 序列化并嵌入 dehydrated 缓存，以使用 HTML 发送给客户端
+- 在 dehydrated 状态已通过调用 [`queryClient.clear()`](../reference/QueryClient#queryclientclear) 发往客户端时，清除 React Query 缓存
 
 > 安全说明：使用 `JSON.stringify` 序列化数据可能使您面临 XSS 攻击的风险，[此博客文章](https://medium.com/node-security/the-most-common-xss-vulnerability-in-react-js-applications-2bdffbcc1fa0)解释了为什么以及如何解决它
 
@@ -168,6 +169,8 @@ function handleRequest(req, res) {
       </body>
     </html>
   `);
+
+  queryClient.clear();
 }
 ```
 
@@ -206,15 +209,24 @@ ReactDOM.hydrate(
 也许您希望在某些错误或查询上呈现一个带有正确状态代码的错误页面。
 在这些情况下，使用 `fetchQuery` 捕获任何错误并**手动处理这些错误**。
 
-### 数据何时过时，在服务端上获取了查询数据时就开始度量
+### 在服务端上获取了查询数据时，就会开始度量“数据何时过时”
 
 一个查询被认为是过时的，这取决于它是何时被标记为 `dataUpdatedAt` 的。
 这里需要注意的是，服务器需要有正确的时间才能正常工作。
 React Query **使用的是 UTC 时间**，所以时区不需要考虑在内。
 
 由于 `staleTime` 默认为 `0`，因此默认情况下，在页面加载时，查询就将在后台重新获取。
-您可能希望使用较高的过期时间来避免这种双重获取，特别是在不缓存标记的情况下。
+您可能希望使用较高的过期时间来避免这种多次没必要的获取，特别是在不缓存标记的情况下。
 
 在 CDN 中缓存标记时，这种对陈旧查询的重新获取是完美的选择！
 您可以将页面本身的缓存时间设置得相当高，以避免不得不在服务器上重新渲染页面，但是可以将查询的 `staleTime` 配置得较低，以确保用户访问该页面后立即在后台重新获取数据。
 当然，或许您可以设置得将页面缓存一周，但如果数据大于一天，则在页面加载时自动重新获取数据？
+
+### 服务端的内存占用过高
+
+如果你为每个请求都创建一个 `QueryClient`, React Query 则会为每个客户端都创建一个隔离的缓存，每个都会在内存中保存一段时间(`cacheTime` 设定的, 默认为 5 分钟)。
+如果一段时间内有大量的请求，这可能会导致服务器上的高内存消耗。
+
+为了在不需要缓存后立即清除缓存并降低内存消耗，可以在服务器处理请求并将 dehydrated 的状态发送给客户端后，添加一句对[`queryClient.clear()`](../reference/QueryClient#queryclientclear)的调用。
+
+或者，你可以设置一个较小的 `cacheTime`。

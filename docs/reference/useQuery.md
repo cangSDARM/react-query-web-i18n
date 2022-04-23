@@ -38,6 +38,7 @@ const {
   onError,
   onSettled,
   onSuccess,
+  placeholderData,
   queryKeyHashFn,
   refetchInterval,
   refetchIntervalInBackground,
@@ -108,24 +109,27 @@ const result = useQuery({
 - `refetchIntervalInBackground: boolean`
   - Optional
   - If set to `true`, queries that are set to continuously refetch with a `refetchInterval` will continue to refetch while their tab/window is in the background
-- `refetchOnMount: boolean | "always"`
+- `refetchOnMount: boolean | "always" | ((query: Query) => boolean | "always")`
   - Optional
   - Defaults to `true`
   - If set to `true`, the query will refetch on mount if the data is stale.
   - If set to `false`, the query will not refetch on mount.
   - If set to `"always"`, the query will always refetch on mount.
-- `refetchOnWindowFocus: boolean | "always"`
+  - If set to a function, the function will be executed with the query to compute the value
+- `refetchOnWindowFocus: boolean | "always" | ((query: Query) => boolean | "always")`
   - Optional
   - Defaults to `true`
   - If set to `true`, the query will refetch on window focus if the data is stale.
   - If set to `false`, the query will not refetch on window focus.
   - If set to `"always"`, the query will always refetch on window focus.
-- `refetchOnReconnect: boolean | "always"`
+  - If set to a function, the function will be executed with the query to compute the value
+- `refetchOnReconnect: boolean | "always" | ((query: Query) => boolean | "always")`
   - Optional
   - Defaults to `true`
   - If set to `true`, the query will refetch on reconnect if the data is stale.
   - If set to `false`, the query will not refetch on reconnect.
   - If set to `"always"`, the query will always refetch on reconnect.
+  - If set to a function, the function will be executed with the query to compute the value
 - `notifyOnChangeProps: string[] | "tracked"`
   - Optional
   - If set, the component will only re-render if any of the listed properties change.
@@ -173,11 +177,11 @@ const result = useQuery({
   - Optional
   - Defaults to `true`
   - If set to `false`, structural sharing between query results will be disabled.
-- `useErrorBoundary: undefined | boolean | (error: TError) => boolean`
+- `useErrorBoundary: undefined | boolean | (error: TError, query: Query) => boolean`
   - Defaults to the global query config's `useErrorBoundary` value, which is `undefined`
   - Set this to `true` if you want errors to be thrown in the render phase and propagate to the nearest error boundary
   - Set this to `false` to disable `suspense`'s default behavior of throwing errors to the error boundary.
-  - If set to a function, it will be passed the error and should return a boolean indicating whether to show the error in an error boundary (`true`) or return the error as state (`false`)
+  - If set to a function, it will be passed the error and the query, and it should return a boolean indicating whether to show the error in an error boundary (`true`) or return the error as state (`false`)
 - `meta: Record<string, unknown>`
   - Optional
   - If set, stores additional information on the query cache entry that can be used as needed. It will be accessible wherever the `query` is available, and is also part of the `QueryFunctionContext` provided to the `queryFn`.
@@ -230,6 +234,8 @@ const result = useQuery({
   - The failure count for the query.
   - Incremented every time the query fails.
   - Reset to `0` when the query succeeds.
+- `errorUpdateCount: number`
+  - The sum of all errors.
 - `refetch: (options: { throwOnError: boolean, cancelRefetch: boolean }) => Promise<UseQueryResult>`
   - A function to manually refetch the query.
   - If the query errors, the error will only be logged. If you want an error to be thrown, pass the `throwOnError: true` option

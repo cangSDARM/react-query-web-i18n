@@ -59,16 +59,19 @@ import React from "react";
 import { useFocusEffect } from "@react-navigation/native";
 
 export function useRefreshOnFocus<T>(refetch: () => Promise<T>) {
-  const enabledRef = React.useRef(false);
+  const firstTimeRef = React.useRef(true);
 
   useFocusEffect(
     React.useCallback(() => {
-      if (enabledRef.current) {
-        refetch();
-      } else {
-        enabledRef.current = true;
+      if (firstTimeRef.current) {
+        firstTimeRef.current = false;
+        return;
       }
+
+      refetch();
     }, [refetch]),
   );
 }
 ```
+
+在上面的代码中，跳过了`refetch`方法一次，因为除了屏幕焦点外，`useFocusEffect`在挂载时也会调用我们的回调。

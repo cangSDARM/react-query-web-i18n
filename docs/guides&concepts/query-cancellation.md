@@ -108,7 +108,21 @@ const query = useQuery("todos", ({ signal }) => {
 
 ## 使用 `graphql-request`
 
-An `AbortSignal` can be set in the `GraphQLClient` constructor.
+### 使用 `graphql-request` v4.0.0+
+
+可以传递给 `request` 函数一个 `AbortSignal`。
+
+```js
+const client = new GraphQLClient(endpoint);
+
+const query = useQuery("todos", ({ signal }) => {
+  client.request({ document: query, signal });
+});
+```
+
+### 使用 `graphql-request` (版本低于 `v4.0.0`)
+
+可以传递给 `GraphQLClient` 的构造函数一个 `AbortSignal`.
 
 ```js
 const query = useQuery("todos", ({ signal }) => {
@@ -127,21 +141,25 @@ const query = useQuery("todos", ({ signal }) => {
 如果 `promise.cancel` 可用或者你在查询函数内处理了 `signal`，React Query 将取消该 Promise 的同时取消请求。
 
 ```jsx
-const [queryKey] = useState("todos")
+const [queryKey] = useState("todos");
 
-const query = useQuery(queryKey, await ({ signal }) => {
-  const resp = fetch("/todos", { signal })
-  return resp.json()
-})
+const query = useQuery(queryKey, async ({ signal }) => {
+  const resp = await fetch("/todos", { signal });
+  return resp.json();
+});
 
-const queryClient = useQueryClient()
+const queryClient = useQueryClient();
 
 return (
-  <button onClick={(e) => {
-    e.preventDefault()
-    queryClient.cancelQueries(queryKey)
-   }}>Cancel</button>
-)
+  <button
+    onClick={(e) => {
+      e.preventDefault();
+      queryClient.cancelQueries(queryKey);
+    }}
+  >
+    Cancel
+  </button>
+);
 ```
 
 ## 旧的 `cancel` 函数

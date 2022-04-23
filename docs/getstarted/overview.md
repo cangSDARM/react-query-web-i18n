@@ -41,7 +41,7 @@ React Query 使您可以击败并征服棘手的服务器状态挑战和障碍�
 
 - 帮助您从应用中删除许多复杂和容易引起误解的代码行，用少量的 React 查询逻辑代替
 - 使您的应用更易于维护，更易于构建新功能，而不必担心如何连接新的服务器状态数据源
-- 通过应用的GUI及执行层面的更快的数据响应，直接影响您的最终用户
+- 通过应用的 GUI 及执行层面的更快的数据响应，直接影响您的最终用户
 - 潜在地帮助您节省带宽和提高内存性能
 
 ## 直接上代码!
@@ -51,42 +51,42 @@ React Query 使您可以击败并征服棘手的服务器状态挑战和障碍�
 [Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-query/tree/master/examples/simple)
 
 ```jsx
-import { QueryClient, QueryClientProvider, useQuery } from 'react-query'
+import { QueryClient, QueryClientProvider, useQuery } from "react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 export default function App() {
   return (
     <QueryClientProvider client={queryClient}>
       <Example />
     </QueryClientProvider>
-  )
+  );
 }
 
 function Example() {
-  const { isLoading, error, data } = useQuery('repoData', () =>
-    fetch(
-      'https://api.github.com/repos/tannerlinsley/react-query',
-    ).then((res) => res.json()),
-  )
+  const { isLoading, error, data } = useQuery("repoData", () =>
+    fetch("https://api.github.com/repos/tannerlinsley/react-query").then(
+      (res) => res.json(),
+    ),
+  );
 
-  if (isLoading) return 'Loading...'
+  if (isLoading) return "Loading...";
 
-  if (error) return 'An error has occurred: ' + error.message
+  if (error) return "An error has occurred: " + error.message;
 
   return (
     <div>
       <h1>{data.name}</h1>
       <p>{data.description}</p>
-      <strong>👀 {data.subscribers_count}</strong>{' '}
-      <strong>✨ {data.stargazers_count}</strong>{' '}
+      <strong>👀 {data.subscribers_count}</strong>{" "}
+      <strong>✨ {data.stargazers_count}</strong>{" "}
       <strong>🍴 {data.forks_count}</strong>
     </div>
-  )
+  );
 }
 ```
 
 ## 你说服了我，那现在怎么办？
 
-- 考虑参加[React Query Essentials](https://learn.tanstack.com/)课程（或为整个团队购买！）（英文）
+- 考虑参加[React Query Course](https://ui.dev/react-query?from=tanstack)课程（或为整个团队购买！）（英文）
 - 立即开始阅读文档

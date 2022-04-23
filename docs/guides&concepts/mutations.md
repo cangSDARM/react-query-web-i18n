@@ -188,6 +188,32 @@ mutate(todo, {
 });
 ```
 
+### 持续修改
+
+当持续修改时，`onSuccess`, `onError` and `onSettled` 这几个回调会有一些细微的差别。
+当组件是挂载状态，且将它们传递给 `mutate` 函数时，它们只会被 _触发一次_。
+这是因为在每次调用 `mutate` 函数时，相关的观察者都会被先移除再重新监听。
+与之相反，`useMutation` 的处理函数会在每一次的 `mutate` 调用时被调用。
+
+> 请注意，传递给 `useMutation` 的 `mutationFn` 是**同步**的。在这种情况下，`mutationFn` 的触发顺序和调用 `mutate` 时的顺序是有所不同的。
+
+```js
+useMutation(addTodo, {
+  onSuccess: (data, error, variables, context) => {
+    // Will be called 3 times
+  },
+});
+
+[("Todo 1", "Todo 2", "Todo 3")].forEach((todo) => {
+  mutate(todo, {
+    onSuccess: (data, error, variables, context) => {
+      // Will execute only once, for the last mutation (Todo 3),
+      // regardless which mutation resolves first
+    },
+  });
+});
+```
+
 ## Promises
 
 使用 `mutateAsync` 而不是 `mutate` 来返回一个 Promise，它将在成功时解析或抛出一个错误。

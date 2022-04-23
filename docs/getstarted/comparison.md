@@ -1,6 +1,6 @@
 ---
 id: comparison
-title: 比较 | React Query vs SWR vs Apollo vs RTK Query
+title: 比较 | React Query vs SWR vs Apollo vs RTK Query vs React Router
 ---
 
 > 该比较表力求尽可能准确和公正。 如果您使用这些库中的任何一个，并且认为信息可以得到改善，请随时使用[此链接](https://github.com/tannerlinsley/react-query/edit/master/docs/src/pages/comparison.md)来提交更改（带有注释或声明的证据）
@@ -12,52 +12,54 @@ title: 比较 | React Query vs SWR vs Apollo vs RTK Query
 - 🔶 受支持和记录，但需要额外的用户代码才能实现
 - 🛑 没有官方支持或文档。
 
-|                                    | React Query                              | [SWR][swr]               | [Apollo Client][apollo]        | [RTK-Query][rtk-query]               |
-| ---------------------------------- | ---------------------------------------- | ------------------------ | ------------------------------ | ------------------------------------ |
-| Github Repo / Stars                | [![][stars-react-query]][gh-react-query] | [![][stars-swr]][gh-swr] | [![][stars-apollo]][gh-apollo] | [![][stars-rtk-query]][gh-rtk-query] |
-| 平台要求                           | React                                    | React                    | React, GraphQL                 | Redux                                |
-| 他们的比较                         |                                          | (none)                   | (none)                         | [Comparison][rtk-query-comparison]   |
-| 支持的查询语法                     | Promise, REST, GraphQL                   | Promise, REST, GraphQL   | GraphQL                        | Promise, REST, GraphQL               |
-| 支持的框架                         | React                                    | React                    | React + Others                 | Any                                  |
-| 支持的查询类型                     | JSON                                     | JSON                     | GraphQL Query                  | JSON                                 |
-| 查询的 key 变更检测方法            | 深度比较 (稳定的序列化)                  | 浅比较                   | 深度比较 (不稳定的序列化)      | 引用相等 (===)                       |
-| 查询数据记忆级别                   | 查询 + 结构化共享                        | 查询                     | 查询 + 实体类 + 结构化共享     | 查询                                 |
-| 打包后大小                         | [![][bp-react-query]][bpl-react-query]   | [![][bp-swr]][bpl-swr]   | [![][bp-apollo]][bpl-apollo]   | [![][bp-rtk-query]][bpl-rtk-query]   |
-| API 定义                           | 使用中，声明式                           | 使用中                   | GraphQL 语法                   | 声明式                               |
-| 查询                               | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 缓存                               | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 开发者工具                         | ✅                                       | 🟡                       | ✅                             | ✅                                   |
-| 轮询/长轮询                        | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 并行查询                           | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 有依赖的查询                       | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 分页查询                           | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 无限查询                           | ✅                                       | ✅                       | ✅                             | 🛑                                   |
-| 双向无限查询                       | ✅                                       | 🔶                       | 🔶                             | 🛑                                   |
-| 无限查询重新获取数据               | ✅                                       | ✅                       | 🛑                             | 🛑                                   |
-| 滞后查询数据<sup>1</sup>           | ✅                                       | 🔶                       | 🛑                             | ✅                                   |
-| 选择器                             | ✅                                       | 🛑                       | ✅                             | ✅                                   |
-| 初始化数据                         | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 滚动恢复                           | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 缓存操作                           | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 过时数据的处理                     | ✅                                       | ✅                       | ✅                             | ✅                                   |
-| 批量渲染及优化<sup>2</sup>         | ✅                                       | 🛑                       | 🛑                             | ✅                                   |
-| 自动垃圾收集                       | ✅                                       | 🛑                       | 🛑                             | ✅                                   |
-| 修改 Hook                          | ✅                                       | 🟡                       | ✅                             | ✅                                   |
-| 离线修改的支持                     | ✅                                       | 🛑                       | 🟡                             | 🛑                                   |
-| 预取 api                           | ✅                                       | 🔶                       | ✅                             | ✅                                   |
-| 查询取消                           | ✅                                       | 🛑                       | 🛑                             | 🛑                                   |
-| 部分查询匹配<sup>3</sup>           | ✅                                       | 🛑                       | 🛑                             | ✅                                   |
-| 超时重新验证                       | ✅                                       | ✅                       | 🛑                             | ✅                                   |
-| 超时时间设置<sup>7</sup>           | ✅                                       | 🛑                       | 🛑                             | ✅                                   |
-| 使用前查询/修改配置<sup>4</sup>    | ✅                                       | 🛑                       | 🛑                             | ✅                                   |
-| 窗口焦点重新获取数据               | ✅                                       | ✅                       | 🛑                             | 🔶                                   |
-| 网络状态重新获取数据               | ✅                                       | ✅                       | ✅                             | 🔶                                   |
-| 通用缓存的 Dehydration/Rehydration | ✅                                       | 🛑                       | ✅                             | ✅                                   |
-| 离线缓存                           | ✅ (实验中)                              | 🛑                       | ✅                             | 🔶                                   |
-| React Suspense (实验中)            | ✅                                       | ✅                       | 🛑                             | 🛑                                   |
-| 抽象的内核                         | ✅                                       | 🛑                       | ✅                             | ✅                                   |
-| 修改后自动重新获取数据<sup>5</sup> | 🔶                                       | 🔶                       | ✅                             | ✅                                   |
-| 归一化缓存<sup>6</sup>             | 🛑                                       | 🛑                       | ✅                             | 🛑                                   |
+|                                    | React Query                              | [SWR][swr]               | [Apollo Client][apollo]        | [RTK-Query][rtk-query]               | [React Router][react-router]                                              |
+| ---------------------------------- | ---------------------------------------- | ------------------------ | ------------------------------ | ------------------------------------ | ------------------------------------------------------------------------- |
+| Github Repo / Stars                | [![][stars-react-query]][gh-react-query] | [![][stars-swr]][gh-swr] | [![][stars-apollo]][gh-apollo] | [![][stars-rtk-query]][gh-rtk-query] | [![][stars-react-router]][gh-react-router]                                |
+| 平台要求                           | React                                    | React                    | React, GraphQL                 | Redux                                | React                                                                     |
+| 他们的比较                         |                                          | (none)                   | (none)                         | [Comparison][rtk-query-comparison]   | (none)                                                                    |
+| 支持的查询语法                     | Promise, REST, GraphQL                   | Promise, REST, GraphQL   | GraphQL                        | Promise, REST, GraphQL               | Promise, REST, GraphQL                                                    |
+| 支持的框架                         | React                                    | React                    | React + Others                 | Any                                  | React                                                                     |
+| 缓存策略                           | 分层的 Key -> Value                      | 唯一的 Key -> Value      | 归一化的结构                   | 唯一的 Key -> Value                  | 嵌套的路由 -> value                                                       |
+| 缓存 key 的策略                    | JSON                                     | JSON                     | GraphQL Query                  | JSON                                 | Route Path                                                                |
+| 缓存变更检测方法                   | 深度比较 (稳定的序列化)                  | 浅比较                   | 深度比较 (不稳定的序列化)      | 引用相等 (===)                       | 路由变更                                                                  |
+| 数据变更检测方法                   | 深度比较 + 结构化共享                    | 深比较(即`dequal`)       | 深度比较 (不稳定的序列化)      | 引用相等 (===)                       | 程序加载                                                                  |
+| 数据缓存(memo)                     | 全量的结构化共享                         | 一致性(===)              | 归一化的一致性                 | 一致性(===)                          | 一致性(===)                                                               |
+| 打包后大小                         | [![][bp-react-query]][bpl-react-query]   | [![][bp-swr]][bpl-swr]   | [![][bp-apollo]][bpl-apollo]   | [![][bp-rtk-query]][bpl-rtk-query]   | [![][bp-react-router]][bpl-react-router] + [![][bp-history]][bpl-history] |
+| API 定义位置                       | 组件中, 额外 config                      | 组件中                   | GraphQL 语法(文件)             | 额外 config                          | 路由树的 config                                                           |
+| 查询                               | ✅                                       | ✅                       | ✅                             | ✅                                   | ✅                                                                        |
+| 缓存                               | ✅                                       | ✅                       | ✅                             | ✅                                   | 🛑 仅已激活的路由 <sup>8</sup>                                            |
+| 开发者工具                         | ✅                                       | 🟡                       | ✅                             | ✅                                   | 🛑                                                                        |
+| 轮询/长轮询                        | ✅                                       | ✅                       | ✅                             | ✅                                   | 🛑                                                                        |
+| 并行查询                           | ✅                                       | ✅                       | ✅                             | ✅                                   | ✅                                                                        |
+| 有依赖的查询                       | ✅                                       | ✅                       | ✅                             | ✅                                   | ✅                                                                        |
+| 分页查询                           | ✅                                       | ✅                       | ✅                             | ✅                                   | ✅                                                                        |
+| 无限查询                           | ✅                                       | ✅                       | ✅                             | 🛑                                   | 🛑                                                                        |
+| 双向无限查询                       | ✅                                       | 🔶                       | 🔶                             | 🛑                                   | 🛑                                                                        |
+| 无限查询重新获取数据               | ✅                                       | ✅                       | 🛑                             | 🛑                                   | 🛑                                                                        |
+| 滞后查询数据<sup>1</sup>           | ✅                                       | 🔶                       | 🛑                             | ✅                                   | ✅                                                                        |
+| 选择器                             | ✅                                       | 🛑                       | ✅                             | ✅                                   | N/A                                                                       |
+| 初始化数据                         | ✅                                       | ✅                       | ✅                             | ✅                                   | ✅                                                                        |
+| 滚动恢复                           | ✅                                       | ✅                       | ✅                             | ✅                                   | ✅                                                                        |
+| 缓存操作                           | ✅                                       | ✅                       | ✅                             | ✅                                   | 🛑                                                                        |
+| 过时数据的处理                     | ✅                                       | ✅                       | ✅                             | ✅                                   | ✅                                                                        |
+| 批量渲染及优化<sup>2</sup>         | ✅                                       | 🛑                       | 🛑                             | ✅                                   | ✅                                                                        |
+| 自动垃圾收集                       | ✅                                       | 🛑                       | 🛑                             | ✅                                   | N/A                                                                       |
+| 修改 Hook                          | ✅                                       | 🟡                       | ✅                             | ✅                                   | ✅                                                                        |
+| 离线修改的支持                     | ✅                                       | 🛑                       | 🟡                             | 🛑                                   | 🛑                                                                        |
+| 预取 api                           | ✅                                       | 🔶                       | ✅                             | ✅                                   | ✅                                                                        |
+| 查询取消                           | ✅                                       | 🛑                       | 🛑                             | 🛑                                   | ✅                                                                        |
+| 部分查询匹配<sup>3</sup>           | ✅                                       | 🛑                       | 🛑                             | ✅                                   | N/A                                                                       |
+| 超时重新验证                       | ✅                                       | ✅                       | ✅                             | ✅                                   | 🛑                                                                        |
+| 超时时间设置                       | ✅                                       | 🛑<sup>7</sup>           | 🛑                             | ✅                                   | 🛑                                                                        |
+| 使用前查询/修改配置<sup>4</sup>    | ✅                                       | 🛑                       | 🛑                             | ✅                                   | ✅                                                                        |
+| 窗口焦点重新获取数据               | ✅                                       | ✅                       | 🛑                             | 🔶                                   | 🛑                                                                        |
+| 网络状态重新获取数据               | ✅                                       | ✅                       | ✅                             | 🔶                                   | 🛑                                                                        |
+| 通用缓存的 Dehydration/Rehydration | ✅                                       | 🛑                       | ✅                             | ✅                                   | ✅                                                                        |
+| 离线缓存                           | ✅ (实验中)                              | 🛑                       | ✅                             | 🔶                                   | 🛑                                                                        |
+| React Suspense (实验中)            | ✅                                       | ✅                       | 🛑                             | 🛑                                   | ✅                                                                        |
+| 抽象的内核                         | ✅                                       | 🛑                       | ✅                             | ✅                                   | 🛑                                                                        |
+| 修改后自动重新获取数据<sup>5</sup> | 🔶                                       | 🔶                       | ✅                             | ✅                                   | ✅                                                                        |
+| 归一化缓存<sup>6</sup>             | 🛑                                       | 🛑                       | ✅                             | 🛑                                   | 🛑                                                                        |
 
 ### Notes
 
@@ -74,6 +76,8 @@ title: 比较 | React Query vs SWR vs Apollo vs RTK Query
 > **<sup>6</sup> 归一化缓存** - React Query 和 SWR 当前不支持自动归一化的缓存，该缓存描述了在平面架构中如何存储实体以避免某些高级数据的重复。
 
 > **<sup>7</sup> SWR 的不可变模式** - SWR 提供了一种"不可变"模式，允许您在缓存的生命周期里只获取一次查询。然而它任然没有关于过期时间或有条件的自动重新验证相关的概念。
+
+> **<sup>8</sup> React Router 的持久化缓存** - React Router 不缓存除当前匹配的路由之外的数据。如果一条从路由切换到另外的路由，则该路由的数据将丢失.
 
 <!-- -->
 
@@ -100,11 +104,22 @@ title: 比较 | React Query vs SWR vs Apollo vs RTK Query
 
 <!-- -->
 
-[rtk-query]: https://rtk-query-docs.netlify.app/
-[rtk-query-comparison]: https://rtk-query-docs.netlify.app/introduction/comparison
+[rtk-query]: https://redux-toolkit.js.org/rtk-query/overview
+[rtk-query-comparison]: https://redux-toolkit.js.org/rtk-query/comparison
+[rtk-query-bundle-size]: https://redux-toolkit.js.org/rtk-query/comparison#bundle-size
 [bp-rtk]: https://badgen.net/bundlephobia/minzip/@reduxjs/toolkit?label=💾
-[bp-rtk-query]: https://badgen.net/bundlephobia/minzip/@rtk-incubator/rtk-query?label=💾
-[gh-rtk-query]: https://github.com/rtk-incubator/rtk-query
-[stars-rtk-query]: https://img.shields.io/github/stars/rtk-incubator/rtk-query?label=%F0%9F%8C%9F
+[bp-rtk-query]: https://badgen.net/bundlephobia/minzip/@reduxjs/toolkit?label=💾
+[gh-rtk-query]: https://github.com/reduxjs/redux-toolkit
+[stars-rtk-query]: https://img.shields.io/github/stars/reduxjs/redux-toolkit?label=🌟
 [bpl-rtk]: https://bundlephobia.com/result?p=@reduxjs/toolkit
-[bpl-rtk-query]: https://bundlephobia.com/result?p=@rtk-incubator/rtk-query
+[bpl-rtk-query]: https://bundlephobia.com/package/@reduxjs/toolkit
+
+<!--  -->
+
+[react-router]: https://github.com/remix-run/react-router
+[bp-react-router]: https://badgen.net/bundlephobia/minzip/react-router-dom?label=💾
+[gh-react-router]: https://github.com/remix-run/react-router
+[stars-react-router]: https://img.shields.io/github/stars/remix-run/react-router?label=%F0%9F%8C%9F
+[bpl-react-router]: https://bundlephobia.com/result?p=react-router-dom
+[bp-history]: https://badgen.net/bundlephobia/minzip/history?label=💾
+[bpl-history]: https://bundlephobia.com/result?p=history
