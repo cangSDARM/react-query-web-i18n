@@ -13,6 +13,16 @@ module.exports = {
   },
   ssrTemplate: require("./ssr-template.js").default,
   themeConfig: {
+    colorMode: {
+      respectPrefersColorScheme: true,
+    },
+    announcementBar: {
+      id: "upgrading",
+      content: "v4的文档正在翻译中……现在的是v3版本的文档",
+      backgroundColor: "#bff3e7",
+      textColor: "#091E42",
+      isCloseable: false,
+    },
     navbar: {
       title: "React Query 中文文档",
       logo: {
@@ -25,6 +35,11 @@ module.exports = {
           activeBasePath: "docs",
           label: "文档",
           position: "right",
+        },
+        {
+          type: "docsVersionDropdown",
+          position: "right",
+          dropdownActiveClassDisabled: true,
         },
         {
           label: "官方资源（英文）",
@@ -63,7 +78,6 @@ module.exports = {
       {
         docs: {
           sidebarPath: require.resolve("./sidebars.js"),
-          // Please change this to your repo.
           editUrl: "https://github.com/cangSDARM/react-query-web-i18n",
           routeBasePath: "/",
           showLastUpdateTime: true,

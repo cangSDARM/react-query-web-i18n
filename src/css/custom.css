@@ -7,18 +7,36 @@
 
 /* You can override the default Infima variables here. */
 :root {
-  --ifm-color-primary: #25c2a0;
-  --ifm-color-primary-dark: rgb(33, 175, 144);
-  --ifm-color-primary-darker: rgb(31, 165, 136);
-  --ifm-color-primary-darkest: rgb(26, 136, 112);
-  --ifm-color-primary-light: rgb(70, 203, 174);
-  --ifm-color-primary-lighter: rgb(102, 212, 189);
-  --ifm-color-primary-lightest: rgb(146, 224, 208);
   --ifm-code-font-size: 95%;
+  --ifm-background-color: #fafafa;
   --text-opacity: 1;
-  --ifm-link-color: rgba(28,100,242,var(--text-opacity));
+  --ifm-link-color: rgba(28, 100, 242, var(--text-opacity));
   --ifm-blockquote-padding-vertical: 0.25em;
   --ifm-blockquote-padding-horizontal: 1em;
+}
+
+:root {
+  --ifm-color-primary: #195735;
+  --ifm-color-primary-dark: #174e30;
+  --ifm-color-primary-darker: #154a2d;
+  --ifm-color-primary-darkest: #113d25;
+  --ifm-color-primary-light: #1c603a;
+  --ifm-color-primary-lighter: #1d643d;
+  --ifm-color-primary-lightest: #217145;
+}
+
+[data-theme="dark"] {
+  --ifm-color-primary: #22bf9d;
+  --ifm-color-primary-dark: #1fac8d;
+  --ifm-color-primary-darker: #1da285;
+  --ifm-color-primary-darkest: #18866e;
+  --ifm-color-primary-light: #25d2ad;
+  --ifm-color-primary-lighter: #2ad9b3;
+  --ifm-color-primary-lightest: #46debd;
+}
+
+html[data-theme="dark"] {
+  --ifm-background-color: #202122;
 }
 
 a {
@@ -38,14 +56,13 @@ h1.docTitle_node_modules-\@docusaurus-theme-classic-lib-next-theme-DocItem- {
 }
 
 blockquote {
-  padding: .75rem;
+  padding: 0.75rem;
   color: var(--ifm-color-emphasis-700);
   background-color: var(--ifm-color-emphasis-100);
   margin-bottom: 1.5rem;
   --border-opacity: 1;
-  border-color: rgba(210,214,220,var(--border-opacity));
   border-width: 1px 1px 1px 4px;
-  border-radius: .125rem;
-  font-size: .875rem;
+  border-radius: 0.125rem;
+  font-size: 0.875rem;
   line-height: 1.25rem;
 }
