@@ -19,15 +19,15 @@ module.exports = {
     announcementBar: {
       id: "upgrading",
       content: "v4的文档正在翻译中……现在的是v3版本的文档",
-      backgroundColor: "#bff3e7",
-      textColor: "#091E42",
+      backgroundColor: "#f1563a",
+      textColor: "#000000",
       isCloseable: false,
     },
     navbar: {
-      title: "React Query 中文文档",
+      title: "TanStack Query 中文文档",
       logo: {
         alt: "logo",
-        src: "img/logo.svg",
+        src: "img/logo-v4.png",
       },
       items: [
         {

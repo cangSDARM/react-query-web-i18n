@@ -10,7 +10,7 @@
   --ifm-code-font-size: 95%;
   --ifm-background-color: #fafafa;
   --text-opacity: 1;
-  --ifm-link-color: rgba(28, 100, 242, var(--text-opacity));
+  --ifm-link-color: rgba(250, 250, 250, var(--text-opacity));
   --ifm-blockquote-padding-vertical: 0.25em;
   --ifm-blockquote-padding-horizontal: 1em;
 }
@@ -36,11 +36,14 @@
 }
 
 html[data-theme="dark"] {
-  --ifm-background-color: #202122;
+  --ifm-background-color: #111827;
+  --ifm-navbar-background-color: #111827;
 }
 
-a {
+div.markdown a {
   font-weight: 600;
+  text-decoration: underline;
+  margin: auto 2px;
 }
 
 .docusaurus-highlight-code-line {

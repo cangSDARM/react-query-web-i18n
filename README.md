@@ -15,6 +15,11 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 ### 关于 Gitee
 
-Gitee 有时会 404 或者过旧，这是因为 Gitee 同步的问题。
+由于某些总所周知的原因，Gitee 不再同步
 
 请以 Github 版本为准
+
+### 已知 Issue
+
+- 由于 react-query 官方 repo 换位置了，所以`git submodule`现在同步有些问题，仍然是 v3 版本的文件
+- 官方的 logo 还没有 svg 图片，因此图片暂时是 png 的锯齿图……

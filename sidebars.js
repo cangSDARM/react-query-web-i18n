@@ -3,12 +3,19 @@ const started = [
   "installation",
   "quick-start",
   "devtools",
-  "videos",
+  "videos&talks",
   "comparison",
   "typescript",
   "graphql",
   "react-native",
 ].map((item) => "getstarted/" + item);
+
+const adapters = [
+  "react-query",
+  "svelte-query",
+  "solid-query",
+  "vue-query",
+].map((item) => "adapters/" + item);
 
 const guide = [
   "important-defaults",
@@ -55,6 +62,7 @@ const reference = ["useQuery", "useQueries"].map((item) => "reference/" + item);
 module.exports = {
   zhCN: {
     准备开始: started,
+    适配器: adapters,
     "指南&概念": guide,
     范例: [
       {

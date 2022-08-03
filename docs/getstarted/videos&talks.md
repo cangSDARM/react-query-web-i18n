@@ -1,5 +1,5 @@
 ---
-id: videos
+id: videos&talks
 title: 视频教程
 ---
 
