@@ -9,4 +9,4 @@ title: GraphQL
 
 ## 例子
 
-- [basic-graphql-request](https://react-query.tanstack.com/docs/examples/basic-graphql-request) (“基本”示例，但使用了 [`graphql-request`](https://github.com/prisma-labs/graphql-request))
+- [basic-graphql-request](https://tanstack.com/query/v4/docs/examples/react/basic-graphql-request) (“基本”示例，但使用了 [`graphql-request`](https://github.com/prisma-labs/graphql-request))

@@ -18,7 +18,8 @@ module.exports = {
     },
     announcementBar: {
       id: "upgrading",
-      content: "v4的文档正在翻译中……现在的是v3版本的文档",
+      content:
+        "v4的文档翻译中(20%, <span style='font-weight:bold;'>\"准备开始\"部分已经翻译完毕!</span>)，现在稳定的是v3版本的文档",
       backgroundColor: "#f1563a",
       textColor: "#000000",
       isCloseable: false,
@@ -46,7 +47,7 @@ module.exports = {
           position: "right",
           items: [
             {
-              href: "https://react-query.tanstack.com/examples/simple",
+              href: "https://tanstack.com/query/v4/docs/examples/react/basic",
               label: "示例",
             },
             {
@@ -54,7 +55,7 @@ module.exports = {
               label: "学习",
             },
             {
-              href: "https://github.com/tannerlinsley/react-query",
+              href: "https://github.com/TanStack/query",
               label: "Github",
             },
           ],

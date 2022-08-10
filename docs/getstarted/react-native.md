@@ -18,11 +18,11 @@ React Query 已支持在浏览器中的重新连网时的自动重新获取。
 
 ```ts
 import NetInfo from "@react-native-community/netinfo";
-import { onlineManager } from "react-query";
+import { onlineManager } from "@tanstack/react-query";
 
 onlineManager.setEventListener((setOnline) => {
   return NetInfo.addEventListener((state) => {
-    setOnline(state.isConnected);
+    setOnline(!!state.isConnected);
   });
 });
 ```
@@ -31,10 +31,8 @@ onlineManager.setEventListener((setOnline) => {
 
 在 React Native 中，你需要使用 `focusManager` 来使得此特性生效。
 
-你也可以使用一个叫 'react-native-appstate-hook' 的包来通知 React Query。
-
 ```ts
-import { focusManager } from "react-query";
+import { focusManager } from "@tanstack/react-query";
 import useAppState from "react-native-appstate-hook";
 
 function onAppStateChange(status: AppStateStatus) {
@@ -43,9 +41,11 @@ function onAppStateChange(status: AppStateStatus) {
   }
 }
 
-useAppState({
-  onChange: onAppStateChange,
-});
+useEffect(() => {
+  const subscription = AppState.addEventListener("change", onAppStateChange);
+
+  return () => subscription.remove();
+}, []);
 ```
 
 ## 屏幕的基于焦点的重新获取

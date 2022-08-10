@@ -25,7 +25,7 @@
   --ifm-color-primary-lightest: #217145;
 }
 
-[data-theme='dark'] {
+[data-theme="dark"]:root {
   --ifm-color-primary: #f2c922;
   --ifm-color-primary-dark: #ebbf0e;
   --ifm-color-primary-darker: #deb40d;
@@ -35,6 +35,11 @@
   --ifm-color-primary-lightest: #f7dc70;
   --ifm-background-color: #111827;
   --ifm-navbar-background-color: #111827;
+  --ifm-color-content: #e1e1e1;
+}
+
+strong {
+  --ifm-color-content: #efefef;
 }
 
 div.markdown a {

@@ -4,7 +4,7 @@ module.exports.default = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=0.86, maximum-scale=3.0, minimum-scale=0.86">
     <meta name="generator" content="Docusaurus v<%= it.version %>">
-    <meta content="React Query,React,Query,React Query中文,中文文档,数据同步" name="Keywords">
+    <meta content="React Query,TanStack Query,React,Query,TanStack Query中文,React Query中文,数据同步" name="Keywords">
     <%~ it.headTags %>
     <% it.metaAttributes.forEach((metaAttribute) => { %>
       <%~ metaAttribute %>

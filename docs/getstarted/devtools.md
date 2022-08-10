@@ -10,12 +10,20 @@ title: 开发调试工具
 
 > 请注意，目前**devtools 还不支持 React Native**。如果你想帮助我们使 devtools 变得平台无关，请让我们知道!
 
-## 导入工具
+## 安装和导入工具
 
-devtools 包被拆分为`react-query/devtools`包。不需要安装任何额外的东西:
+devtools 包现在被拆分开来，因此需要额外安装:
 
-```js
-import { ReactQueryDevtools } from 'react-query/devtools'
+```bash
+$ npm i @tanstack/react-query-devtools
+# or
+$ yarn add @tanstack/react-query-devtools
+```
+
+然后你可以像这样导入它:
+
+```ts
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 ```
 
 默认情况下，当`process.env.NODE_ENV ==='production'`时，React Query Devtools 不包含在生产包中，因此您不需要手动在生产构建期间将其排除。
@@ -26,8 +34,8 @@ import { ReactQueryDevtools } from 'react-query/devtools'
 
 将以下代码尽可能地放在 React 应用的顶部。它离页面的根元素越近，它工作得越好!
 
-```js
-import { ReactQueryDevtools } from 'react-query/devtools'
+```tsx
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 function App() {
   return (
@@ -35,7 +43,7 @@ function App() {
       {/* The rest of your application */}
       <ReactQueryDevtools initialIsOpen={false} />
     </QueryClientProvider>
-  )
+  );
 }
 ```
 
@@ -52,13 +60,15 @@ function App() {
 - `position?: "top-left" | "top-right" | "bottom-left" | "bottom-right"`
   - 默认值为 `bottom-left`
   - React Query 徽标的位置，用于打开和关闭 devtools 面板
+- `context?: React.Context<QueryClient | undefined>`
+  - 使用这个来使用自定义的 React Query 上下文。否则，将默认使用`defaultContext`
 
 ## 嵌入模式
 
 嵌入式模式会将 devtools 作为常规组件嵌入到您的应用中。 您可以根据需要设置样式！
 
-```js
-import { ReactQueryDevtoolsPanel } from 'react-query/devtools'
+```tsx
+import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
 
 function App() {
   return (
@@ -66,7 +76,7 @@ function App() {
       {/* The rest of your application */}
       <ReactQueryDevtoolsPanel style={styles} className={className} />
     </QueryClientProvider>
-  )
+  );
 }
 ```
 

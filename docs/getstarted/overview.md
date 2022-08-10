@@ -48,10 +48,14 @@ React Query 使您可以击败并征服棘手的服务器状态挑战和障碍�
 
 在下面的例子中，你可以看到 React Query 以其最基本和简单的形式被用来获取 GitHub 项目本身的 React Query 的统计信息:
 
-[Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-query/tree/master/examples/simple)
+[Open in CodeSandbox](https://codesandbox.io/s/github/tannerlinsley/react-query/tree/main/examples/react/simple)
 
-```jsx
-import { QueryClient, QueryClientProvider, useQuery } from "react-query";
+```tsx
+import {
+  QueryClient,
+  QueryClientProvider,
+  useQuery,
+} from "@tanstack/react-query";
 
 const queryClient = new QueryClient();
 
@@ -64,7 +68,7 @@ export default function App() {
 }
 
 function Example() {
-  const { isLoading, error, data } = useQuery("repoData", () =>
+  const { isLoading, error, data } = useQuery(["repoData"], () =>
     fetch("https://api.github.com/repos/tannerlinsley/react-query").then(
       (res) => res.json(),
     ),
@@ -89,4 +93,4 @@ function Example() {
 ## 你说服了我，那现在怎么办？
 
 - 考虑参加[React Query Course](https://ui.dev/react-query?from=tanstack)课程（或为整个团队购买！）（英文）
-- 立即开始阅读文档
+- [立即开始阅读文档!](./installation.md)
