@@ -2,4 +2,4 @@
 # git submodule update --recursive --remote
 [submodule "upstream"]
 	path = upstream
-	url = git@github.com:tannerlinsley/react-query.git
+	url = git@github.com:TanStack/query.git
