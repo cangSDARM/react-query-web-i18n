@@ -19,7 +19,7 @@ module.exports = {
     announcementBar: {
       id: "upgrading",
       content:
-        "v4的文档翻译中(20%, <span style='font-weight:bold;'>\"准备开始\"部分已经翻译完毕!</span>)，现在稳定的是v3版本的文档",
+        "v4的文档翻译中(<span style='font-weight:bold;'>\"准备开始\"部分已经翻译完毕!</span>)，现在稳定的是v3版本的文档",
       backgroundColor: "#f1563a",
       textColor: "#000000",
       isCloseable: false,
