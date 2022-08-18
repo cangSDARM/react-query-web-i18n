@@ -45,6 +45,7 @@ const guide = [
   "caching",
   "default-query-function",
   "suspense",
+  "custom-logger",
   "testing",
   "does-this-replace-client-state",
   "migrating-to-react-query-3",

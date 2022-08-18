@@ -1,13 +1,15 @@
 ---
 id: default-query-function
-title: 默认的查询函数 default-query-function
+title: 默认的查询函数 Default Query Fn
+tags:
+  - 翻译完成
 ---
 
-如果出于某种原因，您希望在整个应用中共享相同的查询功能，并且可以仅靠查询键值来标识应获取的内容。则可以通过重写 React Query 提供的**默认查询函数**来做到这一点：
+如果出于某种原因，您希望在整个应用中共享相同的查询功能，并且可以仅靠查询键值来标识应获取的内容。
+则可以通过重写 React Query 提供的**默认查询函数**来做到这一点：
 
-```js
+```tsx
 // 定义一个参数为查询键值的默认查询函数
-// 假设这里的 queryKey 是一个数组
 const defaultQueryFn = async ({ queryKey }) => {
   const { data } = await axios.get(
     `https://jsonplaceholder.typicode.com${queryKey[0]}`,
@@ -34,14 +36,14 @@ function App() {
 
 // 现在，只需要传入一个键值就行了!
 function Posts() {
-  const { status, data, error, isFetching } = useQuery("/posts");
+  const { status, data, error, isFetching } = useQuery(["/posts"]);
 
   // ...
 }
 
 // 你也可以传入一些参数
 function Post({ postId }) {
-  const { status, data, error, isFetching } = useQuery(`/posts/${postId}`, {
+  const { status, data, error, isFetching } = useQuery([`/posts/${postId}`], {
     enabled: !!postId,
   });
 

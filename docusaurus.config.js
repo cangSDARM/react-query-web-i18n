@@ -18,8 +18,7 @@ module.exports = {
     },
     announcementBar: {
       id: "upgrading",
-      content:
-        "v4的文档翻译中(<span style='font-weight:bold;'>\"准备开始\"部分已经翻译完毕!</span>)，现在稳定的是v3版本的文档",
+      content: `v4的文档翻译中(<span style='font-weight:bold;'>"准备开始"及"适配器"已经翻译完毕!</span>其他请查看<a href="/react-query-web-i18n/next/tags/翻译完成">"翻译完成"</a>的tag!)，现在稳定的是v3版本的文档`,
       backgroundColor: "#f1563a",
       textColor: "#000000",
       isCloseable: false,
