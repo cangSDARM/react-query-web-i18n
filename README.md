@@ -21,5 +21,4 @@ This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern 
 
 ### 已知 Issue
 
-- 由于 react-query 官方 repo 换位置了，所以`git submodule`现在同步有些问题，仍然是 v3 版本的文件
 - 官方的 logo 还没有 svg 图片，因此图片暂时是 png 的锯齿图……
