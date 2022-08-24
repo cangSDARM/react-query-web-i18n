@@ -1,20 +1,22 @@
 ---
 id: important-defaults
-title: 重要的默认配置 important-defaults
+title: 重要的默认配置 Important Defaults
+tags:
+  - 翻译完成
 ---
 
 在开箱即用的情况下，React Query 配置了**激进但还算理智**的默认值。有时，这些默认值有时会让新用户措手不及，或者说如果用户不知道它们，则会**使学习/调试变得困难**。
 在继续学习和使用 React Query 时，请记住以下几点：
 
-- 默认情况下，通过`useQuery`或`useInfiniteQuery`生成的查询实例会将缓存的数据视为过时(stale)的。
+- 默认情况下，通过`useQuery`或`useInfiniteQuery`生成的查询实例会*将缓存的数据视为过时(stale)的*。
 
-> 要更改此行为，可以使用`staleTime`选项在全局和单独每个查询中配置。指定更长的`staleTime`意味着查询将不会像以前那样频繁地重新获取其数据
+> 要更改此行为，可以在全局或者在单个查询中配置`staleTime`选项。指定更长的`staleTime`意味着查询将不会像以前那样频繁地重新获取其数据
 
 - 当出现以下情况时，过时的查询会在后台自动重新获取数据:
   - 挂载新的查询实例
   - 窗口重新聚焦
   - 网络重新连接
-  - 该查询可选地配置有重新获取数据的间隔
+  - 该查询可选地配置有重新获取数据的间隔(refetch interval)
 
 如果某些重新获取的数据不是你所期望的，那么很大可能是你重新获取了窗口焦点(此时 React Query 正在处理`refetchOnWindowFocus`)。_在开发模式下，这可能会更频繁地触发_，特别是在浏览器的 Devtools 和你的应用之间互相切换也会导致获取，所以请额外注意。
 
@@ -39,4 +41,4 @@ title: 重要的默认配置 important-defaults
 社区中有关于默认值的进一步解释或说明（英文）
 
 - [React Query 实践](https://react-query.tanstack.com/community/tkdodos-blog#1-practical-react-query)
-- [React Query 作为一个状态管理器](https://react-query.tanstack.com/community/tkdodos-blog#10-react-query-as-a-state-manager)
+- [React Query "作为一个状态管理器"](https://react-query.tanstack.com/community/tkdodos-blog#10-react-query-as-a-state-manager)
