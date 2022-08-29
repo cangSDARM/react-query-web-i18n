@@ -22,6 +22,7 @@ const guide = [
   "queries",
   "query-keys",
   "query-functions",
+  "network-mode",
   "parallel-queries",
   "dependent-queries",
   "background-fetching-indicators",
@@ -49,6 +50,7 @@ const guide = [
   "testing",
   "does-this-replace-client-state",
   "migrating-to-react-query-3",
+  "migrating-to-react-query-4",
 ].map((item) => "guides&concepts/" + item);
 
 const plugins = [

@@ -1,6 +1,8 @@
 ---
 id: migrating-to-react-query-3
 title: 迁移到React Query 3
+tags:
+  - 翻译完成
 ---
 
 以前版本的 React Query 很棒，并为库带来了一些惊人的新特性、更多的魔力以及更好的整体体验。
@@ -22,7 +24,7 @@ v3 版本 merge 了许多性能优化和 API 调优的内容。
 - 修改/查询可以在 React 之外实现观察者模式
 - 随时随地使用 React Query 核心逻辑！
 - 通过使用`react-query/devtools`，随时享受 Devtools
-- 持久化缓存到 web的存储 中 (_实验性_， `react-query/persistQueryClient-experimental` 和 `react-query/createWebStoragePersistor-experimental`)
+- 持久化缓存到 web 的存储 中 (_实验性_， `react-query/persistQueryClient-experimental` 和 `react-query/createWebStoragePersistor-experimental`)
 
 ## 破坏性修改
 
@@ -41,9 +43,9 @@ v3 版本 merge 了许多性能优化和 API 调优的内容。
 当 `new QueryClient()` 时，如果不提供 `QueryCache` 和 `MutationCache` 对象，则会自动为您创建
 
 ```js
-import { QueryClient } from 'react-query'
+import { QueryClient } from "react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 ```
 
 ### `ReactQueryConfigProvider` 和 `ReactQueryCacheProvider` 已被 `QueryClientProvider` 替代
@@ -62,18 +64,18 @@ const queryClient = new QueryClient({
       // mutation options
     },
   },
-})
+});
 ```
 
 `QueryClientProvider` 组件现在用于将 `QueryClient` 连接到应用：
 
 ```js
-import { QueryClient, QueryClientProvider } from 'react-query'
+import { QueryClient, QueryClientProvider } from "react-query";
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient();
 
 function App() {
-  return <QueryClientProvider client={queryClient}>...</QueryClientProvider>
+  return <QueryClientProvider client={queryClient}>...</QueryClientProvider>;
 }
 ```
 
@@ -92,11 +94,11 @@ function App() {
 
 ```js
 // Prefetch a query:
-await queryClient.prefetchQuery('posts', fetchPosts)
+await queryClient.prefetchQuery("posts", fetchPosts);
 
 // Fetch a query:
 try {
-  const data = await queryClient.fetchQuery('posts', fetchPosts)
+  const data = await queryClient.fetchQuery("posts", fetchPosts);
 } catch (error) {
   // 错误处理
 }
@@ -132,16 +134,16 @@ try {
 
 ```js
 // Old
-useQuery(['post', id], (_key, id) => fetchPost(id))
+useQuery(["post", id], (_key, id) => fetchPost(id));
 
 // New
-useQuery(['post', id], () => fetchPost(id))
+useQuery(["post", id], () => fetchPost(id));
 ```
 
 如果仍然坚持不使用闭包，则可以使用新的 `QueryFunctionContext`：
 
 ```js
-useQuery(['post', id], (context) => fetchPost(context.queryKey[1]))
+useQuery(["post", id], (context) => fetchPost(context.queryKey[1]));
 ```
 
 ### 无限查询的分页参数现在使用 `QueryFunctionContext.pageParam` 传递
@@ -150,10 +152,10 @@ useQuery(['post', id], (context) => fetchPost(context.queryKey[1]))
 
 ```js
 // Old
-useInfiniteQuery(['posts'], (_key, pageParam = 0) => fetchPosts(pageParam))
+useInfiniteQuery(["posts"], (_key, pageParam = 0) => fetchPosts(pageParam));
 
 // New
-useInfiniteQuery(['posts'], ({ pageParam = 0 }) => fetchPosts(pageParam))
+useInfiniteQuery(["posts"], ({ pageParam = 0 }) => fetchPosts(pageParam));
 ```
 
 ### 不推荐使用 `usePaginatedQuery()`，而是应该选择 `keepPreviousData` 参数
@@ -161,12 +163,12 @@ useInfiniteQuery(['posts'], ({ pageParam = 0 }) => fetchPosts(pageParam))
 新的 `keepPreviousData` 选项可用于 `useQuery` 和 `useInfiniteQuery`，它们对于数据具有相同的“滞后”效果：
 
 ```js
-import { useQuery } from 'react-query'
+import { useQuery } from "react-query";
 
 function Page({ page }) {
-  const { data } = useQuery(['page', page], fetchPage, {
+  const { data } = useQuery(["page", page], fetchPage, {
     keepPreviousData: true,
-  })
+  });
 }
 ```
 
@@ -187,18 +189,14 @@ function Page({ page }) {
 一个方向：
 
 ```js
-const {
-  data,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-} = useInfiniteQuery(
-  'projects',
-  ({ pageParam = 0 }) => fetchProjects(pageParam),
-  {
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  },
-)
+const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  useInfiniteQuery(
+    "projects",
+    ({ pageParam = 0 }) => fetchProjects(pageParam),
+    {
+      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    },
+  );
 ```
 
 双向：
@@ -213,34 +211,30 @@ const {
   isFetchingNextPage,
   isFetchingPreviousPage,
 } = useInfiniteQuery(
-  'projects',
+  "projects",
   ({ pageParam = 0 }) => fetchProjects(pageParam),
   {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
     getPreviousPageParam: (firstPage, pages) => firstPage.prevCursor,
   },
-)
+);
 ```
 
 反向：
 
 ```js
-const {
-  data,
-  fetchNextPage,
-  hasNextPage,
-  isFetchingNextPage,
-} = useInfiniteQuery(
-  'projects',
-  ({ pageParam = 0 }) => fetchProjects(pageParam),
-  {
-    select: (data) => ({
-      pages: [...data.pages].reverse(),
-      pageParams: [...data.pageParams].reverse(),
-    }),
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  },
-)
+const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+  useInfiniteQuery(
+    "projects",
+    ({ pageParam = 0 }) => fetchProjects(pageParam),
+    {
+      select: (data) => ({
+        pages: [...data.pages].reverse(),
+        pageParams: [...data.pageParams].reverse(),
+      }),
+      getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+    },
+  );
 ```
 
 ### 现在，无限查询数据包含页面数组和用于获取这些页面的 pageParams
@@ -248,10 +242,10 @@ const {
 这样可以更轻松地操作数据和页面参数，例如，删除数据的第一页及其相关的参数：
 
 ```js
-queryClient.setQueryData('projects', (data) => ({
+queryClient.setQueryData("projects", (data) => ({
   pages: data.pages.slice(1),
   pageParams: data.pageParams.slice(1),
-}))
+}));
 ```
 
 ### `useMutation` 现在返回一个对象而不是一个数组
@@ -261,10 +255,10 @@ queryClient.setQueryData('projects', (data) => ({
 
 ```js
 // Old:
-const [mutate, { status, reset }] = useMutation()
+const [mutate, { status, reset }] = useMutation();
 
 // New:
-const { mutate, status, reset } = useMutation()
+const { mutate, status, reset } = useMutation();
 ```
 
 ### `mutation.mutate` 不再返回一个 Promise
@@ -279,33 +273,33 @@ const { mutate, status, reset } = useMutation()
 因而，现在 `mutate` 函数的接口为回调函数式：
 
 ```js
-const { mutate } = useMutation(addTodo)
+const { mutate } = useMutation(addTodo);
 
-mutate('todo', {
+mutate("todo", {
   onSuccess: (data) => {
-    console.log(data)
+    console.log(data);
   },
   onError: (error) => {
-    console.error(error)
+    console.error(error);
   },
   onSettled: () => {
-    console.log('settled')
+    console.log("settled");
   },
-})
+});
 ```
 
 异步时，考虑使用 `mutateAsync` 函数：
 
 ```js
-const { mutateAsync } = useMutation(addTodo)
+const { mutateAsync } = useMutation(addTodo);
 
 try {
-  const data = await mutateAsync('todo')
-  console.log(data)
+  const data = await mutateAsync("todo");
+  console.log(data);
 } catch (error) {
-  console.error(error)
+  console.error(error);
 } finally {
-  console.log('settled')
+  console.log("settled");
 }
 ```
 
@@ -314,17 +308,17 @@ try {
 ```js
 // Old:
 useQuery({
-  queryKey: 'posts',
+  queryKey: "posts",
   queryFn: fetchPosts,
   config: { staleTime: Infinity },
-})
+});
 
 // New:
 useQuery({
-  queryKey: 'posts',
+  queryKey: "posts",
   queryFn: fetchPosts,
   staleTime: Infinity,
-})
+});
 ```
 
 ### 如果设置，则 `QueryOptions.enabled` 选项必须为布尔值 (`true`/`false`)
@@ -360,26 +354,26 @@ useQuery({
 只有当 `data` 或 `error` 被改变时重新渲染：
 
 ```js
-import { useQuery } from 'react-query'
+import { useQuery } from "react-query";
 
 function User() {
-  const { data } = useQuery('user', fetchUser, {
-    notifyOnChangeProps: ['data', 'error'],
-  })
-  return <div>Username: {data.username}</div>
+  const { data } = useQuery("user", fetchUser, {
+    notifyOnChangeProps: ["data", "error"],
+  });
+  return <div>Username: {data.username}</div>;
 }
 ```
 
 在 `isStale` 改变时忽略，不进行重新渲染：
 
 ```js
-import { useQuery } from 'react-query'
+import { useQuery } from "react-query";
 
 function User() {
-  const { data } = useQuery('user', fetchUser, {
-    notifyOnChangePropsExclusions: ['isStale'],
-  })
-  return <div>Username: {data.username}</div>
+  const { data } = useQuery("user", fetchUser, {
+    notifyOnChangePropsExclusions: ["isStale"],
+  });
+  return <div>Username: {data.username}</div>;
 }
 ```
 
@@ -395,17 +389,17 @@ function User() {
 ### `setConsole()` 被新函数 `setLogger()` 替代
 
 ```js
-import { setLogger } from 'react-query'
+import { setLogger } from "react-query";
 
 // 使用 Sentry
 setLogger({
   error: (error) => {
-    Sentry.captureException(error)
+    Sentry.captureException(error);
   },
-})
+});
 
 // 使用 Winston
-setLogger(winston.createLogger())
+setLogger(winston.createLogger());
 ```
 
 ### React Native 不再需要重写 Logger
@@ -413,19 +407,19 @@ setLogger(winston.createLogger())
 为了防止查询失败时在 React Native 中显示错误的界面，必须手动更改控制台：
 
 ```js
-import { setConsole } from 'react-query'
+import { setConsole } from "react-query";
 
 setConsole({
   log: console.log,
   warn: console.warn,
   error: console.warn,
-})
+});
 ```
 
 在 v3 中，**React Query 在 React Native 中使用时，会自动做到上面这点**
 
-
 ### Typescript 的类型
+
 #### `QueryStatus` 的类型已经从 [enum](https://www.typescriptlang.org/docs/handbook/enums.html#string-enums) 切换为 [union type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types)
 
 因此，如果您要根据`QueryStatus`枚举属性检查查询或修改的状态，你现在必须检查其字符串字面量，而不是以前的枚举值。
@@ -461,13 +455,13 @@ const { data, status } = useQuery(['post', id], () => fetchPost(id));
 现在，`useQuery` 和 `useInfiniteQuery` Hook 分别带有一个 `select` 选项，用于选择或转换部分查询结果。
 
 ```js
-import { useQuery } from 'react-query'
+import { useQuery } from "react-query";
 
 function User() {
-  const { data } = useQuery('user', fetchUser, {
+  const { data } = useQuery("user", fetchUser, {
     select: (user) => user.username,
-  })
-  return <div>Username: {data}</div>
+  });
+  return <div>Username: {data}</div>;
 }
 ```
 
@@ -479,18 +473,18 @@ function User() {
 Hook 规则说不，但是有了新的 `useQueries()` hook，可以了！
 
 ```js
-import { useQueries } from 'react-query'
+import { useQueries } from "react-query";
 
 function Overview() {
   const results = useQueries([
-    { queryKey: ['post', 1], queryFn: fetchPost },
-    { queryKey: ['post', 2], queryFn: fetchPost },
-  ])
+    { queryKey: ["post", 1], queryFn: fetchPost },
+    { queryKey: ["post", 2], queryFn: fetchPost },
+  ]);
   return (
     <ul>
       {results.map(({ data }) => data && <li key={data.id}>{data.title})</li>)}
     </ul>
-  )
+  );
 }
 ```
 
@@ -501,7 +495,7 @@ function Overview() {
 ```js
 const mutation = useMutation(addTodo, {
   retry: 3,
-})
+});
 ```
 
 **如果由于设备离线而导致修改失败，那么当设备重新连接时，它们将以相同的顺序重新尝试。**
@@ -517,12 +511,12 @@ const mutation = useMutation(addTodo, {
 QueryObserver 可以用来创建和/或监视一个查询：
 
 ```js
-const observer = new QueryObserver(queryClient, { queryKey: 'posts' })
+const observer = new QueryObserver(queryClient, { queryKey: "posts" });
 
 const unsubscribe = observer.subscribe((result) => {
-  console.log(result)
-  unsubscribe()
-})
+  console.log(result);
+  unsubscribe();
+});
 ```
 
 #### InfiniteQueryObserver
@@ -531,16 +525,16 @@ InfiniteQueryObserver 可以用来创建和/或监视一个无限查询：
 
 ```js
 const observer = new InfiniteQueryObserver(queryClient, {
-  queryKey: 'posts',
+  queryKey: "posts",
   queryFn: fetchPosts,
   getNextPageParam: (lastPage, allPages) => lastPage.nextCursor,
   getPreviousPageParam: (firstPage, allPages) => firstPage.prevCursor,
-})
+});
 
 const unsubscribe = observer.subscribe((result) => {
-  console.log(result)
-  unsubscribe()
-})
+  console.log(result);
+  unsubscribe();
+});
 ```
 
 #### QueriesObserver
@@ -549,14 +543,14 @@ QueriesObserver 可以用来创建和/或监视多个查询：
 
 ```js
 const observer = new QueriesObserver(queryClient, [
-  { queryKey: ['post', 1], queryFn: fetchPost },
-  { queryKey: ['post', 2], queryFn: fetchPost },
-])
+  { queryKey: ["post", 1], queryFn: fetchPost },
+  { queryKey: ["post", 2], queryFn: fetchPost },
+]);
 
 const unsubscribe = observer.subscribe((result) => {
-  console.log(result)
-  unsubscribe()
-})
+  console.log(result);
+  unsubscribe();
+});
 ```
 
 ### 为特定查询/修改设置默认选项
@@ -566,10 +560,10 @@ const unsubscribe = observer.subscribe((result) => {
 `QueryClient.setQueryDefaults()` 方法可用于为特定查询设置默认选项：
 
 ```js
-queryClient.setQueryDefaults('posts', { queryFn: fetchPosts })
+queryClient.setQueryDefaults("posts", { queryFn: fetchPosts });
 
 function Component() {
-  const { data } = useQuery('posts')
+  const { data } = useQuery("posts");
 }
 ```
 
@@ -578,10 +572,10 @@ function Component() {
 `QueryClient.setMutationDefaults()` 方法可用于为特定修改设置默认选项：
 
 ```js
-queryClient.setMutationDefaults('addPost', { mutationFn: addPost })
+queryClient.setMutationDefaults("addPost", { mutationFn: addPost });
 
 function Component() {
-  const { mutate } = useMutation('addPost')
+  const { mutate } = useMutation("addPost");
 }
 ```
 
@@ -590,7 +584,7 @@ function Component() {
 现在，`useIsFetching()` Hook 可以接收一些过滤器，这些过滤器可用于例如仅显示某些查询类型的微调：
 
 ```js
-const fetches = useIsFetching(['posts'])
+const fetches = useIsFetching(["posts"]);
 ```
 
 ## 分离
@@ -599,10 +593,10 @@ const fetches = useIsFetching(['posts'])
 使用 `react-query/core` 入口点仅导入核心功能：
 
 ```js
-import { QueryClient } from 'react-query/core'
+import { QueryClient } from "react-query/core";
 ```
 
 ## Devtools 现在是主仓库和 npm 软件包的一部分
 
-devtools现在包含在 `react-query` 下的 `react-query/devtools` 中。
+devtools 现在包含在 `react-query` 下的 `react-query/devtools` 中。
 只需将 `react-query-devtools` 导入替换为 `react-query/devtools` 即可

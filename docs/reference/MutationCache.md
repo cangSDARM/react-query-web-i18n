@@ -7,25 +7,24 @@ The `MutationCache` is the storage for mutations.
 
 **Normally, you will not interact with the MutationCache directly and instead use the `QueryClient`.**
 
-```js
-import { MutationCache } from "react-query";
+```tsx
+import { MutationCache } from '@tanstack/react-query'
 
 const mutationCache = new MutationCache({
-  onError: (error) => {
-    console.log(error);
+  onError: error => {
+    console.log(error)
   },
-  onSuccess: (data) => {
-    console.log(data);
+  onSuccess: data => {
+    console.log(data)
   },
-});
+})
 ```
 
 Its available methods are:
 
-- [Global callbacks](#global-callbacks)
-- [`mutationCache.getAll`](#mutationcachegetall)
-- [`mutationCache.subscribe`](#mutationcachesubscribe)
-- [`mutationCache.clear`](#mutationcacheclear)
+- [`getAll`](#mutationcachegetall)
+- [`subscribe`](#mutationcachesubscribe)
+- [`clear`](#mutationcacheclear)
 
 **Options**
 
@@ -52,8 +51,8 @@ The `onError`, `onSuccess` and `onMutate` callbacks on the MutationCache can be 
 
 > Note: This is not typically needed for most applications, but can come in handy when needing more information about a mutation in rare scenarios
 
-```js
-const mutations = mutationCache.getAll();
+```tsx
+const mutations = mutationCache.getAll()
 ```
 
 **Returns**
@@ -65,17 +64,17 @@ const mutations = mutationCache.getAll();
 
 The `subscribe` method can be used to subscribe to the mutation cache as a whole and be informed of safe/known updates to the cache like mutation states changing or mutations being updated, added or removed.
 
-```js
-const callback = (mutation) => {
-  console.log(mutation);
-};
+```tsx
+const callback = event => {
+  console.log(event.type, event.mutation)
+}
 
-const unsubscribe = mutationCache.subscribe(callback);
+const unsubscribe = mutationCache.subscribe(callback)
 ```
 
 **Options**
 
-- `callback: (mutation?: Mutation) => void`
+- `callback: (mutation?: MutationCacheNotifyEvent) => void`
   - This function will be called with the mutation cache any time it is updated.
 
 **Returns**
@@ -87,6 +86,6 @@ const unsubscribe = mutationCache.subscribe(callback);
 
 The `clear` method can be used to clear the cache entirely and start fresh.
 
-```js
-mutationCache.clear();
+```tsx
+mutationCache.clear()
 ```

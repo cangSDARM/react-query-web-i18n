@@ -5,18 +5,20 @@ title: useIsMutating
 
 `useIsMutating` is an optional hook that returns the `number` of mutations that your application is fetching (useful for app-wide loading indicators).
 
-```js
-import { useIsMutating } from "react-query";
+```tsx
+import { useIsMutating } from '@tanstack/react-query'
 // How many mutations are fetching?
-const isMutating = useIsMutating();
+const isMutating = useIsMutating()
 // How many mutations matching the posts prefix are fetching?
-const isMutatingPosts = useIsMutating(["posts"]);
+const isMutatingPosts = useIsMutating(['posts'])
 ```
 
 **Options**
 
 - `mutationKey?: string | unknown[]`
-- `filters?: MutationFilters`: [Mutation Filters](../guides&concepts/filters#mutation-filters)
+- `filters?: MutationFilters`: [Mutation Filters](../guides/filters#mutation-filters)
+- `context?: React.Context<QueryClient | undefined>`
+  - Use this to use a custom React Query context. Otherwise, `defaultContext` will be used.
 
 **Returns**
 

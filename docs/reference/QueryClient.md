@@ -7,8 +7,8 @@ title: QueryClient
 
 The `QueryClient` can be used to interact with a cache:
 
-```js
-import { QueryClient } from "react-query";
+```tsx
+import { QueryClient } from '@tanstack/react-query'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -16,14 +16,13 @@ const queryClient = new QueryClient({
       staleTime: Infinity,
     },
   },
-});
+})
 
-await queryClient.prefetchQuery("posts", fetchPosts);
+await queryClient.prefetchQuery(['posts'], fetchPosts)
 ```
 
 Its available methods are:
 
-- [`QueryClient`](#queryclient)
 - [`queryClient.fetchQuery`](#queryclientfetchquery)
 - [`queryClient.fetchInfiniteQuery`](#queryclientfetchinfinitequery)
 - [`queryClient.prefetchQuery`](#queryclientprefetchquery)
@@ -40,6 +39,7 @@ Its available methods are:
 - [`queryClient.resetQueries`](#queryclientresetqueries)
 - [`queryClient.isFetching`](#queryclientisfetching)
 - [`queryClient.isMutating`](#queryclientismutating)
+- [`queryClient.getLogger`](#queryclientgetlogger)
 - [`queryClient.getDefaultOptions`](#queryclientgetdefaultoptions)
 - [`queryClient.setDefaultOptions`](#queryclientsetdefaultoptions)
 - [`queryClient.getQueryDefaults`](#queryclientgetquerydefaults)
@@ -49,6 +49,7 @@ Its available methods are:
 - [`queryClient.getQueryCache`](#queryclientgetquerycache)
 - [`queryClient.getMutationCache`](#queryclientgetmutationcache)
 - [`queryClient.clear`](#queryclientclear)
+- [`queryClient.resumePausedMutations`](#queryclientresumepausedmutations)
 
 **Options**
 
@@ -58,6 +59,9 @@ Its available methods are:
 - `mutationCache?: MutationCache`
   - Optional
   - The mutation cache this client is connected to.
+- `logger?: Logger`
+  - Optional
+  - The logger this client uses to log debugging information, warnings and errors. If not set, `console` is the default logger.
 - `defaultOptions?: DefaultOptions`
   - Optional
   - Define defaults for all queries and mutations using this queryClient.
@@ -70,29 +74,29 @@ If the query exists and the data is not invalidated or older than the given `sta
 
 > The difference between using `fetchQuery` and `setQueryData` is that `fetchQuery` is async and will ensure that duplicate requests for this query are not created with `useQuery` instances for the same query are rendered while the data is fetching.
 
-```js
+```tsx
 try {
-  const data = await queryClient.fetchQuery(queryKey, queryFn);
+  const data = await queryClient.fetchQuery(queryKey, queryFn)
 } catch (error) {
-  console.log(error);
+  console.log(error)
 }
 ```
 
 Specify a `staleTime` to only fetch when the data is older than a certain amount of time:
 
-```js
+```tsx
 try {
   const data = await queryClient.fetchQuery(queryKey, queryFn, {
     staleTime: 10000,
-  });
+  })
 } catch (error) {
-  console.log(error);
+  console.log(error)
 }
 ```
 
 **Options**
 
-The options for `fetchQuery` are exactly the same as those of [`useQuery`](./useQuery), except the following: `enabled, refetchInterval, refetchIntervalInBackground, refetchOnWindowFocus, refetchOnReconnect, notifyOnChangeProps, notifyOnChangePropsExclusions, onSuccess, onError, onSettled, useErrorBoundary, select, suspense, keepPreviousData, placeholderData`; which are strictly for useQuery and useInfiniteQuery. You can check the [source code](https://github.com/tannerlinsley/react-query/blob/361935a12cec6f36d0bd6ba12e84136c405047c5/src/core/types.ts#L83) for more clarity.
+The options for `fetchQuery` are exactly the same as those of [`useQuery`](../reference/useQuery), except the following: `enabled, refetchInterval, refetchIntervalInBackground, refetchOnWindowFocus, refetchOnReconnect, notifyOnChangeProps, onSuccess, onError, onSettled, useErrorBoundary, select, suspense, keepPreviousData, placeholderData`; which are strictly for useQuery and useInfiniteQuery. You can check the [source code](https://github.com/tannerlinsley/react-query/blob/361935a12cec6f36d0bd6ba12e84136c405047c5/src/core/types.ts#L83) for more clarity.
 
 **Returns**
 
@@ -102,12 +106,12 @@ The options for `fetchQuery` are exactly the same as those of [`useQuery`](./use
 
 `fetchInfiniteQuery` is similar to `fetchQuery` but can be used to fetch and cache an infinite query.
 
-```js
+```tsx
 try {
-  const data = await queryClient.fetchInfiniteQuery(queryKey, queryFn);
-  console.log(data.pages);
+  const data = await queryClient.fetchInfiniteQuery(queryKey, queryFn)
+  console.log(data.pages)
 } catch (error) {
-  console.log(error);
+  console.log(error)
 }
 ```
 
@@ -123,14 +127,14 @@ The options for `fetchInfiniteQuery` are exactly the same as those of [`fetchQue
 
 `prefetchQuery` is an asynchronous method that can be used to prefetch a query before it is needed or rendered with `useQuery` and friends. The method works the same as `fetchQuery` except that it will not throw or return any data.
 
-```js
-await queryClient.prefetchQuery(queryKey, queryFn);
+```tsx
+await queryClient.prefetchQuery(queryKey, queryFn)
 ```
 
 You can even use it with a default queryFn in your config!
 
-```js
-await queryClient.prefetchQuery(queryKey);
+```tsx
+await queryClient.prefetchQuery(queryKey)
 ```
 
 **Options**
@@ -146,8 +150,8 @@ The options for `prefetchQuery` are exactly the same as those of [`fetchQuery`](
 
 `prefetchInfiniteQuery` is similar to `prefetchQuery` but can be used to prefetch and cache an infinite query.
 
-```js
-await queryClient.prefetchInfiniteQuery(queryKey, queryFn);
+```tsx
+await queryClient.prefetchInfiniteQuery(queryKey, queryFn)
 ```
 
 **Options**
@@ -163,14 +167,14 @@ The options for `prefetchInfiniteQuery` are exactly the same as those of [`fetch
 
 `getQueryData` is a synchronous function that can be used to get an existing query's cached data. If the query does not exist, `undefined` will be returned.
 
-```js
-const data = queryClient.getQueryData(queryKey);
+```tsx
+const data = queryClient.getQueryData(queryKey)
 ```
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
 
 **Returns**
 
@@ -181,13 +185,13 @@ const data = queryClient.getQueryData(queryKey);
 
 `getQueriesData` is a synchronous function that can be used to get the cached data of multiple queries. Only queries that match the passed queryKey or queryFilter will be returned. If there are no matching queries, an empty array will be returned.
 
-```js
-const data = queryClient.getQueriesData(queryKey | filters);
+```tsx
+const data = queryClient.getQueriesData(queryKey | filters)
 ```
 
 **Options**
 
-- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys) | `filters: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey: QueryKey`: [Query Keys](../guides/query-keys) | `filters: QueryFilters`: [Query Filters](../guides/filters#query-filters)
   - if a queryKey is passed as the argument, the data with queryKeys fuzzily matching this param will be returned
   - if a filter is passed, the data with queryKeys matching the filter will be returned
 
@@ -208,56 +212,60 @@ This distinction is more a "convenience" for ts devs that know which structure w
 
 > The difference between using `setQueryData` and `fetchQuery` is that `setQueryData` is sync and assumes that you already synchronously have the data available. If you need to fetch the data asynchronously, it's suggested that you either refetch the query key or use `fetchQuery` to handle the asynchronous fetch.
 
-```js
-queryClient.setQueryData(queryKey, updater);
+```tsx
+queryClient.setQueryData(queryKey, updater)
 ```
 
 **Options**
 
-- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `updater: TData | (oldData: TData | undefined) => TData`
+- `queryKey: QueryKey`: [Query Keys](../guides/query-keys)
+- `updater: TData | (oldData: TData | undefined) => TData | undefined`
   - If non-function is passed, the data will be updated to this value
   - If a function is passed, it will receive the old data value and be expected to return a new one.
 
 **Using an updater value**
 
-```js
-setQueryData(queryKey, newData);
+```tsx
+setQueryData(queryKey, newData)
 ```
+
+If the value is `undefined`, the query data is not updated.
 
 **Using an updater function**
 
 For convenience in syntax, you can also pass an updater function which receives the current data value and returns the new one:
 
-```js
-setQueryData(queryKey, (oldData) => newData);
+```tsx
+setQueryData(queryKey, oldData => newData)
 ```
+
+If the updater function returns `undefined`, the query data will not be updated. If the updater function receives `undefined` as input, you can return `undefined` to bail out of the update and thus _not_ create a new cache entry.
 
 ## `queryClient.getQueryState`
 
 `getQueryState` is a synchronous function that can be used to get an existing query's state. If the query does not exist, `undefined` will be returned.
 
-```js
-const state = queryClient.getQueryState(queryKey);
-console.log(state.dataUpdatedAt);
+```tsx
+const state = queryClient.getQueryState(queryKey)
+console.log(state.dataUpdatedAt)
 ```
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
 
 ## `queryClient.setQueriesData`
 
 `setQueriesData` is a synchronous function that can be used to immediately update cached data of multiple queries by using filter function or partially matching the query key. Only queries that match the passed queryKey or queryFilter will be updated - no new cache entries will be created. Under the hood, [`setQueryData`](#queryclientsetquerydata) is called for each query.
 
-```js
-queryClient.setQueriesData(queryKey | filters, updater);
+```tsx
+queryClient.setQueriesData(queryKey | filters, updater)
 ```
 
 **Options**
 
-- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys) | `filters: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey: QueryKey`: [Query Keys](../guides/query-keys) | `filters: QueryFilters`: [Query Filters](../guides/filters#query-filters)
   - if a queryKey is passed as first argument, queryKeys partially matching this param will be updated
   - if a filter is passed, queryKeys matching the filter will be updated
 - `updater: TData | (oldData: TData | undefined) => TData`
@@ -267,37 +275,36 @@ queryClient.setQueriesData(queryKey | filters, updater);
 
 The `invalidateQueries` method can be used to invalidate and refetch single or multiple queries in the cache based on their query keys or any other functionally accessible property/state of the query. By default, all matching queries are immediately marked as invalid and active queries are refetched in the background.
 
-- If you **do not want active queries to refetch**, and simply be marked as invalid, you can use the `refetchActive: false` option.
-- If you **want inactive queries to refetch** as well, use the `refetchInactive: true` option
+- If you **do not want active queries to refetch**, and simply be marked as invalid, you can use the `refetchType: 'none'` option.
+- If you **want inactive queries to refetch** as well, use the `refetchTye: 'all'` option
 
-```js
-await queryClient.invalidateQueries(
-  "posts",
-  {
-    exact,
-    refetchActive: true,
-    refetchInactive: false,
-  },
-  { throwOnError },
-);
+```tsx
+await queryClient.invalidateQueries(['posts'], {
+  exact,
+  refetchType: 'active',
+}, { throwOnError, cancelRefetch })
 ```
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
-  - `refetchActive: Boolean`
-    - Defaults to `true`
-    - When set to `false`, queries that match the refetch predicate and are actively being rendered via `useQuery` and friends will NOT be refetched in the background, and only marked as invalid.
-  - `refetchInactive: Boolean`
-    - Defaults to `false`
-    - When set to `true`, queries that match the refetch predicate and are not being rendered via `useQuery` and friends will be both marked as invalid and also refetched in the background
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
+  - `refetchType?: 'active' | 'inactive' | 'all' | 'none'`
+    - Defaults to `'active'`
+    - When set to `active`, only queries that match the refetch predicate and are actively being rendered via `useQuery` and friends will be refetched in the background.
+    - When set to `inactive`, only queries that match the refetch predicate and are NOT actively being rendered via `useQuery` and friends will be refetched in the background.
+    - When set to `all`, all queries that match the refetch predicate will be refetched in the background.
+    - When set to `none`, no queries will be refetched, and those that match the refetch predicate will be marked as invalid only.
   - `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
-    - Only for [Infinite Queries](../guides&concepts/infinite-queries#refetchpage)
+    - Only for [Infinite Queries](../guides/infinite-queries#refetchpage)
     - Use this function to specify which pages should be refetched
-- `refetchOptions?: RefetchOptions`:
+- `options?: InvalidateOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
+  - `cancelRefetch?: boolean`
+    - Defaults to `true`
+      - Per default, a currently running request will be cancelled before a new request is made
+    - When set to `false`, no refetch will be made if there is already a request running.
 
 ## `queryClient.refetchQueries`
 
@@ -305,30 +312,34 @@ The `refetchQueries` method can be used to refetch queries based on certain cond
 
 Examples:
 
-```js
+```tsx
 // refetch all queries:
-await queryClient.refetchQueries();
+await queryClient.refetchQueries()
 
 // refetch all stale queries:
-await queryClient.refetchQueries({ stale: true });
+await queryClient.refetchQueries({ stale: true })
 
 // refetch all active queries partially matching a query key:
-await queryClient.refetchQueries(["posts"], { active: true });
+await queryClient.refetchQueries(['posts'], { type: 'active' })
 
 // refetch all active queries exactly matching a query key:
-await queryClient.refetchQueries(["posts", 1], { active: true, exact: true });
+await queryClient.refetchQueries(['posts', 1], { type: 'active', exact: true })
 ```
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
   - `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
-    - Only for [Infinite Queries](../guides&concepts/infinite-queries#refetchpage)
+    - Only for [Infinite Queries](../guides/infinite-queries#refetchpage)
     - Use this function to specify which pages should be refetched
-- `refetchOptions?: RefetchOptions`:
+- `options?: RefetchOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
+  - `cancelRefetch?: boolean`
+    - Defaults to `true`
+      - Per default, a currently running request will be cancelled before a new request is made
+    - When set to `false`, no refetch will be made if there is already a request running.
 
 **Returns**
 
@@ -340,14 +351,14 @@ The `cancelQueries` method can be used to cancel outgoing queries based on their
 
 This is most useful when performing optimistic updates since you will likely need to cancel any outgoing query refetches so they don't clobber your optimistic update when they resolve.
 
-```js
-await queryClient.cancelQueries("posts", { exact: true });
+```tsx
+await queryClient.cancelQueries(['posts'], { exact: true })
 ```
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
 
 **Returns**
 
@@ -357,14 +368,14 @@ This method does not return anything
 
 The `removeQueries` method can be used to remove queries from the cache based on their query keys or any other functionally accessible property/state of the query.
 
-```js
-queryClient.removeQueries(queryKey, { exact: true });
+```tsx
+queryClient.removeQueries(queryKey, { exact: true })
 ```
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
 
 **Returns**
 
@@ -381,20 +392,24 @@ subscribers &mdash; and reset the query to its pre-loaded state &mdash; unlike
 `invalidateQueries`. If a query has `initialData`, the query's data will be
 reset to that. If a query is active, it will be refetched.
 
-```js
-queryClient.resetQueries(queryKey, { exact: true });
+```tsx
+queryClient.resetQueries(queryKey, { exact: true })
 ```
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
   - `refetchPage: (page: TData, index: number, allPages: TData[]) => boolean`
-    - Only for [Infinite Queries](../guides&concepts/infinite-queries#refetchpage)
+    - Only for [Infinite Queries](../guides/infinite-queries#refetchpage)
     - Use this function to specify which pages should be refetched
-- `resetOptions?: ResetOptions`:
+- `options?: ResetOptions`:
   - `throwOnError?: boolean`
     - When set to `true`, this method will throw if any of the query refetch tasks fail.
+  - `cancelRefetch?: boolean`
+    - Defaults to `true`
+      - Per default, a currently running request will be cancelled before a new request is made
+    - When set to `false`, no refetch will be made if there is already a request running.
 
 **Returns**
 
@@ -404,18 +419,18 @@ This method returns a promise that resolves when all active queries have been re
 
 This `isFetching` method returns an `integer` representing how many queries, if any, in the cache are currently fetching (including background-fetching, loading new pages, or loading more infinite query results)
 
-```js
+```tsx
 if (queryClient.isFetching()) {
-  console.log("At least one query is fetching!");
+  console.log('At least one query is fetching!')
 }
 ```
 
-React Query also exports a handy [`useIsFetching`](./useIsFetching) hook that will let you subscribe to this state in your components without creating a manual subscription to the query cache.
+React Query also exports a handy [`useIsFetching`](../reference/useIsFetching) hook that will let you subscribe to this state in your components without creating a manual subscription to the query cache.
 
 **Options**
 
-- `queryKey?: QueryKey`: [Query Keys](../guides&concepts/query-keys)
-- `filters?: QueryFilters`: [Query Filters](../guides&concepts/filters#query-filters)
+- `queryKey?: QueryKey`: [Query Keys](../guides/query-keys)
+- `filters?: QueryFilters`: [Query Filters](../guides/filters#query-filters)
 
 **Returns**
 
@@ -425,84 +440,97 @@ This method returns the number of fetching queries.
 
 This `isMutating` method returns an `integer` representing how many mutations, if any, in the cache are currently fetching.
 
-```js
+```tsx
 if (queryClient.isMutating()) {
-  console.log("At least one mutation is fetching!");
+  console.log('At least one mutation is fetching!')
 }
 ```
 
-React Query also exports a handy [`useIsMutating`](./useIsMutating) hook that will let you subscribe to this state in your components without creating a manual subscription to the mutation cache.
+React Query also exports a handy [`useIsMutating`](../reference/useIsMutating) hook that will let you subscribe to this state in your components without creating a manual subscription to the mutation cache.
 
 **Options**
 
-- `filters: MutationFilters`: [Mutation Filters](../guides&concepts/filters#mutation-filters)
+- `filters: MutationFilters`: [Mutation Filters](../guides/filters#mutation-filters)
 
 **Returns**
 
 This method returns the number of fetching mutations.
+## `queryClient.getLogger`
+
+The `getLogger` method returns the logger which have been set when creating the client.
+
+```tsx
+const logger = queryClient.getLogger()
+```
 
 ## `queryClient.getDefaultOptions`
 
 The `getDefaultOptions` method returns the default options which have been set when creating the client or with `setDefaultOptions`.
 
-```js
-const defaultOptions = queryClient.getDefaultOptions();
+```tsx
+const defaultOptions = queryClient.getDefaultOptions()
 ```
 
 ## `queryClient.setDefaultOptions`
 
 The `setDefaultOptions` method can be used to dynamically set the default options for this queryClient. Previously defined default options will be overwritten.
 
-```js
+```tsx
 queryClient.setDefaultOptions({
   queries: {
     staleTime: Infinity,
   },
-});
+})
 ```
 
 ## `queryClient.getQueryDefaults`
 
 The `getQueryDefaults` method returns the default options which have been set for specific queries:
 
-```js
-const defaultOptions = queryClient.getQueryDefaults("posts");
+```tsx
+const defaultOptions = queryClient.getQueryDefaults(['posts'])
 ```
+
+> Note that if several query defaults match the given query key, the **first** matching one is returned.
+> This could lead to unexpected behaviours. See [`setQueryDefaults`](#queryclientsetquerydefaults).
 
 ## `queryClient.setQueryDefaults`
 
 `setQueryDefaults` can be used to set default options for specific queries:
 
-```js
-queryClient.setQueryDefaults("posts", { queryFn: fetchPosts });
+```tsx
+queryClient.setQueryDefaults(['posts'], { queryFn: fetchPosts })
 
 function Component() {
-  const { data } = useQuery("posts");
+  const { data } = useQuery(['posts'])
 }
 ```
 
 **Options**
 
-- `queryKey: QueryKey`: [Query Keys](../guides&concepts/query-keys)
+- `queryKey: QueryKey`: [Query Keys](../guides/query-keys)
 - `options: QueryOptions`
+
+> As stated in [`getQueryDefaults`](#queryclientgetquerydefaults), the order of registration of query defaults does matter.
+> Since the **first** matching defaults are returned by `getQueryDefaults`, the registration should be made in the following order: from the **least generic key** to the **most generic one**. This way, in case of specific key, the first matching one would be the expected one.
 
 ## `queryClient.getMutationDefaults`
 
 The `getMutationDefaults` method returns the default options which have been set for specific mutations:
 
-```js
-const defaultOptions = queryClient.getMutationDefaults("addPost");
+```tsx
+const defaultOptions = queryClient.getMutationDefaults(['addPost'])
 ```
 
 ## `queryClient.setMutationDefaults`
 
 `setMutationDefaults` can be used to set default options for specific mutations:
 
-```js
-queryClient.setMutationDefaults("addPost", { mutationFn: addPost });
+```tsx
+queryClient.setMutationDefaults(['addPost'], { mutationFn: addPost })
 
 function Component() {
-  const { data } = useMutation("addPost");
+  const { data } = useMutation(['addPost'])
 }
 ```
 
@@ -511,26 +539,36 @@ function Component() {
 - `mutationKey: string | unknown[]`
 - `options: MutationOptions`
 
+> Similar to [`setQueryDefaults`](#queryclientsetquerydefaults), the order of registration does matter here.
+
 ## `queryClient.getQueryCache`
 
 The `getQueryCache` method returns the query cache this client is connected to.
 
-```js
-const queryCache = queryClient.getQueryCache();
+```tsx
+const queryCache = queryClient.getQueryCache()
 ```
 
 ## `queryClient.getMutationCache`
 
 The `getMutationCache` method returns the mutation cache this client is connected to.
 
-```js
-const mutationCache = queryClient.getMutationCache();
+```tsx
+const mutationCache = queryClient.getMutationCache()
 ```
 
 ## `queryClient.clear`
 
 The `clear` method clears all connected caches.
 
-```js
-queryClient.clear();
+```tsx
+queryClient.clear()
+```
+
+## `queryClient.resumePausedMutations`
+
+Can be used to resume mutations that have been paused because there was no network connection.
+
+```tsx
+queryClient.resumePausedMutations()
 ```
