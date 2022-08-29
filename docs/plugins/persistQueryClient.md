@@ -7,8 +7,8 @@ This is set of utilities for interacting with "persisters" which save your query
 
 ## Build Persisters
 
-- [createSyncStoragePersister](/plugins/createSyncStoragePersister)
-- [createAsyncStoragePersister](/plugins/createAsyncStoragePersister)
+- [createSyncStoragePersister](./createSyncStoragePersister.md)
+- [createAsyncStoragePersister](./createAsyncStoragePersister.md)
 - [create a custom persister](#persisters)
 
 ## How It Works
@@ -28,17 +28,17 @@ const queryClient = new QueryClient({
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
-})
+});
 ```
 
 ### Cache Busting
 
-Sometimes you may make changes to your application or data that immediately invalidate any and all cached data. If and when this happens, you can pass a `buster` string option. If the cache that is found does not also have that buster string, it will be discarded.  The following several functions accept this option:
+Sometimes you may make changes to your application or data that immediately invalidate any and all cached data. If and when this happens, you can pass a `buster` string option. If the cache that is found does not also have that buster string, it will be discarded. The following several functions accept this option:
 
 ```ts
-persistQueryClient({ queryClient, persister, buster: buildHash })
-persistQueryClientSave({ queryClient, persister, buster: buildHash })
-persistQueryClientRestore({ queryClient, persister, buster: buildHash })
+persistQueryClient({ queryClient, persister, buster: buildHash });
+persistQueryClientSave({ queryClient, persister, buster: buildHash });
+persistQueryClientRestore({ queryClient, persister, buster: buildHash });
 ```
 
 ### Removal
@@ -57,7 +57,7 @@ the persister `removeClient()` is called and the cache is immediately discarded.
 ### `persistQueryClientSave`
 
 - Your query/mutation are [`dehydrated`](../reference/hydration#dehydrate) and stored by the persister you provided.
-- `createSyncStoragePersister` and `createAsyncStoragePersister` throttle this action to happen at most every 1 second to save on potentially expensive writes.  Review their documentation to see how to customize their throttle timing.
+- `createSyncStoragePersister` and `createAsyncStoragePersister` throttle this action to happen at most every 1 second to save on potentially expensive writes. Review their documentation to see how to customize their throttle timing.
 
 You can use this to explicitly persist the cache at the moment(s) you choose.
 
@@ -65,9 +65,9 @@ You can use this to explicitly persist the cache at the moment(s) you choose.
 persistQueryClientSave({
   queryClient,
   persister,
-  buster = '',
+  buster = "",
   dehydrateOptions = undefined,
-})
+});
 ```
 
 ### `persistQueryClientSubscribe`
@@ -81,9 +81,9 @@ Runs `persistQueryClientSave` whenever the cache changes for your `queryClient`.
 persistQueryClientSubscribe({
   queryClient,
   persister,
-  buster = '',
+  buster = "",
   dehydrateOptions = undefined,
-})
+});
 ```
 
 ### `persistQueryClientRestore`
@@ -98,9 +98,9 @@ persistQueryClientRestore({
   queryClient,
   persister,
   maxAge = 1000 * 60 * 60 * 24, // 24 hours
-  buster = '',
+  buster = "",
   hydrateOptions = undefined,
-})
+});
 ```
 
 ### `persistQueryClient`
@@ -117,10 +117,10 @@ persistQueryClient({
   queryClient,
   persister,
   maxAge = 1000 * 60 * 60 * 24, // 24 hours
-  buster = '',
+  buster = "",
   hydrateOptions = undefined,
   dehydrateOptions = undefined,
-})
+});
 ```
 
 ### `Options`
@@ -130,28 +130,29 @@ All options available are as follows:
 ```ts
 interface PersistQueryClientOptions {
   /** The QueryClient to persist */
-  queryClient: QueryClient
+  queryClient: QueryClient;
   /** The Persister interface for storing and restoring the cache
    * to/from a persisted location */
-  persister: Persister
+  persister: Persister;
   /** The max-allowed age of the cache in milliseconds.
    * If a persisted cache is found that is older than this
    * time, it will be **silently** discarded
    * (defaults to 24 hours) */
-  maxAge?: number
+  maxAge?: number;
   /** A unique string that can be used to forcefully
    * invalidate existing caches if they do not share the same buster string */
-  buster?: string
+  buster?: string;
   /** The options passed to the hydrate function
    * Not used on `persistQueryClientSave` or `persistQueryClientSubscribe` */
-  hydrateOptions?: HydrateOptions
+  hydrateOptions?: HydrateOptions;
   /** The options passed to the dehydrate function
-  * Not used on `persistQueryClientRestore` */
-  dehydrateOptions?: DehydrateOptions
+   * Not used on `persistQueryClientRestore` */
+  dehydrateOptions?: DehydrateOptions;
 }
 ```
 
 There are actually three interfaces available:
+
 - `PersistedQueryClientSaveOptions` is used for `persistQueryClientSave` and `persistQueryClientSubscribe` (doesn't use `hydrateOptions`).
 - `PersistedQueryClientRestoreOptions` is used for `persistQueryClientRestore` (doesn't use `dehydrateOptions`).
 - `PersistQueryClientOptions` is used for `persistQueryClient`
@@ -169,10 +170,10 @@ Further, if you subscribe to changes outside of the React component lifecycle, y
 persistQueryClient({
   queryClient,
   persister: localStoragePersister,
-})
+});
 
 // 🚨 happens at the same time as restoring
-ReactDOM.createRoot(rootElement).render(<App />)
+ReactDOM.createRoot(rootElement).render(<App />);
 ```
 
 ### PersistQueryClientProvider
@@ -180,9 +181,8 @@ ReactDOM.createRoot(rootElement).render(<App />)
 For this use-case, you can use the `PersistQueryClientProvider`. It will make sure to subscribe / unsubscribe correctly according to the React component lifecycle, and it will also make sure that queries will not start fetching while we are still restoring. Queries will still render though, they will just be put into `fetchingState: 'idle'` until data has been restored. Then, they will refetch unless the restored data is _fresh_ enough, and _initialData_ will also be respected. It can be used _instead of_ the normal [QueryClientProvider](../reference/QueryClientProvider):
 
 ```tsx
-
-import { PersistQueryClientProvider } from '@tanstack/react-query-persist-client'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -190,11 +190,11 @@ const queryClient = new QueryClient({
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
-})
+});
 
 const persister = createSyncStoragePersister({
   storage: window.localStorage,
-})
+});
 
 ReactDOM.createRoot(rootElement).render(
   <PersistQueryClientProvider
@@ -202,8 +202,8 @@ ReactDOM.createRoot(rootElement).render(
     persistOptions={{ persister }}
   >
     <App />
-  </PersistQueryClientProvider>
-)
+  </PersistQueryClientProvider>,
+);
 ```
 
 #### Props
@@ -229,9 +229,9 @@ Persisters have the following interfaces:
 
 ```ts
 export interface Persister {
-  persistClient(persistClient: PersistedClient): Promisable<void>
-  restoreClient(): Promisable<PersistedClient | undefined>
-  removeClient(): Promisable<void>
+  persistClient(persistClient: PersistedClient): Promisable<void>;
+  restoreClient(): Promisable<PersistedClient | undefined>;
+  removeClient(): Promisable<void>;
 }
 ```
 
@@ -239,23 +239,31 @@ Persisted Client entries have the following interface:
 
 ```ts
 export interface PersistedClient {
-  timestamp: number
-  buster: string
-  cacheState: any
+  timestamp: number;
+  buster: string;
+  cacheState: any;
 }
 ```
 
 You can import these (to build a persister):
+
 ```ts
-import { PersistedClient, Persister } from "@tanstack/react-query-persist-client";
+import {
+  PersistedClient,
+  Persister,
+} from "@tanstack/react-query-persist-client";
 ```
 
 ### Building A Persister
-You can persist however you like.  Here is an example of how to build an [Indexed DB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) persister. Compared to `Web Storage API`, Indexed DB is faster, stores more than 5MB, and doesn't require serialization.  That means it can readily store Javascript native types, such as `Date` and `File`.
+
+You can persist however you like. Here is an example of how to build an [Indexed DB](https://developer.mozilla.org/en-US/docs/Web/API/IndexedDB_API) persister. Compared to `Web Storage API`, Indexed DB is faster, stores more than 5MB, and doesn't require serialization. That means it can readily store Javascript native types, such as `Date` and `File`.
 
 ```ts
 import { get, set, del } from "idb-keyval";
-import { PersistedClient, Persister } from "@tanstack/react-query-persist-client";
+import {
+  PersistedClient,
+  Persister,
+} from "@tanstack/react-query-persist-client";
 
 /**
  * Creates an Indexed DB persister

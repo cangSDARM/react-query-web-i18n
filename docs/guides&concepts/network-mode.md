@@ -1,5 +1,5 @@
 ---
-id: mutations
+id: network-mode
 title: 网络模式 network-mode
 ---
 

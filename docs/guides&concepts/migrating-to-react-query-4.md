@@ -123,7 +123,7 @@ npx jscodeshift ./path/to/src/
 ### 对于成功的查询来说， Undefined 现在是一个非法的缓存数据
 
 为了使通过返回`undefined`来跳出更新(bailing out of updates)成为可能，我们必须使`undefined`成为一个非法的缓存值。
-这与 React Query 的其他概念是一致的：例如，[来自函数的初始化的数据](guidelines/initial-query-data#initial-data-function)如果是`undefined`，也将*不会设置初始的数据*。
+这与 React Query 的其他概念是一致的：例如，[来自函数的初始化的数据](./initial-query-data.md#initial-data-function)如果是`undefined`，也将*不会设置初始的数据*。
 
 此外，在`queryFn`中，如果返回的是`Promise<void>`，但仍然尝试打印是一个很常见的错误：
 
@@ -287,7 +287,7 @@ React.useEffect(() => mySideEffectHere(data), [data]);
 
 ### 支持的浏览器
 
-从 v4 开始，React Query 针对现代浏览器进行了优化。我们已经更新了我们的浏览器列表，以组合为一个更现代、更高性能和更小的打包文件。你可以阅读[有关要求](.../installation.md#requirements)。
+从 v4 开始，React Query 针对现代浏览器进行了优化。我们已经更新了我们的浏览器列表，以组合为一个更现代、更高性能和更小的打包文件。你可以阅读[有关要求](../getstarted/installation.md#requirements)。
 
 ### `setLogger` 被移除
 

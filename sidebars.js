@@ -54,10 +54,10 @@ const guide = [
 ].map((item) => "guides&concepts/" + item);
 
 const plugins = [
-  "broadcast-query-client",
-  "createAsyncStoragePersistor",
-  "createWebStoragePersistor",
-  "persist-query-client",
+  "broadcastQueryClient",
+  "createAsyncStoragePersister",
+  "createSyncStoragePersister",
+  "persistQueryClient",
 ].map((item) => "plugins/" + item);
 
 const reference = ["useQuery", "useQueries"].map((item) => "reference/" + item);
