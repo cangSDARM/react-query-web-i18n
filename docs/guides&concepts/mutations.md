@@ -1,6 +1,8 @@
 ---
 id: mutations
 title: 修改 mutations
+tags:
+  - 翻译完成
 ---
 
 与查询不同，修改通常意味着用于创建/更新/删除数据或执行服务器命令等副作用。
@@ -10,7 +12,7 @@ title: 修改 mutations
 
 下面是一个向服务器添加新 todo 的示例：
 
-```js
+```tsx
 function App() {
   const mutation = useMutation((newTodo) => axios.post("/todos", newTodo));
 
@@ -59,7 +61,7 @@ function App() {
 > 重要说明：`mutate` 函数是一个异步函数，这意味着您不能在事件回调中直接使用它 (**React16 及之前版本**)。
 > 如果您需要在 `onSubmit` 中访问事件，则需要将 `mutate` 包装在另一个函数中。 这是由于 [React 事件池](https://reactjs.org/docs/events.html#event-pooling)限制。
 
-```js
+```tsx
 // 在React16及之前的版本，这将无法正常工作
 const CreateTodo = () => {
   const mutation = useMutation((event) => {
@@ -89,7 +91,7 @@ const CreateTodo = () => {
 在某些情况下，您需要清除 `error` 或修改请求的数据。
 为此，您可以使用 `reset` 函数来处理：
 
-```js
+```tsx
 const CreateTodo = () => {
   const [title, setTitle] = useState("");
   const mutation = useMutation(createTodo);
@@ -122,7 +124,7 @@ const CreateTodo = () => {
 允许在其生命周期的任何阶段快速而简单地产生副作用。
 这些对于在[乐观更新](./optimistic-updates)甚至是[修改后使查询无效并重新获取](./invalidation-from-mutations)都非常有用
 
-```js
+```tsx
 useMutation(addTodo, {
   onMutate: (variables) => {
     // 修改即将发生！
@@ -162,7 +164,7 @@ useMutation(addTodo, {
 支持的覆盖包括: `onSuccess`, `onError` 和 `onSettled`。
 (请记住，如果组件在*修改完成之前被卸载*，则这些额外的回调不会被运行)
 
-```js
+```ts
 useMutation(addTodo, {
   onSuccess: (data, variables, context) => {
     // I will fire first
@@ -197,7 +199,7 @@ mutate(todo, {
 
 > 请注意，传递给 `useMutation` 的 `mutationFn` 是**同步**的。在这种情况下，`mutationFn` 的触发顺序和调用 `mutate` 时的顺序是有所不同的。
 
-```js
+```ts
 useMutation(addTodo, {
   onSuccess: (data, error, variables, context) => {
     // Will be called 3 times
@@ -219,7 +221,7 @@ useMutation(addTodo, {
 使用 `mutateAsync` 而不是 `mutate` 来返回一个 Promise，它将在成功时解析或抛出一个错误。
 例如，这可以用来组合副作用。
 
-```js
+```ts
 const mutation = useMutation(addTodo);
 
 try {
@@ -236,7 +238,7 @@ try {
 
 默认情况下，React Query 不会在出错时重试修改，但可以使用 `retry` 选项：
 
-```js
+```ts
 const mutation = useMutation(addTodo, {
   retry: 3,
 });
@@ -248,28 +250,28 @@ const mutation = useMutation(addTodo, {
 
 现在可以将修改持久化到数据库或其他什么存储方式中，并在以后恢复。这可以通过以下高阶函数实现：
 
-```js
+```ts
 const queryClient = new QueryClient();
 
 // 定义 "addTodo" 修改
-queryClient.setMutationDefaults("addTodo", {
+queryClient.setMutationDefaults(["addTodo"], {
   mutationFn: addTodo,
   onMutate: async (variables) => {
     // 取消 todos list 当前的查询
-    await queryClient.cancelQueries("todos");
+    await queryClient.cancelQueries(["todos"]);
 
     // 创建一个对于 todo 的乐观修改
     const optimisticTodo = { id: uuid(), title: variables.title };
 
     // 添加到 todos list
-    queryClient.setQueryData("todos", (old) => [...old, optimisticTodo]);
+    queryClient.setQueryData(["todos"], (old) => [...old, optimisticTodo]);
 
     // 返回包含乐观修改的上下文
     return { optimisticTodo };
   },
   onSuccess: (result, variables, context) => {
     // 成功，用正确内容替换掉
-    queryClient.setQueryData("todos", (old) =>
+    queryClient.setQueryData(["todos"], (old) =>
       old.map((todo) =>
         todo.id === context.optimisticTodo.id ? result : todo,
       ),
@@ -277,7 +279,7 @@ queryClient.setMutationDefaults("addTodo", {
   },
   onError: (error, variables, context) => {
     // 清除掉添加失败的 todo
-    queryClient.setQueryData("todos", (old) =>
+    queryClient.setQueryData(["todos"], (old) =>
       old.filter((todo) => todo.id !== context.optimisticTodo.id),
     );
   },
@@ -285,7 +287,7 @@ queryClient.setMutationDefaults("addTodo", {
 });
 
 // 在同一个组件内启动修改
-const mutation = useMutation("addTodo");
+const mutation = useMutation(["addTodo"]);
 mutation.mutate({ title: "title" });
 
 // 如果因为设备离线而暂停了修改，
@@ -298,6 +300,49 @@ hydrate(queryClient, state);
 // 重启修改
 queryClient.resumePausedMutations();
 ```
+
+### 持久化的离线修改
+
+如果您使用 [persistQueryClient 插件](../plugins/persistQueryClient.md)持久化一个离线的修改，除非提供一个默认修改函数，否则在页面重新加载时，修改没法恢复。
+
+这是一个技术限制。当持久化到外部存储时，只有修改的状态被持久化，因为函数不能被序列化。hydration 后，触发修改的组件可能没有被正确挂载，所以调用`resumePausedMutations`可能会产生一个错误：`No mutationFn found`。
+
+```tsx
+const persister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      cacheTime: 1000 * 60 * 60 * 24, // 24 hours
+    },
+  },
+});
+
+// 我们需要一个默认的修改函数，以便暂停的修改可以在页面重新加载后继续进行
+queryClient.setMutationDefaults(["todos"], {
+  mutationFn: ({ id, data }) => {
+    return api.upateTodo(id, data);
+  },
+});
+
+export default function App() {
+  return (
+    <PersistQueryClientProvider
+      client={queryClient}
+      persistOptions={{ persister }}
+      onSuccess={() => {
+        // 在从localStorage初始化恢复(initial restore from localStorage)成功后恢复修改
+        queryClient.resumePausedMutations();
+      }}
+    >
+      <RestOfTheApp />
+    </PersistQueryClientProvider>
+  );
+}
+```
+
+这里还有一个覆盖面更泛化的[离线修改+查询的例子(codesandbox)](https://codesandbox.io/s/github/tanstack/query/tree/main/examples/react/offline?from-embed)
 
 ## 衍生阅读
 
