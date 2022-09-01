@@ -13,7 +13,7 @@ React Query 是通过 hook 工作的——要么是我们提供的 hook，要么
 npm install @testing-library/react-hooks react-test-renderer --save-dev
 ```
 
-(`react-test-renderer` 是 `@testing-library/react-hooks` 的对等依赖项，它需要与您使用的 React 版本相对应。)
+(`react-test-renderer` 是 `@testing-library/react-hooks` 的对等依赖项，它需要与你使用的 React 版本相对应。)
 
 ## 我们的第一个测试
 

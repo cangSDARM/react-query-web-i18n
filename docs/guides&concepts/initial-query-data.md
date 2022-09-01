@@ -15,7 +15,7 @@ tags:
 
 ## 使用`initialData`预先填充查询
 
-有时候，您可能已经在应用中其他地方获得了查询的初始数据，并且可以直接将其提供给您的查询。
+有时候，你可能已经在应用中其他地方获得了查询的初始数据，并且可以直接将其提供给你的查询。
 在这种情况下，则可以使用`config.initialData`选项设置查询的初始数据，并跳过初始加载状态！
 
 > 重要说明：`initialData`保留在缓存中，因此**不建议为此选项提供占位符，部分或不完整的数据**，如有必要，应使用`placeholderData`
@@ -55,7 +55,7 @@ function Todos() {
   }
   ```
 
-- 那么，如果您的`initialData`并不完全新鲜怎么办？这就引出了最后一个——实际上也是最为准确的——名为`initialDataUpdatedAt`的配置项。该选项允许你传递一个`Number`类型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。请注意，如果是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳
+- 那么，如果你的`initialData`并不完全新鲜怎么办？这就引出了最后一个——实际上也是最为准确的——名为`initialDataUpdatedAt`的配置项。该选项允许你传递一个`Number`类型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。请注意，如果是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳
 
   ```ts
   function Todos() {
@@ -71,7 +71,7 @@ function Todos() {
 
   此选项允许将 staleTime 用于其"原始"用途，以确定数据需要有多新鲜，同时还允许：如果 `initialData` 早于 `staleTime`，则在挂载时重新获取数据。在上面的示例中，我们的数据需要在 1 分钟内刷新，我们可以在`initialData`最后一次更新时提示查询，以便查询自己决定是否需要重新获取数据。
 
-> 如果您希望将数据视为**预取数据**，建议您使用`prefetchQuery`或`fetchQuery` API 来预先填充缓存，从而独立于`initialData`配置`staleTime`。
+> 如果你希望将数据视为**预取数据**，建议你使用`prefetchQuery`或`fetchQuery` API 来预先填充缓存，从而独立于`initialData`配置`staleTime`。
 
 ### 来自函数的初始数据
 
@@ -89,7 +89,7 @@ function Todos() {
 
 ### 来自缓存的初始数据
 
-在某些情况下，您可能希望能够从另一个查询的缓存结果中为查询提供初始数据。一个很好的例子是，从一个 todos list 查询中搜索一个单独的 todo 项，然后使用该项对应的已被缓存的数据，来作为单独的 todo 查询的初始数据：
+在某些情况下，你可能希望能够从另一个查询的缓存结果中为查询提供初始数据。一个很好的例子是，从一个 todos list 查询中搜索一个单独的 todo 项，然后使用该项对应的已被缓存的数据，来作为单独的 todo 查询的初始数据：
 
 ```js
 function Todo({ todoId }) {
@@ -121,7 +121,7 @@ function Todo({ todoId }) {
 ### 来自缓存的有条件的初始数据
 
 如果用来查找初始数据的源查询过旧，则可能根本不会考虑使用缓存的数据，而只是想从服务器中获取数据。
-为了使此决定更容易，您可以改用`queryClient.getQueryState`方法来获取关于源查询的更多信息，如`state.dataUpdatedAt`时间戳。您可以以此确定查询是否足够"新鲜"以满足您的需求：
+为了使此决定更容易，你可以改用`queryClient.getQueryState`方法来获取关于源查询的更多信息，如`state.dataUpdatedAt`时间戳。你可以以此确定查询是否足够"新鲜"以满足你的需求：
 
 ```ts
 function Todo({ todoId }) {
@@ -144,4 +144,4 @@ function Todo({ todoId }) {
 
 ## 延伸阅读
 
-如果对于`Initial Data`和`Placeholder Data`有困惑的话，请参考[此社区内容(英文)](https://react-query.tanstack.com/community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)
+如果对于`Initial Data`和`Placeholder Data`有困惑的话，请参考[此社区内容(英文)](https://tanstack.com/query/v4/docs/community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)

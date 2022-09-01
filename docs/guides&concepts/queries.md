@@ -7,7 +7,7 @@ title: 查询 queries
 
 查询是一种对于与**唯一键值**相关联的异步数据源的声明性依赖。
 查询可以与任何基于 Promise 的方法（包括 GET 和 POST 方法）一起使用，以从服务器获取数据。
-如果您的方法修改了服务器上的数据，建议您改用[Mutations](https://react-query.tanstack.com/docs/guides/mutations)。
+如果你的方法修改了服务器上的数据，建议你改用[Mutations](https://react-query.tanstack.com/docs/guides/mutations)。
 
 要在你的组件或自定义 Hook 中订阅一个查询，至少需要以下的参数来调用`useQuery`Hook：
 
@@ -32,7 +32,7 @@ function App() {
 const result = useQuery("todos", fetchTodoList);
 ```
 
-`result`对象包含一些非常重要的状态，您需要注意这些状态才能提高工作效率。
+`result`对象包含一些非常重要的状态，你需要注意这些状态才能提高工作效率。
 在任何给定时刻，查询只能处于以下状态之一：
 
 - `isLoading` 或者 `status === 'loading'` - 查询没有数据，正在获取结果中

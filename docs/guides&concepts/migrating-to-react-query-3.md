@@ -40,7 +40,7 @@ v3 版本 merge 了许多性能优化和 API 调优的内容。
 - 客户端 API 更侧重于一般用法
 - 更容易进行独立于各个组件的测试
 
-当 `new QueryClient()` 时，如果不提供 `QueryCache` 和 `MutationCache` 对象，则会自动为您创建
+当 `new QueryClient()` 时，如果不提供 `QueryCache` 和 `MutationCache` 对象，则会自动为你创建
 
 ```js
 import { QueryClient } from "react-query";
@@ -330,7 +330,7 @@ useQuery({
 
 `initialStale` 选项已被移除，初始的数据现在被视为常规数据。
 这意味着，如果提供 `initialData`，则默认查询将在挂载时重新获取。
-如果您不想该动作被立即执行，则可以定义一个 `staleTime`。
+如果你不想该动作被立即执行，则可以定义一个 `staleTime`。
 
 ### `QueryOptions.forceFetchOnMount` 选项被 `refetchOnMount: 'always'` 替代
 
@@ -422,9 +422,9 @@ setConsole({
 
 #### `QueryStatus` 的类型已经从 [enum](https://www.typescriptlang.org/docs/handbook/enums.html#string-enums) 切换为 [union type](https://www.typescriptlang.org/docs/handbook/2/everyday-types.html#union-types)
 
-因此，如果您要根据`QueryStatus`枚举属性检查查询或修改的状态，你现在必须检查其字符串字面量，而不是以前的枚举值。
+因此，如果你要根据`QueryStatus`枚举属性检查查询或修改的状态，你现在必须检查其字符串字面量，而不是以前的枚举值。
 
-因此，您必须将枚举属性更改为其等效的字符串文字，如下所示：
+因此，你必须将枚举属性更改为其等效的字符串文字，如下所示：
 
 - `QueryStatus.Idle` -> `'idle'`
 - `QueryStatus.Loading` -> `'loading'`

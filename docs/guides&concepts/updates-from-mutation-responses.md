@@ -24,8 +24,8 @@ mutation.mutate({
 const { status, data, error } = useQuery(["todo", { id: 5 }], fetchTodoByID);
 ```
 
-您可能希望将 `onSuccess` 逻辑绑定到可重用的更新中。
-为此，您可以创建一个自定义 hook，如下所示：
+你可能希望将 `onSuccess` 逻辑绑定到可重用的更新中。
+为此，你可以创建一个自定义 hook，如下所示：
 
 ```js
 const useMutateTodo = () => {

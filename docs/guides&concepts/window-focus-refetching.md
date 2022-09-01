@@ -3,8 +3,8 @@ id: window-focus-refetching
 title: 窗口焦点影响的数据刷新 window-focus-refetching
 ---
 
-如果用户离开您的应用时数据是标记为过时的，**React Query 会自动在后台为您请求新的数据**。
-您可以使用`refetchOnWindowFocus`选项在全局或每个查询中禁用此选项。
+如果用户离开你的应用时数据是标记为过时的，**React Query 会自动在后台为你请求新的数据**。
+你可以使用`refetchOnWindowFocus`选项在全局或每个查询中禁用此选项。
 
 #### 全局禁用
 
@@ -31,8 +31,8 @@ useQuery("todos", fetchTodos, { refetchOnWindowFocus: false });
 
 ## 自定义窗口 Focus 事件
 
-在极少数情况下，您可能需要自己管理窗口的 Focus 事件，这些事件会触发 React Query 的重新验证。
-为此，React Query 提供了一个`focusManager.setEventListener`函数，该函数提供了当窗口聚焦时应触发的回调，并允许您设置自己的事件。
+在极少数情况下，你可能需要自己管理窗口的 Focus 事件，这些事件会触发 React Query 的重新验证。
+为此，React Query 提供了一个`focusManager.setEventListener`函数，该函数提供了当窗口聚焦时应触发的回调，并允许你设置自己的事件。
 当调用`focusManager.setEventListener`时，先前设置的处理函数将被删除（在大多数情况下将是默认处理函数），而将使用新的处理函数。 例如，这是默认处理程序：
 
 ```js

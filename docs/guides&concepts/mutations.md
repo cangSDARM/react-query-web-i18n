@@ -1,6 +1,6 @@
 ---
 id: mutations
-title: 修改 mutations
+title: 修改 Mutations
 tags:
   - 翻译完成
 ---
@@ -54,12 +54,12 @@ function App() {
 - `error` - `isError` 时，则可以通过 `error` 属性获取错误
 - `data` - `isSuccess` 时，则可以通过 `data` 属性获取数据
 
-在上面的示例中，您还看到可以通过使用单个变量或对象调用 `mutate` 函数来将变量传递给您的修改函数
+在上面的示例中，你还看到可以通过使用单个变量或对象调用 `mutate` 函数来将变量传递给你的修改函数
 
 即使只有变量，修改也没有那么特别，但是当与 `onSuccess` 回调，[Query Client 的 `invalidateQueries` 方法](../reference/QueryClient#queryclientinvalidatequeries)和 [Query Client 的 `setQueryData` 方法](../reference/QueryClient#queryclientsetquerydata)一起使用时，修改就成为了一个非常强大的工具。
 
-> 重要说明：`mutate` 函数是一个异步函数，这意味着您不能在事件回调中直接使用它 (**React16 及之前版本**)。
-> 如果您需要在 `onSubmit` 中访问事件，则需要将 `mutate` 包装在另一个函数中。 这是由于 [React 事件池](https://reactjs.org/docs/events.html#event-pooling)限制。
+> 重要说明：`mutate` 函数是一个异步函数，这意味着你不能在事件回调中直接使用它 (**React16 及之前版本**)。
+> 如果你需要在 `onSubmit` 中访问事件，则需要将 `mutate` 包装在另一个函数中。 这是由于 [React 事件池](https://reactjs.org/docs/events.html#event-pooling)限制。
 
 ```tsx
 // 在React16及之前的版本，这将无法正常工作
@@ -88,8 +88,8 @@ const CreateTodo = () => {
 
 ## 重置修改的状态
 
-在某些情况下，您需要清除 `error` 或修改请求的数据。
-为此，您可以使用 `reset` 函数来处理：
+在某些情况下，你需要清除 `error` 或修改请求的数据。
+为此，你可以使用 `reset` 函数来处理：
 
 ```tsx
 const CreateTodo = () => {
@@ -303,7 +303,7 @@ queryClient.resumePausedMutations();
 
 ### 持久化的离线修改
 
-如果您使用 [persistQueryClient 插件](../plugins/persistQueryClient.md)持久化一个离线的修改，除非提供一个默认修改函数，否则在页面重新加载时，修改没法恢复。
+如果你使用 [persistQueryClient 插件](../plugins/persistQueryClient.md)持久化一个离线的修改，除非提供一个默认修改函数，否则在页面重新加载时，修改没法恢复。
 
 这是一个技术限制。当持久化到外部存储时，只有修改的状态被持久化，因为函数不能被序列化。hydration 后，触发修改的组件可能没有被正确挂载，所以调用`resumePausedMutations`可能会产生一个错误：`No mutationFn found`。
 
@@ -346,4 +346,4 @@ export default function App() {
 
 ## 衍生阅读
 
-要了解更多关于修改的信息，请查看[此社区内容(英文)](https://react-query.tanstack.com/community/tkdodos-blog#12-mastering-mutations-in-react-query)
+要了解更多关于修改的信息，请查看[此社区内容(英文)](https://tanstack.com/query/v4/docs/community/tkdodos-blog#12-mastering-mutations-in-react-query)

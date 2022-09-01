@@ -30,9 +30,9 @@ tags:
 
 - 失败的查询将**静默重试 3 次**，在捕获并向 UI 显示错误之前，会有**指数级的后退延迟(exponential backoff delay)**。
 
-> 要更改这一点，您可以将查询的默认`retry`和`retryDelay`选项更改为`3`之外的其他值或指数后退函数。
+> 要更改这一点，你可以将查询的默认`retry`和`retryDelay`选项更改为`3`之外的其他值或指数后退函数。
 
-- 默认情况下，查询结果**在结构上是共享的，以检测数据是否确实发生了更改**。如果没有，则**数据的引用保持不变**，以更好地帮助`useMemo`和`useCallback`进行值稳定化(value stabilization)。如果这个概念听起来很陌生，那么不要担心！99.9％的时间您不需要禁用此功能，它会让你的应用在零成本的情况下获得更好的性能。
+- 默认情况下，查询结果**在结构上是共享的，以检测数据是否确实发生了更改**。如果没有，则**数据的引用保持不变**，以更好地帮助`useMemo`和`useCallback`进行值稳定化(value stabilization)。如果这个概念听起来很陌生，那么不要担心！99.9％的时间你不需要禁用此功能，它会让你的应用在零成本的情况下获得更好的性能。
 
 > 结构共享仅适用于**与 JSON 兼容的值**，任何其他值类型将始终被视为已更改的。例如，如果由于响应过大而导致性能问题，则可以通过配置`config.structuralSharing`来禁用此功能。 如果要在查询响应中处理非 JSON 兼容值，并且仍想检测数据是否已更改，则可以使用`config.isDataEqual`来自定义一个数据比较函数。
 
@@ -40,5 +40,5 @@ tags:
 
 社区中有关于默认值的进一步解释或说明（英文）
 
-- [React Query 实践](https://react-query.tanstack.com/community/tkdodos-blog#1-practical-react-query)
-- [React Query "作为一个状态管理器"](https://react-query.tanstack.com/community/tkdodos-blog#10-react-query-as-a-state-manager)
+- [React Query 实践](https://tanstack.com/query/v4/docs/community/tkdodos-blog#1-practical-react-query)
+- [React Query "作为一个状态管理器"](https://tanstack.com/query/v4/docs/community/tkdodos-blog#10-react-query-as-a-state-manager)

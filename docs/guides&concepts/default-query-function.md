@@ -5,7 +5,7 @@ tags:
   - 翻译完成
 ---
 
-如果出于某种原因，您希望在整个应用中共享相同的查询功能，并且可以仅靠查询键值来标识应获取的内容。
+如果出于某种原因，你希望在整个应用中共享相同的查询功能，并且可以仅靠查询键值来标识应获取的内容。
 则可以通过重写 React Query 提供的**默认查询函数**来做到这一点：
 
 ```tsx
@@ -17,7 +17,7 @@ const defaultQueryFn = async ({ queryKey }) => {
   return data;
 };
 
-// 使用 defaultOptions 向您的应用提供默认查询函数
+// 使用 defaultOptions 向你的应用提供默认查询函数
 const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
@@ -51,4 +51,4 @@ function Post({ postId }) {
 }
 ```
 
-如果您想覆盖默认的 queryFn，像平常一样提供一个函数即可。
+如果你想覆盖默认的 queryFn，像平常一样提供一个函数即可。

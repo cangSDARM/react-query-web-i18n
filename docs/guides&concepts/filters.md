@@ -28,7 +28,7 @@ await queryClient.refetchQueries(["posts"], { type: "active" });
 查询过滤器对象支持以下属性：
 
 - `exact?: boolean`
-  - 如果您不想对键值做模糊查询（search queries inclusively），则可以传递 `exact: true` 选项，选项来返回且只返回完整匹配的
+  - 如果你不想对键值做模糊查询（search queries inclusively），则可以传递 `exact: true` 选项，选项来返回且只返回完整匹配的
 - `type?: 'active' | 'inactive' | 'all'`
   - 默认为 `all`
   - 设置为 `active` 时，它将匹配当前活跃的查询
@@ -65,7 +65,7 @@ await queryClient.isMutating({
 修改过滤器对象支持以下属性：
 
 - `exact?: boolean`
-  - 如果您不想对键值做模糊查询，你可以设置 `exact: true` 选项来返回且只返回完整匹配的
+  - 如果你不想对键值做模糊查询，你可以设置 `exact: true` 选项来返回且只返回完整匹配的
 - `fetching?: boolean`
   - 设置为 `true` 时，它将匹配当前正在获取的
   - 设置为 `false` 时，它将匹配当前未在获取的

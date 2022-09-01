@@ -7,8 +7,8 @@ title: 查询取消 query-cancellation
 
 React Query 为每个查询函数都提供了一个[`AbortSignal`的实例](https://developer.mozilla.org/docs/Web/API/AbortSignal)，**当且仅当你的运行环境支持该对象**。
 当一个查询变得过时或者不活跃，那么该“信号”将被中止。
-这意味着，所有的查询都是可取消的，而且如果需要，您可以在查询函数中响应取消动作。
-最好的是，您可以继续使用普通的 `async/await` 语法，同时获得自动取消的所有好处。
+这意味着，所有的查询都是可取消的，而且如果需要，你可以在查询函数中响应取消动作。
+最好的是，你可以继续使用普通的 `async/await` 语法，同时获得自动取消的所有好处。
 此外，这个解决方案比旧的解决方案更适合 TypeScript。
 
 [AbortController API 在大多数运行时环境中都是可用的](https://developer.mozilla.org/docs/Web/API/AbortController#browser_compatibility)。但是如果运行时环境不支持它，那么查询函数将在对应的地方接收到 `undefined`。
@@ -23,7 +23,7 @@ React Query 为每个查询函数都提供了一个[`AbortSignal`的实例](http
 这意味着，在执行之后的数据是在缓存中可用。
 因此，在已经开始接收一个查询时且在其完成之前，卸载其组件的情形是被允许的。并且若再次挂载组件，而查询还没有被 GC，那么数据是可用的。
 
-但是，如果您使用了 `AbortSignal` 或者是附加了一个 `cancel` 函数，那么这个 Promise 是可以被取消的(例如，下面的取消 `fetch` 操作)，因此查询也必须被取消。
+但是，如果你使用了 `AbortSignal` 或者是附加了一个 `cancel` 函数，那么这个 Promise 是可以被取消的(例如，下面的取消 `fetch` 操作)，因此查询也必须被取消。
 取消查询将导致其状态*恢复到*以前的状态。
 
 ## 使用 `fetch`
@@ -135,9 +135,9 @@ const query = useQuery("todos", ({ signal }) => {
 
 ## 手动取消
 
-有时，您可能会想手动取消。
+有时，你可能会想手动取消。
 例如，如果请求需要很长时间才能完成，此时允许用户单击“取消”按钮来停止请求。
-为此，您只需要调用 `queryClient.cancelQueries(key)`，取消此次查询并将数据还原到上一次的状态。
+为此，你只需要调用 `queryClient.cancelQueries(key)`，取消此次查询并将数据还原到上一次的状态。
 如果 `promise.cancel` 可用或者你在查询函数内处理了 `signal`，React Query 将取消该 Promise 的同时取消请求。
 
 ```jsx

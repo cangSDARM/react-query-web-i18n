@@ -18,7 +18,7 @@ tags:
 - `hasPreviousPage`布尔值现在可用。如果`getPreviousPageParam`返回的值不是`undefined`的，则为`true`
 - `isFetchingNextPage`和`isFetchingPreviousPage`布尔值来区分后台刷新状态和加载更多状态
 
-> 注意：在查询中使用`initialData`或`select`参数时，请确保在重组(restructure)数据时仍包含`data.pages`和`data.pageParams`属性，否则查询返回时将覆盖您的更改！
+> 注意：在查询中使用`initialData`或`select`参数时，请确保在重组(restructure)数据时仍包含`data.pages`和`data.pageParams`属性，否则查询返回时将覆盖你的更改！
 
 ## 例子
 
@@ -41,7 +41,7 @@ fetch("/api/projects?cursor=9");
 - 获取`getNextPageParam`中返回的用于下一个查询的信息
 - 调用`fetchNextPage`函数
 
-> 注意：请勿使用参数调用`fetchNextPage`，这很重要。除非您希望它们覆盖从`getNextPageParam`函数返回的`pageParam`数据。
+> 注意：请勿使用参数调用`fetchNextPage`，这很重要。除非你希望它们覆盖从`getNextPageParam`函数返回的`pageParam`数据。
 > 例如，不要这样做：`<button onClick={fetchNextPage} />`，因为这会将`onClick`的事件对象当作一个参数给`fetchNextPage`函数。
 
 ```tsx
@@ -122,8 +122,8 @@ refetch({ refetchPage: (page, index) => index === 0 });
 
 ## 如果我需要将自定义信息传递给查询函数怎么办
 
-默认情况下，从`getNextPageParam`返回的变量将提供给查询函数，但是在某些情况下，您可能希望重写它。
-您可以将自定义变量传递给`fetchNextPage`函数，该函数将覆盖默认变量，如下所示：
+默认情况下，从`getNextPageParam`返回的变量将提供给查询函数，但是在某些情况下，你可能希望重写它。
+你可以将自定义变量传递给`fetchNextPage`函数，该函数将覆盖默认变量，如下所示：
 
 ```tsx
 function Projects() {
@@ -141,7 +141,7 @@ function Projects() {
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
   });
 
-  // 传递您自己的页面参数
+  // 传递你自己的页面参数
   const skipToCursor50 = () => fetchNextPage({ pageParam: 50 });
 }
 ```
@@ -159,7 +159,7 @@ useInfiniteQuery(["projects"], fetchProjects, {
 
 ## 如果我想以相反的顺序显示页面呢
 
-有时您可能想以相反的顺序显示页面。在这种情况下，可以使用`select`选项：
+有时你可能想以相反的顺序显示页面。在这种情况下，可以使用`select`选项：
 
 ```tsx
 useInfiniteQuery(["projects"], fetchProjects, {
