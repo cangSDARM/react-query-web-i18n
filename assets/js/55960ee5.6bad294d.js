@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkreact_query_web_i18n=self.webpackChunkreact_query_web_i18n||[]).push([[4121],{8070:e=>{e.exports=JSON.parse('[{"name":"\u7ffb\u8bd1\u5b8c\u6210","permalink":"/react-query-web-i18n/next/tags/\u7ffb\u8bd1\u5b8c\u6210","count":23}]')}}]);
