@@ -202,15 +202,15 @@ mutate(todo, {
 ```ts
 useMutation(addTodo, {
   onSuccess: (data, error, variables, context) => {
-    // Will be called 3 times
+    // 将被调用3次
   },
 });
 
 [("Todo 1", "Todo 2", "Todo 3")].forEach((todo) => {
   mutate(todo, {
     onSuccess: (data, error, variables, context) => {
-      // Will execute only once, for the last mutation (Todo 3),
-      // regardless which mutation resolves first
+      // 只会被TODO3触发，而被调用一次
+      // 无论之前被resolve的有多少
     },
   });
 });
@@ -244,7 +244,7 @@ const mutation = useMutation(addTodo, {
 });
 ```
 
-**如果由于设备离线而导致修改失败，那么当设备重新连接时，它们将以相同的顺序重新尝试。**
+**如果由于设备离线而导致修改失败，那么当设备重新连接时，它们将以相同的顺序重试。**
 
 ## 持久化
 
@@ -305,7 +305,9 @@ queryClient.resumePausedMutations();
 
 如果你使用 [persistQueryClient 插件](../plugins/persistQueryClient.md)持久化一个离线的修改，除非提供一个默认修改函数，否则在页面重新加载时，修改没法恢复。
 
-这是一个技术限制。当持久化到外部存储时，只有修改的状态被持久化，因为函数不能被序列化。hydration 后，触发修改的组件可能没有被正确挂载，所以调用`resumePausedMutations`可能会产生一个错误：`No mutationFn found`。
+这是一个技术限制。
+当持久化到外部存储时，只有修改的状态被持久化，因为函数不能被序列化。
+（SSR 中）hydration 后，触发修改的组件可能没有被正确挂载，所以调用`resumePausedMutations`可能会产生一个错误：`No mutationFn found`。
 
 ```tsx
 const persister = createSyncStoragePersister({

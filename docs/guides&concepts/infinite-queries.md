@@ -5,7 +5,8 @@ tags:
   - 翻译完成
 ---
 
-通过"加载更多"来附加更多的数据到现有数据集，或者是通过"无限滚动"来呈现列表，这些都是非常常见的 UI 模式。React Query 支持一个有用的`useQuery`版本，称为`useInfiniteQuery`，很适合用来查询这些类型的数据。
+通过"加载更多"来附加更多的数据到现有数据集，或者是通过"无限滚动"来呈现列表，这些都是非常常见的 UI 模式。
+正巧，React Query 支持一个有用的`useQuery`版本，称为`useInfiniteQuery`，很适合用来查询这些类型的数据。
 
 使用`useInfiniteQuery`时，需要注意一些不同之处：
 
@@ -96,8 +97,9 @@ function Projects() {
 
 ## 当无限查询需要重新获取时会发生什么
 
-当无限查询变得陈旧(`stale`)且需要重新获取时，将从第一个查询开始，*按照对应顺序*获取每个组。
-这样可以确保即使基础数据发生了修改，我们也不会使用过时的游标，也不会得到重复的记录或跳过记录。如果从 queryCache 中删除了无限查询的结果，则分页将在初始状态下重新启动，仅请求初始的第一个分组(initial group)。
+当无限查询变得陈旧(stale)且需要重新获取时，将从第一个查询开始，*按照对应顺序*获取每个组。
+这样可以确保即使基础数据发生了修改，我们也不会使用过时的游标，也不会得到重复的记录或跳过记录。
+如果从 queryCache 中删除了无限查询的结果，则分页将在初始状态下重新启动，仅请求初始的第一个分组(initial group)。
 
 ### 重新获取页面
 
@@ -112,7 +114,7 @@ const { refetch } = useInfiniteQuery(["projects"], fetchProjects, {
 refetch({ refetchPage: (page, index) => index === 0 });
 ```
 
-你也可以将该方法作为第二个参数(`queryFilters`)传递给[queryClient.refetchQueries](../reference/QueryClient#queryclientrefetchqueries), [queryClient.invalidateQueries](../reference/QueryClient#queryclientinvalidatequeries) 或者 [queryClient.resetQueries](../reference/QueryClient#queryclientresetqueries) 来做到同样的效果
+你也可以将该方法作为第二个参数(`queryFilters`)传递给 [queryClient.refetchQueries](../reference/QueryClient#queryclientrefetchqueries), [queryClient.invalidateQueries](../reference/QueryClient#queryclientinvalidatequeries) 或者 [queryClient.resetQueries](../reference/QueryClient#queryclientresetqueries) 来做到同样的效果
 
 **函数签名**
 

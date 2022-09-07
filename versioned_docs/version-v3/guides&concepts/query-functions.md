@@ -31,10 +31,10 @@ const { error } = useQuery(["todos", todoId], async () => {
 });
 ```
 
-## 默认情况下不与`fetch`和其他客户端库一起使用
+## 与`fetch`和其他默认不抛出错误的客户端库一起使用
 
-虽然大多数库（例如`axios`或`graphql-request`）会针对不成功的 HTTP 调用自动引发错误，但某些库（如`fetch`）默认不会引发错误。
-在这种情况下，您需要自己 throw 它们。这是使用流行的`fetch`的 API 的一种简单方法：
+虽然大多数库（例如`axios`或`graphql-request`）会针对不成功的 HTTP 请求自动抛出错误，但某些库（如`fetch`）默认不会抛出错误。
+在这种情况下，你需要自己`throw`它们。这是使用流行的`fetch` API 的一种简单方法：
 
 ```js
 useQuery(["todos", todoId], async () => {

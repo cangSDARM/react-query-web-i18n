@@ -15,7 +15,7 @@ function Todos() {
     data: todos,
     error,
     isFetching,
-  } = useQuery("todos", fetchTodos);
+  } = useQuery(["todos"], fetchTodos);
 
   return status === "loading" ? (
     <span>Loading...</span>

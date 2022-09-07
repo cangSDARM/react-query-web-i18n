@@ -16,13 +16,13 @@ const prefetchTodos = async () => {
 ```
 
 - 如果此查询的数据已经在缓存中并且**没有失效**，则将不会获取该数据
-- 如果一个`staleTime`被传递，例如：`prefetchQuery('todos', fn, {staleTime：5000})`并且数据早于指定的 staleTime，则查询将去尝试获取新值
+- 如果一个`staleTime`被传递，例如：`prefetchQuery(['todos'], fn, {staleTime：5000})`，当数据早于指定的 staleTime 时，则查询将去尝试获取新值
 - 如果一个预取的查询没有出现`useQuery`实例，则将在`cacheTime`指定的时间之后被删除并被垃圾回收
 
 ## 手动启动一个查询
 
 或者，如果你已经有同步可用的查询数据，则无需预取。
-你可以只使用[Query Client 的`setQueryData`方法](https://react-query.tanstack.com/reference/QueryClient#queryclientsetquerydata)直接按键值添加或更新查询的缓存结果。
+你可以只使用[Query Client 的`setQueryData`方法](../reference/QueryClient.md#queryclientsetquerydata)直接按键值添加或更新查询的缓存结果。
 
 ```ts
 queryClient.setQueryData(["todos"], todos);

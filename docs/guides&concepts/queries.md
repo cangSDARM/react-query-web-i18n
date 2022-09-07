@@ -26,7 +26,7 @@ function App() {
 }
 ```
 
-这个*唯一键值*将在内部用于重新获取数据、缓存和在整个程序中共享该查询。
+这个*唯一键值*将在内部用于重新获取数据、缓存和在整个程序中共享该查询信息。
 
 `useQuery`返回的查询结果将包含所有关于该查询的信息，你可以用这些信息来进行排版和或数据驱动的任何动作：
 
@@ -111,16 +111,17 @@ function Todos() {
 
 ### 为什么有两种表示状态的东西(`status`/`fetchStatus`)？
 
-后台刷新和数据过期重试(stale-while-revalidate)的逻辑使`status`和`fetchStatus`的所有组合成为可能。比如说：
+后台刷新和数据过期重试(stale-while-revalidate)的逻辑使`status`和`fetchStatus`的所有组合成为了可能。比如说：
 
 - 一个`state='success'`的查询通常处于`fetchStatus='idle'`状态。但如果同时有后台重新获取动作，它也可能为`fetchStatus='fetching'`状态。
 - 一个没有数据的查询通常处于`status='loading'`状态和`fetchStatus='loading`状态。如果同时无网络连接，它也可能为`fetchStatus='paused'`状态。
 
-所以请记住，一个查询可以处于`fetchStatus='loading'`状态，但没有实际的在获取数据。有一个简单的经验法则：
+所以请记住，一个查询可以处于`fetchStatus='loading'`状态，但没有实际的在获取数据。
+如何理清两者关系？这里有一个简单的经验法则：
 
 - `status`告诉我们有关`data`的状态：有或者没有？
 - `fetchStatus`告诉我们有关`queryFn`的状态：在执行还是没在执行？
 
 ## 延伸阅读
 
-如果你对于执行状态检查的另一种方法感兴趣的话，请参阅[此社区资源](https://react-query.tanstack.com/community/tkdodos-blog#4-status-checks-in-react-query)
+如果你对于执行状态检查的另一种方法感兴趣的话，请参阅[此社区资源](https://tanstack.com/query/v4/docs/community/tkdodos-blog#4-status-checks-in-react-query)

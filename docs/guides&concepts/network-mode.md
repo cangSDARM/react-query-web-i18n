@@ -5,7 +5,7 @@ tags:
   - 翻译完成
 ---
 
-React Query 提供了三种不同的网络模式，以区分在没有网络连接的情况下，[查询](./queries.md)和[修改](./mutations.md)应如何表现。
+React Query 提供了三种不同的网络模式，以确定在没有网络连接的情况下，[查询](./queries.md)和[修改](./mutations.md)应如何表现。
 这几种模式可以为每个查询/修改单独设置，也可以全局设置查询/修改的默认值做到。
 
 由于 React Query 通常与数据获取库(axios/fetch)结合使用，所以默认的网络模式是[online](#模式-online)。

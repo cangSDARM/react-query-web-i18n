@@ -55,7 +55,7 @@ function Todos() {
   }
   ```
 
-- 那么，如果你的`initialData`并不完全新鲜怎么办？这就引出了最后一个——实际上也是最为准确的——名为`initialDataUpdatedAt`的配置项。该选项允许你传递一个`Number`类型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。请注意，如果是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳
+- 那么，如果你的`initialData`并不完全新鲜怎么办？这就引出了最后一个--实际上也是最为准确的--名为`initialDataUpdatedAt`的配置项。该选项允许你传递一个`Number`类型的 JS 时间戳(以毫秒为单位，如`Date.now()`)，以确定`initialData`上次更新的时间。请注意，如果是 unix 时间戳，则需要将其乘以 1000，以将其转换为 JS 时间戳
 
   ```ts
   function Todos() {
@@ -75,7 +75,7 @@ function Todos() {
 
 ### 来自函数的初始数据
 
-如果访问查询的初始数据的过程很繁琐，或者只是不想在每个渲染上执行某些操作，则可以传递一个函数作为`initialData`值。这个函数只在初始化查询时执行一次，从而节省宝贵的内存和或 CPU。
+如果访问查询的初始数据的过程很繁琐，或者只是不想在每个渲染上执行某些操作，则可以传递一个函数作为`initialData`值。这个函数只在初始化查询时执行一次，从而节省宝贵的 RAM 和或 CPU。
 
 ```ts
 function Todos() {

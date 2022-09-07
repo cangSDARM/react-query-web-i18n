@@ -15,7 +15,7 @@ const mutation = useMutation(postTodo);
 ```
 
 当对`postTodo`的修改成功时，我们可能希望对所有的`todos`查询都暂时失效，然后重新获取以显示新的 todo 项。
-为此，可以使用`useMutation`的`onSuccess`参数和`client`（QueryClient）的`invalidateQueries`函数：
+为此，可以使用`useMutation`的`onSuccess`参数和 QueryClient 的`invalidateQueries`函数：
 
 ```ts
 import { useMutation, useQueryClient } from "@tanstack/react-query";

@@ -10,8 +10,7 @@ tags:
 但是在某些情况下，重新获取可能没法正确的工作，修改可能代表某种服务器端的问题，从而而无法进行。
 在这种情况下，你可以选择回滚更新。
 
-为此，`useMutation` 的 `onMutate` 回调允许返回一个特定值，该值稍后将作为最后一个参数传递给 `onError` 和 `onSettled` 处理。
-在大多数情况下，以这种方式来传递一个回滚函数是最有用的。
+为此，`useMutation` 的 `onMutate` 回调允许返回一个特定值，该值稍后将作为最后一个参数传递给 `onError` 和 `onSettled` 处理--在大多数情况下，以这种方式来传递一个回滚函数是最有用的。
 
 ## 添加新的 todo 时更新 todos 列表
 
@@ -28,7 +27,7 @@ useMutation(updateTodo, {
     const previousTodos = queryClient.getQueryData(["todos"]);
 
     // 执行"乐观"更新
-    queryClient.setQueryData("todos", (old) => [...old, newTodo]);
+    queryClient.setQueryData(["todos"], (old) => [...old, newTodo]);
 
     // 返回具有快照值的上下文对象
     return { previousTodos };

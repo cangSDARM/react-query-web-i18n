@@ -16,12 +16,13 @@ React Query 为每个查询函数都提供了一个[`AbortSignal`的实例](http
 
 ## 默认行为
 
-正常情况下，未挂载的或者在其返回的 Promise 被 resolve (reject 的自然是 error)之前的查询是*不会*被取消的。
-这意味着，在 resolve 之后的数据将在缓存中可用。
-因此，在已经开始接收一个查询且在其结束之前，卸载其组件的情形是被允许的。并且若再次挂载组件，而查询还没有被自动垃圾回收，那么数据是可用的。
+正常情况下，未挂载的或在其返回的 Promise 被 resolve/reject 之前的查询是*不会*被自动取消的。
+顺利的话，在 resolve 之后的数据将在缓存中可用，reject 后的 error 可用。
+不顺利的话，如果在已经开始接收一个查询且在其结束之前卸载组件，不会产生任何不利影响。并且若再次挂载此组件，且查询还被自动垃圾回收，那么数据可用。
 
-但是，如果你使用了 `AbortSignal` 或者是给 Promise 附加了一个 `cancel` 函数，那么这个 Promise 是可以被取消的(例如，下面的取消 `fetch` 操作)，此时查询也必须被取消。
-取消查询将导致其*恢复到以前*的状态。
+但是，如果你使用了 `AbortSignal` 或者是给 Promise 附加了一个 `cancel` 函数，那么这个 Promise 是可以被取消的(例如，下面的使用 `fetch` 示例)。
+此时查询也必须被取消。
+取消查询将会导致其*恢复到以前*的状态。
 
 ## 使用 `fetch`
 
@@ -133,9 +134,9 @@ const query = useQuery(["todos"], ({ signal }) => {
 ## 手动取消
 
 有时，你可能会想手动取消。
-例如，如果请求需要很长时间才能完成，此时允许用户单击“取消”按钮来停止请求。
+例如：请求需要很长时间才能完成，因此用户可以单击“取消”按钮来停止请求。
 为此，你只需要调用 `queryClient.cancelQueries(key)`，取消此次查询并将数据还原到上一次的状态。
-如果 `promise.cancel` 可用或者你在查询函数内已经处理了 `signal`，React Query 将取消该 Promise 的同时取消请求。
+如果 `promise.cancel` 可用或者你在查询函数内已经处理了 `signal`，React Query 就会取消该 Promise 同时取消对应请求。
 
 ```tsx
 const query = useQuery(["todos"], async ({ signal }) => {
