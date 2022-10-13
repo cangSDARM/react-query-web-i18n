@@ -79,7 +79,7 @@ export default function MyApp({ Component, pageProps }) {
 }
 ```
 
-现在，你已经准备号用 [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)（针对 SSG）或 [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)（针对 SSR）在页面中预取一些数据了。
+现在，你已经准备好用 [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)（针对 SSG）或 [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)（针对 SSR）在页面中预取一些数据了。
 从 React Query 的角度来看，这些集成方式都是相同的。
 
 `getStaticProps` 的形式如下所示：
