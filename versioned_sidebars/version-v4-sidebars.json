@@ -65,11 +65,9 @@
       }
     ],
     "社区教程/博客": [
-      {
-        "type": "link",
-        "label": "TkDodo's Blog",
-        "href": "https://react-query.tanstack.com/community/tkdodos-blog"
-      },
+      "community/liaoliao666-react-query-kit",
+      "community/lukemorales-query-key-factory",
+      "community/tkdodos-blog",
       {
         "type": "link",
         "label": "入门教程(掘金)",
