@@ -35,13 +35,13 @@ function App () {
 
 ```ts
 function App({ users }) {
-  const userQueries = useQueries(
-    users.map((user) => {
+  const userQueries = useQueries({
+    queries: users.map(user => {
       return {
-        queryKey: ["user", user.id],
+        queryKey: ['user', user.id],
         queryFn: () => fetchUserById(user.id),
-      };
-    }),
-  );
+      }
+    })
+  })
 }
 ```
