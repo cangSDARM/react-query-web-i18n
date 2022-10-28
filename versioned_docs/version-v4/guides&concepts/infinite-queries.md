@@ -47,8 +47,10 @@ fetch("/api/projects?cursor=9");
 import { useInfiniteQuery } from "@tanstack/react-query";
 
 function Projects() {
-  const fetchProjects = ({ pageParam = 0 }) =>
-    fetch("/api/projects?cursor=" + pageParam);
+  const fetchProjects = async ({ pageParam = 0 }) => {
+    const res = await fetch("/api/projects?cursor=" + pageParam);
+    return res.json();
+  };
 
   const {
     data,
@@ -186,7 +188,7 @@ queryClient.setQueryData(["projects"], (data) => ({
 ```tsx
 const newPagesArray =
   oldPagesArray?.pages.map((page) =>
-    page.filter((val) => val.id !== updatedId),
+    page.filter((val) => val.id !== updatedId)
   ) ?? [];
 
 queryClient.setQueryData(["projects"], (data) => ({

@@ -270,15 +270,13 @@ queryClient.setMutationDefaults(["addTodo"], {
   onSuccess: (result, variables, context) => {
     // 成功，用正确内容替换掉
     queryClient.setQueryData(["todos"], (old) =>
-      old.map((todo) =>
-        todo.id === context.optimisticTodo.id ? result : todo,
-      ),
+      old.map((todo) => (todo.id === context.optimisticTodo.id ? result : todo))
     );
   },
   onError: (error, variables, context) => {
     // 清除掉添加失败的 todo
     queryClient.setQueryData(["todos"], (old) =>
-      old.filter((todo) => todo.id !== context.optimisticTodo.id),
+      old.filter((todo) => todo.id !== context.optimisticTodo.id)
     );
   },
   retry: 3,
@@ -322,7 +320,7 @@ const queryClient = new QueryClient({
 // 我们需要一个默认的修改函数，以便暂停的修改可以在页面重新加载后继续进行
 queryClient.setMutationDefaults(["todos"], {
   mutationFn: ({ id, data }) => {
-    return api.upateTodo(id, data);
+    return api.updateTodo(id, data);
   },
 });
 

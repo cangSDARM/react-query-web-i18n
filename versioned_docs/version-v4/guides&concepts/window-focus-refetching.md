@@ -100,7 +100,7 @@ focusManager.setFocused(undefined);
 
 ## 陷阱和警告
 
-一些浏览器API产生的对话窗口，如 `alert()` 或文件上传对话框(`<input type="file" />`)，也可能在关闭之后触发基于窗口焦点的数据获取动作。
+一些浏览器 API 产生的对话窗口，如 `alert()` 或文件上传对话框(`<input type="file" />`)，也可能在关闭之后触发基于窗口焦点的数据获取动作。
 这可能会导致某些不必要的副作用。
 因为数据的重新获取可能会触发组件卸载或重新挂载，甚至远在执行文件上传处理的步骤之前。
 请查看 [此 Issue](https://github.com/tannerlinsley/react-query/issues/2960) 以了解问题背景及相关的解决办法。

@@ -6,10 +6,19 @@ title: createAsyncStoragePersister
 ## Installation
 
 This utility comes as a separate package and is available under the `'@tanstack/query-async-storage-persister'` import.
+
 ```bash
 npm install @tanstack/query-async-storage-persister @tanstack/react-query-persist-client
 ```
+
 or
+
+```bash
+pnpm add @tanstack/query-async-storage-persister @tanstack/react-query-persist-client
+```
+
+or
+
 ```bash
 yarn add @tanstack/query-async-storage-persister @tanstack/react-query-persist-client
 ```
@@ -19,12 +28,12 @@ yarn add @tanstack/query-async-storage-persister @tanstack/react-query-persist-c
 - Import the `createAsyncStoragePersister` function
 - Create a new asyncStoragePersister
   - you can pass any `storage` to it that adheres to the `AsyncStorage` interface - the example below uses the async-storage from React Native
-- Pass it to the [`persistQueryClient`](../plugins/persistQueryClient) function
+- Wrap your app by using [`PersistQueryClientProvider`](./persistQueryClient.md#persistqueryclientprovider) component.
 
 ```ts
-import AsyncStorage from '@react-native-async-storage/async-storage'
-import { persistQueryClient } from '@tanstack/react-query-persist-client'
-import { createAsyncStoragePersister } from '@tanstack/query-async-storage-persister'
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { PersistQueryClientProvider } from "@tanstack/react-query-persist-client";
+import { createAsyncStoragePersister } from "@tanstack/query-async-storage-persister";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -32,21 +41,27 @@ const queryClient = new QueryClient({
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
-})
+});
 
 const asyncStoragePersister = createAsyncStoragePersister({
-  storage: AsyncStorage
-})
+  storage: AsyncStorage,
+});
 
-persistQueryClient({
-  queryClient,
-  persister: asyncStoragePersister,
-})
+const Root = () => (
+  <PersistQueryClientProvider
+    client={queryClient}
+    persistOptions={{ persister: asyncStoragePersister }}
+  >
+    <App />
+  </PersistQueryClientProvider>
+);
+
+export default Root;
 ```
 
 ## Retries
 
-Retries work the same as for a [SyncStoragePersister](../plugins/createSyncStoragePersister), except that they can also be asynchronous. You can also use all the predefined retry handlers.
+Retries work the same as for a [SyncStoragePersister](./createSyncStoragePersister.md), except that they can also be asynchronous. You can also use all the predefined retry handlers.
 
 ## API
 
@@ -63,24 +78,24 @@ createAsyncStoragePersister(options: CreateAsyncStoragePersisterOptions)
 ```ts
 interface CreateAsyncStoragePersisterOptions {
   /** The storage client used for setting an retrieving items from cache */
-  storage: AsyncStorage
+  storage: AsyncStorage;
   /** The key to use when storing the cache to localStorage */
-  key?: string
+  key?: string;
   /** To avoid localStorage spamming,
    * pass a time in ms to throttle saving the cache to disk */
-  throttleTime?: number
+  throttleTime?: number;
   /** How to serialize the data to storage */
-  serialize?: (client: PersistedClient) => string
+  serialize?: (client: PersistedClient) => string;
   /** How to deserialize the data from storage */
-  deserialize?: (cachedString: string) => PersistedClient
+  deserialize?: (cachedString: string) => PersistedClient;
   /** How to retry persistence on error **/
-  retry?: AsyncPersistRetryer
+  retry?: AsyncPersistRetryer;
 }
 
 interface AsyncStorage {
-  getItem: (key: string) => Promise<string>
-  setItem: (key: string, value: string) => Promise<unknown>
-  removeItem: (key: string) => Promise<unknown>
+  getItem: (key: string) => Promise<string>;
+  setItem: (key: string, value: string) => Promise<unknown>;
+  removeItem: (key: string) => Promise<unknown>;
 }
 ```
 

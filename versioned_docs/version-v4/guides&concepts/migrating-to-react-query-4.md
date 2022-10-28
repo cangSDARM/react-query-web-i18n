@@ -109,6 +109,18 @@ npx jscodeshift ./path/to/src/
 
 同时，请花点时间阅读[有依赖的查询](./dependent-queries.md)
 
+#### 禁用的查询
+
+由于一些改动（见下参考），禁用的查询（甚至是暂时禁用的）开始的状态及是`state=loading`。
+为了使迁移更容易，特别是为了有一个好的字段来标识何时显示加载时占位的内容，你可以检查`isInitialLoading`而不是`isLoading`
+
+```diff
+- isLoading
++ isInitialLoading
+```
+
+请参考对应改动：[禁用/暂停查询](../guides/../guides&concepts/disabling-queries.md#isInitialLoading)
+
 ### `useQueries`的新的 API
 
 `useQueries`钩子现在接受一个带有`queries`参数(prop)的对象作为其输入。`queries`的值是一个查询的数组（这个数组与 v3 中传递到`useQueries`的内容相同

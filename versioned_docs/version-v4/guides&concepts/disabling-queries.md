@@ -18,13 +18,10 @@ title: 禁用/暂停查询 Disabling/Pausing Queries
 
 ```tsx
 function Todos() {
-  const { isLoading, isError, data, error, refetch, isFetching } = useQuery(
-    ["todos"],
-    fetchTodoList,
-    {
+  const { isInitialLoading, isError, data, error, refetch, isFetching } =
+    useQuery(["todos"], fetchTodoList, {
       enabled: false,
-    },
-  );
+    });
 
   return (
     <div>
@@ -40,10 +37,10 @@ function Todos() {
         </>
       ) : isError ? (
         <span>Error: {error.message}</span>
-      ) : isLoading && !isFetching ? (
-        <span>Not ready ...</span>
-      ) : (
+      ) : isInitialLoading ? (
         <span>Loading...</span>
+      ) : (
+        <span>Not ready ...</span>
       )}
 
       <div>{isFetching ? "Fetching..." : null}</div>
@@ -59,7 +56,7 @@ function Todos() {
 
 ## [惰性](https://gist.github.com/39eff87048d54dbdb8ea)查询
 
-`enabled`选项不仅可以用来永久禁用一个查询，还可以让你在以后启用或者禁用它。
+`enabled`选项不仅可以用来永久禁用一个查询，还可以让你在稍晚的时候启用或者禁用它。
 一个很好的例子是一个带过滤器的表单，你只想在用户输入了一个用于过滤的关键词后才发起第一次请求：
 
 ```tsx
@@ -84,3 +81,13 @@ function Todos() {
   )
 }
 ```
+
+### isInitialLoading
+
+惰性查询一开始就会处于`status: 'loading'`的状态，因为它的真实加载时机不确定且它的确暂时没有数据。
+由于我们目前没有获取任何数据（因为*enabled*已被禁用），这意味着你很有可能没法使用这个字段来显示一个“正在加载”的样式。
+
+如果你禁用了自动运行的查询或者使用了惰性查询，你可以选择使用`isInitialLoading`字段。
+这是一个派生的标志，是由部分内容计算出来的：`isLoading && isFetching`
+
+所以只有当查询正在进行第一次获取时，它才会为真。

@@ -17,6 +17,8 @@ devtools 包现在被拆分开来，因此需要额外安装:
 ```bash
 $ npm i @tanstack/react-query-devtools
 # or
+$ pnpm add @tanstack/react-query-devtools
+# or
 $ yarn add @tanstack/react-query-devtools
 ```
 
@@ -60,6 +62,9 @@ function App() {
 - `position?: "top-left" | "top-right" | "bottom-left" | "bottom-right"`
   - 默认值为 `bottom-left`
   - React Query 徽标的位置，用于打开和关闭 devtools 面板
+- `panelPosition?: "top" | "bottom" | "left" | "right"`
+  - 默认值为 `bottom`
+  - React Query devtools 面板的位置
 - `context?: React.Context<QueryClient | undefined>`
   - 使用这个来使用自定义的 React Query 上下文。否则，将默认使用`defaultContext`
 
@@ -88,3 +93,68 @@ function App() {
   - 使用内联样式对组件进行样式设置的标准 React Style 对象
 - `className: string`
   - 使用 class 对组件进行样式设置的标准 React className 属性
+- `showCloseButton?: boolean`
+  - 是否在 devtools 里显示关闭按钮
+- `closeButtonProps: PropsObject`
+  - 给关闭按钮添加 props. 例如，你想改动 `className`, `style` 来覆盖默认的样式, `onClick` 更改默认的点击逻辑, 等.
+
+## 生产模式中使用 devtools
+
+Devtools 会在生产编译阶段被排除。
+但是，可以通过懒加载来在生产模式中启用 devtools：
+
+```tsx
+import * as React from "react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
+import { Example } from "./Example";
+
+const queryClient = new QueryClient();
+
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import("@tanstack/react-query-devtools/build/lib/index.prod.js").then(
+    (d) => ({
+      default: d.ReactQueryDevtools,
+    })
+  )
+);
+
+function App() {
+  const [showDevtools, setShowDevtools] = React.useState(false);
+
+  React.useEffect(() => {
+    // @ts-ignore
+    window.toggleDevtools = () => setShowDevtools((old) => !old);
+  }, []);
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <Example />
+      <ReactQueryDevtools initialIsOpen />
+      {showDevtools && (
+        <React.Suspense fallback={null}>
+          <ReactQueryDevtoolsProduction />
+        </React.Suspense>
+      )}
+    </QueryClientProvider>
+  );
+}
+
+export default App;
+```
+
+如上所示，调用 `window.toggleDevtools()` 将下载 devtools 的构建包，然后展示它们。
+
+### 现代的打包器
+
+如果你的打包器支持包导出(package exports)，你可以使用如下的代码：
+
+```tsx
+const ReactQueryDevtoolsProduction = React.lazy(() =>
+  import("@tanstack/react-query-devtools/production").then((d) => ({
+    default: d.ReactQueryDevtools,
+  }))
+);
+```
+
+对应 TypeScript，你或许需要在 tsconfig 中设置 `moduleResolution: 'nodenext'`，该设置仅在 TypeScript v4.7 及以上版本可用。

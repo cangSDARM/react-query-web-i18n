@@ -73,4 +73,4 @@ function Todos({ todoId }) {
 
 ## 延伸阅读
 
-如何在大型应用中正确的组织查询键值？请参阅[此社区资源(英文)](https://tanstack.com/query/v4/docs/community/tkdodos-blog?#8-effective-react-query-keys)
+如何在大型应用中正确的组织查询键值？请参阅[社区博客(英文)](https://tanstack.com/query/v4/docs/community/tkdodos-blog?#8-effective-react-query-keys)及[社区扩展库](../community/lukemorales-query-key-factory.md)

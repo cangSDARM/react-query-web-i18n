@@ -6,10 +6,19 @@ title: createSyncStoragePersister
 ## Installation
 
 This utility comes as a separate package and is available under the `'@tanstack/query-sync-storage-persister'` import.
+
 ```bash
 npm install @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client
 ```
+
 or
+
+```bash
+pnpm add @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client
+```
+
+or
+
 ```bash
 yarn add @tanstack/query-sync-storage-persister @tanstack/react-query-persist-client
 ```
@@ -18,11 +27,11 @@ yarn add @tanstack/query-sync-storage-persister @tanstack/react-query-persist-cl
 
 - Import the `createSyncStoragePersister` function
 - Create a new syncStoragePersister
-- Pass it to the [`persistQueryClient`](../plugins/persistQueryClient) function
+- Pass it to the [`persistQueryClient`](./persistQueryClient.md) function
 
 ```ts
-import { persistQueryClient } from '@tanstack/react-query-persist-client'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -30,15 +39,17 @@ const queryClient = new QueryClient({
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
     },
   },
-})
+});
 
-const localStoragePersister = createSyncStoragePersister({ storage: window.localStorage })
+const localStoragePersister = createSyncStoragePersister({
+  storage: window.localStorage,
+});
 // const sessionStoragePersister = createSyncStoragePersister({ storage: window.sessionStorage })
 
 persistQueryClient({
   queryClient,
   persister: localStoragePersister,
-})
+});
 ```
 
 ## Retries
@@ -49,10 +60,10 @@ The retry function receives the `persistedClient` it tried to save, as well as t
 
 ```ts
 export type PersistRetryer = (props: {
-  persistedClient: PersistedClient
-  error: Error
-  errorCount: number
-}) => PersistedClient | undefined
+  persistedClient: PersistedClient;
+  error: Error;
+  errorCount: number;
+}) => PersistedClient | undefined;
 ```
 
 ### Predefined strategies
@@ -65,8 +76,8 @@ Per default, no retry will occur. You can use one of the predefined strategies t
 ```tsx
 const localStoragePersister = createSyncStoragePersister({
   storage: window.localStorage,
-  retry: removeOldestQuery
-})
+  retry: removeOldestQuery,
+});
 ```
 
 ## API
@@ -84,18 +95,18 @@ createSyncStoragePersister(options: CreateSyncStoragePersisterOptions)
 ```ts
 interface CreateSyncStoragePersisterOptions {
   /** The storage client used for setting an retrieving items from cache (window.localStorage or window.sessionStorage) */
-  storage: Storage
+  storage: Storage;
   /** The key to use when storing the cache */
-  key?: string
+  key?: string;
   /** To avoid spamming,
    * pass a time in ms to throttle saving the cache to disk */
-  throttleTime?: number
+  throttleTime?: number;
   /** How to serialize the data to storage */
-  serialize?: (client: PersistedClient) => string
+  serialize?: (client: PersistedClient) => string;
   /** How to deserialize the data from storage */
-  deserialize?: (cachedString: string) => PersistedClient
+  deserialize?: (cachedString: string) => PersistedClient;
   /** How to retry persistence on error **/
-  retry?: PersistRetryer
+  retry?: PersistRetryer;
 }
 ```
 
@@ -111,24 +122,27 @@ The default options are:
 ```
 
 #### `serialize` and `deserialize` options
+
 There is a limit to the amount of data which can be stored in `localStorage`.
 If you need to store more data in `localStorage`, you can override the `serialize` and `deserialize` functions to compress and decrompress the data using a library like [lz-string](https://github.com/pieroxy/lz-string/).
 
 ```tsx
-import { QueryClient } from '@tanstack/react-query';
-import { persistQueryClient } from '@tanstack/react-query-persist-client'
-import { createSyncStoragePersister } from '@tanstack/query-sync-storage-persister'
+import { QueryClient } from "@tanstack/react-query";
+import { persistQueryClient } from "@tanstack/react-query-persist-client";
+import { createSyncStoragePersister } from "@tanstack/query-sync-storage-persister";
 
-import { compress, decompress } from 'lz-string';
+import { compress, decompress } from "lz-string";
 
-const queryClient = new QueryClient({ defaultOptions: { queries: { staleTime: Infinity } } });
+const queryClient = new QueryClient({
+  defaultOptions: { queries: { staleTime: Infinity } },
+});
 
 persistQueryClient({
   queryClient: connectionsQueryClient,
   persistor: createSyncStoragePersister({
     storage: window.localStorage,
-    serialize: data => compress(JSON.stringify(data)),
-    deserialize: data => JSON.parse(decompress(data)),
+    serialize: (data) => compress(JSON.stringify(data)),
+    deserialize: (data) => JSON.parse(decompress(data)),
   }),
   maxAge: Infinity,
 });
