@@ -1,8 +1,6 @@
 ---
 id: scroll-restoration
 title: 滚动恢复 Scroll Restoration
-tags:
-  - 翻译完成
 ---
 
 传统上，当你在 Web 浏览器中导航到一个先前访问过的页面时，你会发现该页面被滚动到你离开该页面时的位置。
