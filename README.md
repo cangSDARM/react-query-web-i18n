@@ -1,6 +1,6 @@
 # React-Query 中文文档（非官方）
 
-Offical Repo: https://github.com/tannerlinsley/react-query
+Official Repo: https://github.com/TanStack/query
 
 This website is built using [Docusaurus 2](https://v2.docusaurus.io/), a modern static website generator.
 
