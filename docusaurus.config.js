@@ -18,9 +18,9 @@ module.exports = {
     },
     announcementBar: {
       id: "upgrading",
-      content: `v4的文档已翻译完毕！`,
-      backgroundColor: "#f1563a",
-      textColor: "#000000",
+      content: `文档正在升级中，Solid, Vue, Svelte文档即将完成！`,
+      backgroundColor: "#272116",
+      textColor: "#eee",
       isCloseable: false,
     },
     navbar: {
