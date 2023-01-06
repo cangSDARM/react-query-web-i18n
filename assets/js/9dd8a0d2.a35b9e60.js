@@ -1,0 +1,1 @@
+"use strict";(self.webpackChunkreact_query_web_i18n=self.webpackChunkreact_query_web_i18n||[]).push([[7054],{7275:(e,r,t)=>{t.r(r),t.d(r,{default:()=>c});var u=t(7294),a=t(6550);function c(){return u.createElement(a.l_,{to:"/react-query-web-i18n/react"})}}}]);
