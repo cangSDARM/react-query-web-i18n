@@ -7,19 +7,20 @@ title: 有依赖的查询 Dependent Queries
 
 ```ts
 // Get the user
-const { data: user } = useQuery(["user", email], getUserByEmail);
+const { data: user } = useQuery({
+  queryKey: ['user', email],
+  queryFn: () => getUserByEmail(email.value),
+})
 
-const userId = user?.id;
+const userId = computed(() => user.value?.id)
+const enabled = computed(() => !!user.value?.id)
 
 // Then get the user's projects
-const {
-  status,
-  fetchStatus,
-  data: projects,
-} = useQuery(["projects", userId], getProjectsByUser, {
-  // 直到`userId`存在，查询才会被执行
-  enabled: !!userId,
-});
+const { isIdle, data: projects } = useQuery({
+  queryKey: ['projects', userId],
+  queryFn: () => getProjectsByUser(userId.value),
+  enabled, // 直到 `enabled == true`，query才会执行
+})
 ```
 
 `projects`的查询开始状态如下：

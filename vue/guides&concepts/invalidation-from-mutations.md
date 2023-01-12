@@ -16,17 +16,18 @@ const mutation = useMutation(postTodo);
 为此，可以使用`useMutation`的`onSuccess`参数和 QueryClient 的`invalidateQueries`函数：
 
 ```ts
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from '@tanstack/vue-query'
 
-const queryClient = useQueryClient();
+const queryClient = useQueryClient()
 
 // 当此修改成功时，将所有带有`todos`和`reminders`查询键值的查询都无效
-const mutation = useMutation(addTodo, {
+const mutation = useMutation({
+  mutationFn: addTodo,
   onSuccess: () => {
-    queryClient.invalidateQueries(["todos"]);
-    queryClient.invalidateQueries(["reminders"]);
+    queryClient.invalidateQueries({ queryKey: ['todos'] })
+    queryClient.invalidateQueries({ queryKey: ['reminders'] })
   },
-});
+})
 ```
 
 你可以使用[`useMutation` hook](./mutations)中的回调来响应下一步需要干什么

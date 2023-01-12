@@ -15,11 +15,12 @@ title: 乐观更新 Optimistic Updates
 ```ts
 const queryClient = useQueryClient();
 
-useMutation(updateTodo, {
+useMutation({
+  mutationFn: updateTodo,
   // 当 mutate 调用时
   onMutate: async (newTodo) => {
     // 撤销相关的查询（这样它们就不会覆盖我们的乐观更新）
-    await queryClient.cancelQueries(["todos"]);
+    await queryClient.cancelQueries({ queryKey: ["todos"] });
 
     // 保存前一次状态的快照
     const previousTodos = queryClient.getQueryData(["todos"]);
@@ -36,7 +37,7 @@ useMutation(updateTodo, {
   },
   // 总是在错误或成功之后重新获取：
   onSettled: () => {
-    queryClient.invalidateQueries("todos");
+    queryClient.invalidateQueries({ queryKey: ["todos"] });
   },
 });
 ```
@@ -48,7 +49,7 @@ useMutation(updateTodo, {
   // 当 mutate 调用时
   onMutate: async (newTodo) => {
     // 取消相关的获取数据逻辑（这样它们就不会覆盖我们的乐观更新）
-    await queryClient.cancelQueries(["todos", newTodo.id]);
+    await queryClient.cancelQueries({ queryKey: ["todos", newTodo.id] });
 
     // 保存前一次状态的快照
     const previousTodo = queryClient.getQueryData(["todos", newTodo.id]);
@@ -63,20 +64,21 @@ useMutation(updateTodo, {
   onError: (err, newTodo, context) => {
     queryClient.setQueryData(
       ["todos", context.newTodo.id],
-      context.previousTodo,
+      context.previousTodo
     );
   },
   // 总是在错误或成功之后重新获取：
   onSettled: (newTodo) => {
-    queryClient.invalidateQueries(["todos", newTodo.id]);
+    queryClient.invalidateQueries({ queryKey: ["todos", newTodo.id] });
   },
 });
 ```
 
-如果你愿意，你也可以使用 `onsettled` 函数来代替 `onError` 和 `onSuccess` 做处理：
+如果你愿意，你也可以使用 `onSettled` 函数来代替 `onError` 和 `onSuccess` 做处理：
 
 ```ts
-useMutation(updateTodo, {
+useMutation({
+  mutationFn: updateTodo,
   // ...
   onSettled: (newTodo, error, variables, context) => {
     if (error) {

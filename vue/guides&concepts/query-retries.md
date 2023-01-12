@@ -13,10 +13,12 @@ title: 查询重试 Query Retries
 - 设置`retry =（failureCount，error）=> ...`允许基于请求失败的原因进行自定义逻辑
 
 ```ts
-import { useQuery } from "@tanstack/react-query";
+import { useQuery } from "@tanstack/vue-query";
 
 // 对特定的一个查询设置固定的重试次数
-const result = useQuery(["todos", 1], fetchTodoListPage, {
+const result = useQuery({
+  queryKey: ["todos", 1],
+  queryFn: fetchTodoListPage,
   retry: 10, // 在显示错误之前，将重试10次
 });
 ```
@@ -27,32 +29,29 @@ const result = useQuery(["todos", 1], fetchTodoListPage, {
 
 默认的`retryDelay`设置为以二的倍数递增（从`1000ms`开始），但不超过 30 秒：
 
-```ts
+```tsx
 // 为所有查询配置
-import {
-  QueryCache,
-  QueryClient,
-  QueryClientProvider,
-} from "@tanstack/react-query";
+import { VueQueryPlugin } from "@tanstack/vue-query";
 
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+const vueQueryPluginOptions = {
+  queryClientConfig: {
+    defaultOptions: {
+      queries: {
+        retryDelay: (attemptIndex) => Math.min(1000 * 2 ** attemptIndex, 30000),
+      },
     },
   },
-});
-
-function App() {
-  return <QueryClientProvider client={queryClient}>...</QueryClientProvider>;
-}
+};
+app.use(VueQueryPlugin, vueQueryPluginOptions);
 ```
 
 尽管不建议这样做，但是显然你可以在 Provider 和单个查询选项中覆盖`retryDelay`函数/整数。
 如果设置为一个整数而不是函数，则重试之间的延迟将始终是相同的时间量：
 
 ```ts
-const result = useQuery("todos", fetchTodoList, {
+const result = useQuery({
+  queryKey: ["todos"],
+  queryFn: fetchTodoList,
   retryDelay: 1000, // 无论重试多少次，都会始终等待1000毫秒然后重试
 });
 ```

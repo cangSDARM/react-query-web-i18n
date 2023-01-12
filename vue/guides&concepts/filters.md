@@ -3,7 +3,7 @@ id: filters
 title: 过滤器 Filters
 ---
 
-React Query 中的某些方法可以接受 `QueryFilters` 或者 `MutationFilters` 对象。
+Vue Query 中的某些方法可以接受 `QueryFilters` 或者 `MutationFilters` 对象。
 
 ## 查询过滤器
 

@@ -139,7 +139,3 @@ function Todo({ todoId }) {
   });
 }
 ```
-
-## 延伸阅读
-
-如果对于`Initial Data`和`Placeholder Data`有困惑的话，请参考[此社区内容(英文)](https://tanstack.com/query/v4/docs/community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)

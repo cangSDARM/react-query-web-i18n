@@ -4,7 +4,7 @@ title: 无限查询 Infinite Queries
 ---
 
 通过"加载更多"来附加更多的数据到现有数据集，或者是通过"无限滚动"来呈现列表，这些都是非常常见的 UI 模式。
-正巧，React Query 支持一个有用的`useQuery`版本，称为`useInfiniteQuery`，很适合用来查询这些类型的数据。
+正巧，Vue Query 支持一个有用的`useQuery`版本，称为`useInfiniteQuery`，很适合用来查询这些类型的数据。
 
 使用`useInfiniteQuery`时，需要注意一些不同之处：
 
@@ -43,10 +43,10 @@ fetch("/api/projects?cursor=9");
 > 注意：请勿使用参数调用`fetchNextPage`，这很重要。除非你希望它们覆盖从`getNextPageParam`函数返回的`pageParam`数据。
 > 例如，不要这样做：`<button onClick={fetchNextPage} />`，因为这会将`onClick`的事件对象当作一个参数给`fetchNextPage`函数。
 
-```tsx
-import { useInfiniteQuery } from "@tanstack/react-query";
+```html
+<script setup>
+  import { useInfiniteQuery } from "@tanstack/vue-query";
 
-function Projects() {
   const fetchProjects = async ({ pageParam = 0 }) => {
     const res = await fetch("/api/projects?cursor=" + pageParam);
     return res.json();
@@ -59,40 +59,35 @@ function Projects() {
     hasNextPage,
     isFetching,
     isFetchingNextPage,
-    status,
-  } = useInfiniteQuery(["projects"], fetchProjects, {
+    isLoading,
+    isError,
+  } = useInfiniteQuery({
+    queryKey: ["projects"],
+    queryFn: fetchProjects,
     getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
   });
+</script>
 
-  return status === "loading" ? (
-    <p>Loading...</p>
-  ) : status === "error" ? (
-    <p>Error: {error.message}</p>
-  ) : (
-    <>
-      {data.pages.map((group, i) => (
-        <React.Fragment key={i}>
-          {group.projects.map((project) => (
-            <p key={project.id}>{project.name}</p>
-          ))}
-        </React.Fragment>
-      ))}
-      <div>
-        <button
-          onClick={() => fetchNextPage()}
-          disabled={!hasNextPage || isFetchingNextPage}
-        >
-          {isFetchingNextPage
-            ? "Loading more..."
-            : hasNextPage
-            ? "Load More"
-            : "Nothing more to load"}
-        </button>
-      </div>
-      <div>{isFetching && !isFetchingNextPage ? "Fetching..." : null}</div>
-    </>
-  );
-}
+<template>
+  <span v-if="isLoading">Loading...</span>
+  <span v-else-if="isError">Error: {{ error.message }}</span>
+  <div v-else-if="data">
+    <span v-if="isFetching && !isFetchingNextPage">Fetching...</span>
+    <ul v-for="(group, index) in data.pages" :key="index">
+      <li v-for="project in group.projects" :key="project.id">
+        {{ project.name }}
+      </li>
+    </ul>
+    <button
+      @click="() => fetchNextPage()"
+      :disabled="!hasNextPage || isFetchingNextPage"
+    >
+      <span v-if="isFetchingNextPage">Loading more...</span>
+      <span v-else-if="hasNextPage">Load More</span>
+      <span v-else>Nothing more to load</span>
+    </button>
+  </div>
+</template>
 ```
 
 ## 当无限查询需要重新获取时会发生什么
@@ -127,25 +122,18 @@ refetch({ refetchPage: (page, index) => index === 0 });
 默认情况下，从`getNextPageParam`返回的变量将提供给查询函数，但是在某些情况下，你可能希望重写它。
 你可以将自定义变量传递给`fetchNextPage`函数，该函数将覆盖默认变量，如下所示：
 
-```tsx
-function Projects() {
-  const fetchProjects = ({ pageParam = 0 }) =>
-    fetch("/api/projects?cursor=" + pageParam);
+```ts
+const fetchProjects = ({ pageParam = 0 }) =>
+  fetch("/api/projects?cursor=" + pageParam);
 
-  const {
-    status,
-    data,
-    isFetching,
-    isFetchingNextPage,
-    fetchNextPage,
-    hasNextPage,
-  } = useInfiniteQuery(["projects"], fetchProjects, {
-    getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
-  });
+const { fetchNextPage } = useInfiniteQuery({
+  queryKey: ["projects"],
+  queryFn: fetchProjects,
+  getNextPageParam: (lastPage, pages) => lastPage.nextCursor,
+});
 
-  // 传递你自己的页面参数
-  const skipToCursor50 = () => fetchNextPage({ pageParam: 50 });
-}
+// Pass your own page param
+const skipToCursor50 = () => fetchNextPage({ pageParam: 50 });
 ```
 
 ## 如果我想实现双向无限列表怎么办

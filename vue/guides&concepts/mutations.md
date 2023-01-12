@@ -10,34 +10,25 @@ title: 修改 Mutations
 
 下面是一个向服务器添加新 todo 的示例：
 
-```tsx
-function App() {
-  const mutation = useMutation((newTodo) => axios.post("/todos", newTodo));
+```html
+<script setup>
+  import { useMutation } from "@tanstack/vue-query";
 
-  return (
-    <div>
-      {mutation.isLoading ? (
-        "Adding todo..."
-      ) : (
-        <>
-          {mutation.isError ? (
-            <div>An error occurred: {mutation.error.message}</div>
-          ) : null}
+  const { isLoading, isError, error, isSuccess, mutate } = useMutation({
+    mutationFn: (newTodo) => axios.post("/todos", newTodo),
+  });
 
-          {mutation.isSuccess ? <div>Todo added!</div> : null}
+  function addTodo() {
+    mutate({ id: new Date(), title: "Do Laundry" });
+  }
+</script>
 
-          <button
-            onClick={() => {
-              mutation.mutate({ id: new Date(), title: "Do Laundry" });
-            }}
-          >
-            Create Todo
-          </button>
-        </>
-      )}
-    </div>
-  );
-}
+<template>
+  <span v-if="isLoading">Adding todo...</span>
+  <span v-else-if="isError">An error occurred: {{ error.message }}</span>
+  <span v-else-if="isSuccess">Todo added!</span>
+  <button @click="addTodo">Create Todo</button>
+</template>
 ```
 
 在任何给定时刻，修改只能处于以下状态之一：
@@ -56,64 +47,31 @@ function App() {
 
 即使只有变量，修改也没有那么特别，但是当与 `onSuccess` 回调，[Query Client 的 `invalidateQueries` 方法](../reference/QueryClient#queryclientinvalidatequeries)和 [Query Client 的 `setQueryData` 方法](../reference/QueryClient#queryclientsetquerydata)一起使用时，修改就成为了一个非常强大的工具。
 
-> 重要说明：`mutate` 函数是一个异步函数，这意味着你不能在事件回调中直接使用它 (**React16 及之前版本**)。
-> 如果你需要在 `onSubmit` 中访问事件，则需要将 `mutate` 包装在另一个函数中。 这是由于 [React 事件池](https://reactjs.org/docs/events.html#event-pooling)限制。
-
-```tsx
-// 在React16及之前的版本，这将无法正常工作
-const CreateTodo = () => {
-  const mutation = useMutation((event) => {
-    event.preventDefault();
-    return fetch("/api", new FormData(event.target));
-  });
-
-  return <form onSubmit={mutation.mutate}>...</form>;
-};
-
-// 这将正常工作
-const CreateTodo = () => {
-  const mutation = useMutation((formData) => {
-    return fetch("/api", formData);
-  });
-  const onSubmit = (event) => {
-    event.preventDefault();
-    mutation.mutate(new FormData(event.target));
-  };
-
-  return <form onSubmit={onSubmit}>...</form>;
-};
-```
-
 ## 重置修改的状态
 
 在某些情况下，你需要清除 `error` 或修改请求的数据。
 为此，你可以使用 `reset` 函数来处理：
 
-```tsx
-const CreateTodo = () => {
-  const [title, setTitle] = useState("");
-  const mutation = useMutation(createTodo);
+```html
+<script>
+  import { useMutation } from "@tanstack/vue-query";
 
-  const onCreateTodo = (e) => {
-    e.preventDefault();
-    mutation.mutate({ title });
-  };
+  const { error, mutate, reset } = useMutation({
+    mutationFn: (newTodo) => axios.post("/todos", newTodo),
+  });
 
-  return (
-    <form onSubmit={onCreateTodo}>
-      {mutation.error && (
-        <h5 onClick={() => mutation.reset()}>{mutation.error}</h5>
-      )}
-      <input
-        type="text"
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-      />
-      <br />
-      <button type="submit">Create Todo</button>
-    </form>
-  );
-};
+  function addTodo() {
+    mutate({ id: new Date(), title: "Do Laundry" });
+  }
+</script>
+
+<template>
+  <span v-else-if="error">
+    <span>An error occurred: {{ error.message }}</span>
+    <button @click="reset">Reset error</button>
+  </span>
+  <button @click="addTodo">Create Todo</button>
+</template>
 ```
 
 ## 副作用
@@ -305,11 +263,8 @@ queryClient.resumePausedMutations();
 当持久化到外部存储时，只有修改的状态被持久化，因为函数不能被序列化。
 （SSR 中）hydration 后，触发修改的组件可能没有被正确挂载，所以调用`resumePausedMutations`可能会产生一个错误：`No mutationFn found`。
 
-```tsx
-const persister = createSyncStoragePersister({
-  storage: window.localStorage,
-});
-const queryClient = new QueryClient({
+```ts
+const client = new QueryClient({
   defaultOptions: {
     queries: {
       cacheTime: 1000 * 60 * 60 * 24, // 24 hours
@@ -318,26 +273,27 @@ const queryClient = new QueryClient({
 });
 
 // 我们需要一个默认的修改函数，以便暂停的修改可以在页面重新加载后继续进行
-queryClient.setMutationDefaults(["todos"], {
+queryClient.setMutationDefaults({
+  mutationKey: ["todos"],
   mutationFn: ({ id, data }) => {
     return api.updateTodo(id, data);
   },
 });
 
-export default function App() {
-  return (
-    <PersistQueryClientProvider
-      client={queryClient}
-      persistOptions={{ persister }}
-      onSuccess={() => {
-        // 在从localStorage初始化恢复(initial restore from localStorage)成功后恢复修改
-        queryClient.resumePausedMutations();
-      }}
-    >
-      <RestOfTheApp />
-    </PersistQueryClientProvider>
-  );
-}
+const vueQueryOptions: VueQueryPluginOptions = {
+  queryClient: client,
+  clientPersister: (queryClient) => {
+    return persistQueryClient({
+      queryClient,
+      persister: createSyncStoragePersister({ storage: localStorage }),
+    });
+  },
+  clientPersisterOnSuccess: (queryClient) => {
+    queryClient.resumePausedMutations();
+  },
+};
+
+createApp(App).use(VueQueryPlugin, vueQueryOptions).mount("#app");
 ```
 
 这里还有一个覆盖面更泛化的[离线修改+查询的例子(codesandbox)](https://codesandbox.io/s/github/tanstack/query/tree/main/examples/react/offline?from-embed)

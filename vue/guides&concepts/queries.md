@@ -17,11 +17,9 @@ title: 查询 Queries
   - 抛出错误
 
 ```ts
-import { useQuery } from "react-query";
+import { useQuery } from "@tanstack/vue-query";
 
-function App() {
-  const info = useQuery(["todos"], fetchTodoList);
-}
+const result = useQuery({ queryKey: ["todos"], queryFn: fetchTodoList });
 ```
 
 这个*唯一键值*将在内部用于重新获取数据、缓存和在整个程序中共享该查询信息。
@@ -46,55 +44,46 @@ const result = useQuery(["todos"], fetchTodoList);
 
 对于**大多数**查询，通常先检查`isLoading`状态，然后检查`isError`状态，最后假设数据可用并呈现成功状态就足够了：
 
-```ts
-function Todos() {
-  const { isLoading, isError, data, error } = useQuery(
-    ["todos"],
-    fetchTodoList,
-  );
+```html
+<script setup>
+  import { useQuery } from "@tanstack/vue-query";
 
-  if (isLoading) {
-    return <span>Loading...</span>;
-  }
+  const { isLoading, isError, data, error } = useQuery({
+    queryKey: ["todos"],
+    queryFn: fetchTodoList,
+  });
+</script>
 
-  if (isError) {
-    return <span>Error: {error.message}</span>;
-  }
-
-  // 现在我们可以假设 `isSuccess === true`
-  return (
-    <ul>
-      {data.map((todo) => (
-        <li key={todo.id}>{todo.title}</li>
-      ))}
-    </ul>
-  );
-}
+<template>
+  <span v-if="isLoading">Loading...</span>
+  <span v-else-if="isError">Error: {{ error.message }}</span>
+  <!-- We can assume by this point that `isSuccess === true` -->
+  <ul v-else-if="data">
+    <li v-for="todo in data" :key="todo.id">{{ todo.title }}</li>
+  </ul>
+</template>
 ```
 
 如果你不喜欢布尔值，你也可以使用`status`查询状态：
 
-```ts
-function Todos() {
-  const { status, data, error } = useQuery(["todos"], fetchTodoList);
+```html
+<script setup>
+  import { useQuery } from "@tanstack/vue-query";
 
-  if (status === "loading") {
-    return <span>Loading...</span>;
-  }
+  const { status, data, error } = useQuery({
+    queryKey: ["todos"],
+    queryFn: fetchTodoList,
+  });
+</script>
 
-  if (status === "error") {
-    return <span>Error: {error.message}</span>;
-  }
-
-  // 也是 `status ==='success'`，但是 “else” 逻辑也起作用
-  return (
-    <ul>
-      {data.map((todo) => (
-        <li key={todo.id}>{todo.title}</li>
-      ))}
-    </ul>
-  );
-}
+<template>
+  <span v-if="status === 'loading'">Loading...</span>
+  <span v-else-if="status === 'error'">Error: {{ error.message }}</span>
+  <!-- also status === 'success', but "else" logic works, too -->
+  <ul v-else-if="data">
+    <li v-for="todo in data" :key="todo.id">{{ todo.title }}</li>
+  </ul>
+</template>
 ```
 
 如果你在访问`data`之前检查了`loading`和`error`，TypeScript 也会正确缩窄`data`的类型。
@@ -119,7 +108,3 @@ function Todos() {
 
 - `status`告诉我们有关`data`的状态：有或者没有？
 - `fetchStatus`告诉我们有关`queryFn`的状态：在执行还是没在执行？
-
-## 延伸阅读
-
-如果你对于执行状态检查的另一种方法感兴趣的话，请参阅[此社区资源](https://tanstack.com/query/v4/docs/community/tkdodos-blog#4-status-checks-in-react-query)

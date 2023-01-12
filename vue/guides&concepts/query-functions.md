@@ -8,26 +8,38 @@ title: 查询函数 Query Functions
 以下所有都是有效的查询函数配置：
 
 ```ts
-useQuery(["todos"], fetchAllTodos);
-useQuery(["todos", todoId], () => fetchTodoById(todoId));
-useQuery(["todos", todoId], async () => {
-  const data = await fetchTodoById(todoId);
-  return data;
+useQuery({ queryKey: ["todos"], queryFn: fetchAllTodos });
+useQuery({ queryKey: ["todos", todoId], queryFn: () => fetchTodoById(todoId) });
+useQuery({
+  queryKey: ["todos", todoId],
+  queryFn: async () => {
+    const data = await fetchTodoById(todoId);
+    return data;
+  },
 });
-useQuery(["todos", todoId], ({ queryKey }) => fetchTodoById(queryKey[1]));
+useQuery({
+  queryKey: ["todos", todoId],
+  queryFn: ({ queryKey }) => fetchTodoById(queryKey[1]),
+});
 ```
 
 ## 抛出和处理错误
 
-为了使 React Query 确定查询错误，查询函数的**错误必须抛出**。查询函数中引发的任何错误都将被持久化在查询的`error`状态中。
+为了使 React Query 确定查询错误，查询函数的错误**必须抛出**或返回**rejected Promise**。查询函数中引发的任何错误都将被持久化在查询的`error`状态中。
 
 ```ts
-const { error } = useQuery(["todos", todoId], async () => {
-  if (somethingGoesWrong) {
-    throw new Error("Oh no!");
-  }
+const { error } = useQuery({
+  queryKey: ["todos", todoId],
+  queryFn: async () => {
+    if (somethingGoesWrong) {
+      throw new Error("Oh no!");
+    }
+    if (somethingElseGoesWrong) {
+      return Promise.reject(new Error("Oh no!"));
+    }
 
-  return data;
+    return data;
+  },
 });
 ```
 
@@ -37,12 +49,15 @@ const { error } = useQuery(["todos", todoId], async () => {
 在这种情况下，你需要自己`throw`它们。这是使用流行的`fetch` API 的一种简单方法：
 
 ```ts
-useQuery(["todos", todoId], async () => {
-  const response = await fetch("/todos/" + todoId);
-  if (!response.ok) {
-    throw new Error("Network response was not ok");
-  }
-  return response.json();
+useQuery({
+  queryKey: ["todos", todoId],
+  queryFn: async () => {
+    const response = await fetch("/todos/" + todoId);
+    if (!response.ok) {
+      throw new Error("Network response was not ok");
+    }
+    return response.json();
+  },
 });
 ```
 
@@ -51,9 +66,10 @@ useQuery(["todos", todoId], async () => {
 查询键值不仅用于唯一地标识要获取的数据，而且还可以方便地传递到查询函数中，虽然并非总是必需的，但这使得在需要时提取查询函数成为可能：
 
 ```ts
-function Todos({ status, page }) {
-  const result = useQuery(["todos", { status, page }], fetchTodoList);
-}
+const result = useQuery({
+  queryKey: ["todos", { status, page }],
+  queryFn: fetchTodoList,
+});
 
 // 在查询函数中访问键值，状态和页面变量！
 function fetchTodoList({ queryKey }) {
@@ -75,17 +91,3 @@ function fetchTodoList({ queryKey }) {
   - 可以用来做[查询取消](./query-cancellation.md)
 - `meta?: Record<string, unknown>`
   - 一个可选字段，可以填写任意关于该查询的额外信息
-
-## 使用查询对象代替参数
-
-在 React Query 的 API 中只要支持`[queryKey，queryFn，config]`签名的任何函数，你也可以使用一个对象来表达相同的配置：
-
-```ts
-import { useQuery } from "@tanstack/react-query";
-
-useQuery({
-  queryKey: ["todo", 7],
-  queryFn: fetchTodo,
-  ...config,
-});
-```

@@ -36,11 +36,10 @@ const guide = [
   "caching",
   "default-query-function",
   "suspense",
+  "custom-client",
   "custom-logger",
   "testing",
   "does-this-replace-client-state",
-  "migrating-to-react-query-3",
-  "migrating-to-react-query-4",
 ].map((item) => "guides&concepts/" + item);
 
 const communities = ["lukemorales-query-key-factory"].map(

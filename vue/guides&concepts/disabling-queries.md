@@ -16,40 +16,32 @@ title: 禁用/暂停查询 Disabling/Pausing Queries
 - 该查询将忽略查询客户端的`invalidateQueries`和`refetchQueries`调用，这些调用通常会导致查询重新获取数据
 - 从`useQuery`返回的`refetch`可用于手动触发查询以进行数据获取
 
-```tsx
-function Todos() {
-  const { isInitialLoading, isError, data, error, refetch, isFetching } =
-    useQuery(["todos"], fetchTodoList, {
-      enabled: false,
-    });
+```html
+<script setup>
+import { useQuery } from '@tanstack/vue-query'
 
-  return (
-    <div>
-      <button onClick={() => refetch()}>Fetch Todos</button>
+const { isInitialLoading, isError, data, error, refetch, isFetching } =
+  useQuery({
+    queryKey: ['todos'],
+    queryFn: fetchTodoList,
+    enabled: false,
+  })
+</script>
 
-      {data ? (
-        <>
-          <ul>
-            {data.map((todo) => (
-              <li key={todo.id}>{todo.title}</li>
-            ))}
-          </ul>
-        </>
-      ) : isError ? (
-        <span>Error: {error.message}</span>
-      ) : isInitialLoading ? (
-        <span>Loading...</span>
-      ) : (
-        <span>Not ready ...</span>
-      )}
-
-      <div>{isFetching ? "Fetching..." : null}</div>
-    </div>
-  );
-}
+<template>
+  <button @click="refetch">Fetch Todos</button>
+  <span v-if="isIdle">Not ready...</span>
+  <span v-else-if="isError">Error: {{ error.message }}</span>
+  <div v-else-if="data">
+    <span v-if="isFetching">Fetching...</span>
+    <ul>
+      <li v-for="todo in data" :key="todo.id">{{ todo.title }}</li>
+    </ul>
+  </div>
+</template>
 ```
 
-永久性地禁用一个查询会使你失去 React Query 所提供的许多优秀的功能（如后台的重新请求），而且这也不是一种自然的方式。
+永久性地禁用一个查询会使你失去 Vue Query 所提供的许多优秀的功能（如后台的重新请求），而且这也不是一种自然的方式。
 它把你从声明性的方法（定义查询应该何时运行的依赖关系）带入了命令性的模式（每当我点击这里时就会获取）。
 它也不可能传递参数给`refetch`。
 很多时候，你想要的可能只是一个惰性查询：
@@ -59,27 +51,23 @@ function Todos() {
 `enabled`选项不仅可以用来永久禁用一个查询，还可以让你在稍晚的时候启用或者禁用它。
 一个很好的例子是一个带过滤器的表单，你只想在用户输入了一个用于过滤的关键词后才发起第一次请求：
 
-```tsx
-function Todos() {
-  const [filter, setFilter] = React.useState('')
+```html
+<script setup>
+import { useQuery } from '@tanstack/vue-query'
 
-  const { data } = useQuery(
-    ['todos', filter],
-    () => fetchTodos(filter),
-    {
-      // ⬇️ 只要filter为空则禁用
-      enabled: !!filter
-    }
-  )
+const filter = ref('')
+const isEnabled = computed(() => !!filter.value)
+const { data } = useQuery({
+  queryKey: ['todos', filter],
+  queryFn: () => fetchTodos(filter),
+  // ⬇️ 只要filter是空的，就禁用
+  enabled: isEnabled,
+})
+</script>
 
-  return (
-      <div>
-        {/* 🚀 过滤的关键词设置后将启用并执行查询 */}
-        <FiltersForm onApply={setFilter} />
-        {data && <TodosTable data={data}} />
-      </div>
-  )
-}
+<template>
+  <span v-if="data">Filter was set and data is here!</span>
+</template>
 ```
 
 ### isInitialLoading

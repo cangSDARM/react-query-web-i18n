@@ -25,22 +25,25 @@ React Query 为每个查询函数都提供了一个[`AbortSignal`的实例](http
 ## 使用 `fetch`
 
 ```ts
-const query = useQuery(['todos'], async ({ signal }) => {
-  const todosResponse = await fetch('/todos', {
-    // 传递可撤销的信号到fetch里去
-    signal,
-  })
-  const todos = await todosResponse.json()
-
-  const todoDetails = todos.map(async ({ details } => {
-    const response = await fetch(details, {
-      // 或这将他传递给好几个实例
+const query = useQuery({
+  queryKey: ['todos'],
+  queryFn: async ({ signal }) => {
+    const todosResponse = await fetch('/todos', {
+      // 传递可撤销的信号到fetch里去
       signal,
     })
-    return response.json()
-  })
+    const todos = await todosResponse.json()
 
-  return Promise.all(todoDetails)
+    const todoDetails = todos.map(async ({ details } => {
+      const response = await fetch(details, {
+        // 或这将他传递给好几个实例
+        signal,
+      })
+      return response.json()
+    })
+
+    return Promise.all(todoDetails)
+  }
 })
 ```
 
@@ -51,12 +54,14 @@ const query = useQuery(['todos'], async ({ signal }) => {
 ```ts
 import axios from "axios";
 
-const query = useQuery(["todos"], ({ signal }) =>
-  axios.get("/todos", {
-    // 传递可撤销的信号到 `axios`
-    signal,
-  }),
-);
+const query = useQuery({
+  queryKey: ["todos"],
+  queryFn: ({ signal }) =>
+    axios.get("/todos", {
+      // 传递可撤销的信号到 `axios`
+      signal,
+    }),
+});
 ```
 
 ### 使用 `axios` (版本低于 `0.22.0`)
@@ -64,41 +69,47 @@ const query = useQuery(["todos"], ({ signal }) =>
 ```ts
 import axios from "axios";
 
-const query = useQuery(["todos"], ({ signal }) => {
-  // 给这个 request 创建一个 CancelToken
-  const CancelToken = axios.CancelToken;
-  const source = CancelToken.source();
+const query = useQuery({
+  queryKey: ["todos"],
+  queryFn: ({ signal }) => {
+    // 给这个 request 创建一个 CancelToken
+    const CancelToken = axios.CancelToken;
+    const source = CancelToken.source();
 
-  const promise = axios.get("/todos", {
-    // 传递这个 token 到该请求
-    cancelToken: source.token,
-  });
+    const promise = axios.get("/todos", {
+      // 传递这个 token 到该请求
+      cancelToken: source.token,
+    });
 
-  // 如果 React Query 信号是 abort，那么撤销该请求
-  signal?.addEventListener("abort", () => {
-    source.cancel("Query was cancelled by React Query");
-  });
+    // 如果 React Query 信号是 abort，那么撤销该请求
+    signal?.addEventListener("abort", () => {
+      source.cancel("Query was cancelled by React Query");
+    });
 
-  return promise;
+    return promise;
+  },
 });
 ```
 
 ## 使用 `XMLHttpRequest`
 
 ```ts
-const query = useQuery(["todos"], ({ signal }) => {
-  return new Promise((resolve, reject) => {
-    var oReq = new XMLHttpRequest();
-    oReq.addEventListener("load", () => {
-      resolve(JSON.parse(oReq.responseText));
+const query = useQuery({
+  queryKey: ["todos"],
+  queryFn: ({ signal }) => {
+    return new Promise((resolve, reject) => {
+      var oReq = new XMLHttpRequest();
+      oReq.addEventListener("load", () => {
+        resolve(JSON.parse(oReq.responseText));
+      });
+      signal?.addEventListener("abort", () => {
+        oReq.abort();
+        reject();
+      });
+      oReq.open("GET", "/todos");
+      oReq.send();
     });
-    signal?.addEventListener("abort", () => {
-      oReq.abort();
-      reject();
-    });
-    oReq.open("GET", "/todos");
-    oReq.send();
-  });
+  },
 });
 ```
 
@@ -111,8 +122,11 @@ const query = useQuery(["todos"], ({ signal }) => {
 ```ts
 const client = new GraphQLClient(endpoint);
 
-const query = useQuery(["todos"], ({ signal }) => {
-  client.request({ document: query, signal });
+const query = useQuery({
+  queryKey: ["todos"],
+  queryFn: ({ signal }) => {
+    client.request({ document: query, signal });
+  },
 });
 ```
 
@@ -121,11 +135,14 @@ const query = useQuery(["todos"], ({ signal }) => {
 可以传递一个 `AbortSignal` 给 `GraphQLClient` 的构造函数.
 
 ```ts
-const query = useQuery(["todos"], ({ signal }) => {
-  const client = new GraphQLClient(endpoint, {
-    signal,
-  });
-  return client.request(query, variables);
+const query = useQuery({
+  queryKey: ["todos"],
+  queryFn: ({ signal }) => {
+    const client = new GraphQLClient(endpoint, {
+      signal,
+    });
+    return client.request(query, variables);
+  },
 });
 ```
 
@@ -137,21 +154,17 @@ const query = useQuery(["todos"], ({ signal }) => {
 如果 `promise.cancel` 可用或者你在查询函数内已经处理了 `signal`，React Query 就会取消该 Promise 同时取消对应请求。
 
 ```tsx
-const query = useQuery(["todos"], async ({ signal }) => {
-  const resp = await fetch("/todos", { signal });
-  return resp.json();
+const query = useQuery({
+  queryKey: ["todos"],
+  queryFn: async ({ signal }) => {
+    const resp = await fetch("/todos", { signal });
+    return resp.json();
+  },
 });
 
 const queryClient = useQueryClient();
 
-return (
-  <button
-    onClick={(e) => {
-      e.preventDefault();
-      queryClient.cancelQueries(["todos"]);
-    }}
-  >
-    Cancel
-  </button>
-);
+function onButtonClick() {
+  queryClient.cancelQueries({ queryKey: ["todos"] });
+}
 ```

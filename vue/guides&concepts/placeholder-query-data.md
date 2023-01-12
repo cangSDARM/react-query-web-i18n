@@ -21,24 +21,11 @@ title: 查询数据占位符 Placeholder Query Data
 ## 来自值的占位数据
 
 ```ts
-function Todos() {
-  const result = useQuery(["todos"], () => fetch("/todos"), {
-    placeholderData: placeholderTodos,
-  });
-}
-```
-
-### 来自函数的占位数据
-
-如果访问查询的占位数据的过程很繁琐，或者只是不想在每次渲染时都执行这种操作，则可以将该值 memoized 或将 memoized 的函数作为作为`placeholderData`值传递：
-
-```ts
-function Todos() {
-  const placeholderData = useMemo(() => generateFakeTodos(), []);
-  const result = useQuery(["todos"], () => fetch("/todos"), {
-    placeholderData,
-  });
-}
+const result = useQuery({
+  queryKey: ["todos"],
+  queryFn: () => fetch("/todos"),
+  placeholderData: placeholderTodos,
+});
 ```
 
 ### 来自缓存的占位数据
@@ -47,22 +34,14 @@ function Todos() {
 这方面的一个比较好的例子是，从博客帖子列表相关的查询中搜索缓存的数据以获取帖子的预览版本，然后将其用作单个文章查询的占位数据：
 
 ```ts
-function Todo({ blogPostId }) {
-  const result = useQuery(
-    ["blogPost", blogPostId],
-    () => fetch(`/blogPosts/${blogPostId}`),
-    {
-      placeholderData: () => {
-        // 使用 `blogPosts` 查询中的预览版(较小的)作为这个blogPost查询的占位数据
-        return queryClient
-          .getQueryData(["blogPosts"])
-          ?.find((d) => d.id === blogPostId);
-      },
-    },
-  );
-}
+const result = useQuery({
+  queryKey: ["blogPost", blogPostId],
+  queryFn: () => fetch(`/blogPosts/${blogPostId}`),
+  placeholderData: () => {
+    // 使用 `blogPosts` 查询中的预览版(较小的)作为这个blogPost查询的占位数据
+    return queryClient
+      .getQueryData(["blogPosts"])
+      ?.find((d) => d.id === blogPostId);
+  },
+});
 ```
-
-## 延伸阅读
-
-如果对于`Initial Data`和`Placeholder Data`有困惑的话，请参考[此社区内容(英文)](https://tanstack.com/query/v4/docs/community/tkdodos-blog#9-placeholder-and-initial-data-in-react-query)
