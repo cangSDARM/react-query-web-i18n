@@ -5,7 +5,7 @@ const docConfig = (docId, cfg = {}) => {
       id: docId,
       path: docId,
       routeBasePath: docId,
-      editUrl: "https://github.com/cangSDARM/react-query-web-i18n",
+      editUrl: "https://github.com/cangSDARM/react-query-web-i18n/blob/master",
       sidebarPath: require.resolve(`./${docId}-sidebars.js`),
       showLastUpdateTime: true,
       sidebarCollapsible: true,
@@ -36,13 +36,13 @@ module.exports = {
     },
     announcementBar: {
       id: "upgrading",
-      content: `文档正在升级中，Solid, Vue, Svelte文档即将完成！`,
+      content: `Vue 文档已同步完成，Solid, Svelte 文档正在翻译中！`,
       backgroundColor: "#272116",
       textColor: "#eee",
       isCloseable: false,
     },
     navbar: {
-      title: "TanStack Query 中文文档",
+      title: "中文文档",
       logo: {
         alt: "logo",
         src: "img/logo-v4.png",
@@ -115,7 +115,7 @@ module.exports = {
     footer: {
       style: "dark",
       links: [],
-      copyright: `Copyright © ${new Date().getFullYear()} Web Community.`,
+      copyright: `Copyright © 2021-${new Date().getFullYear()} Web Community.`,
     },
   },
   presets: [

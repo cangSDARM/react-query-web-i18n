@@ -9,17 +9,16 @@ title: 窗口焦点影响的数据刷新 Window Focus Refetching
 #### 全局禁用
 
 ```ts
-const queryClient = new QueryClient({
-  defaultOptions: {
-    queries: {
-      refetchOnWindowFocus: false,
+const vueQueryPluginOptions: VueQueryPluginOptions = {
+  queryClientConfig: {
+    defaultOptions: {
+      queries: {
+        refetchOnWindowFocus: false,
+      },
     },
   },
-});
-
-function App() {
-  return <QueryClientProvider client={queryClient}>...</QueryClientProvider>;
-}
+};
+app.use(VueQueryPlugin, vueQueryPluginOptions);
 ```
 
 #### 单独禁用
@@ -58,38 +57,16 @@ iframe 在检测窗口焦点方面存在问题。当你在应用中聚焦或使�
 如果遇到这种情况，你应该使用一个事件处理函数来尽可能地忽略它们。例如使用 [这个 Gist](https://gist.github.com/tannerlinsley/1d3a2122332107fcd8c9cc379be10d88)：
 
 ```ts
-import { focusManager } from "@tanstack/react-query";
+import { focusManager } from "@tanstack/vue-query";
 import onWindowFocus from "./onWindowFocus"; // The gist
 
 focusManager.setEventListener(onWindowFocus); // Boom!
 ```
 
-## 在 React Native 中管理焦点
-
-React Native 通过 [`AppState`模块](https://reactnative.dev/docs/appstate#app-states) 提供焦点信息，而不是 `window` 上的事件侦听器。
-你可以使用`AppState`的“change”事件，在应用状态变为“active”时触发数据的更新：
-
-```ts
-import { AppState } from "react-native";
-import { focusManager } from "@tanstack/react-query";
-
-function onAppStateChange(status: AppStateStatus) {
-  if (Platform.OS !== "web") {
-    focusManager.setFocused(status === "active");
-  }
-}
-
-useEffect(() => {
-  const subscription = AppState.addEventListener("change", onAppStateChange);
-
-  return () => subscription.remove();
-}, []);
-```
-
 ## 管理焦点状态
 
 ```ts
-import { focusManager } from "@tanstack/react-query";
+import { focusManager } from "@tanstack/vue-query";
 
 // 覆盖默认的焦点状态
 focusManager.setFocused(true);
