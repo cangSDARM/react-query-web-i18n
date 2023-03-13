@@ -45,7 +45,7 @@ module.exports = {
       title: "中文文档",
       logo: {
         alt: "logo",
-        src: "img/logo-v4.png",
+        src: "img/logo-light.png",
         href: "/react",
       },
       items: [
