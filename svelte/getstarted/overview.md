@@ -50,7 +50,7 @@ slug: /
 
 ## SvelteKit
 
-如果你使用了 SvelteKit，请参阅 [SSR & SvelteKit](./ssr).
+如果你使用了 SvelteKit，请参阅 [SSR & SvelteKit](./ssr.md).
 
 ## 可用的函数
 
@@ -72,4 +72,4 @@ Svelte Query 提供了一些有用的原语及函数，使得在 Svelte 中操�
 Svelte Query 提供了一个与 React Query 类似的 API，但有一些关键的区别需要注意。
 
 - Svelte Query 有部分函数的返回值会返回 Svelte Store 形式。为了使这些返回值具有响应式的特点，你可能需要为返回的 store 加上`$`前缀。原因情看 [Svelte 的官方文章](https://svelte.dev/tutorial/writable-stores)。
-- 如果你的查询或修改依赖了变量，你必须保证这个变量是响应式的。原因请看 [Svelte 的响应式](./reactivity)部分
+- 如果你的查询或修改依赖了变量，你必须保证这个变量是响应式的。原因请看 [Svelte 的响应式](./reactivity.md)部分
