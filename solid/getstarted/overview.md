@@ -1,6 +1,6 @@
 ---
 id: overview
-title: Solid Query
+title: 概览
 slug: /
 ---
 

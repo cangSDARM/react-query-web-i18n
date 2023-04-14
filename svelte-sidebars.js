@@ -1,4 +1,6 @@
-const started = ["overview"].map((item) => "getstarted/" + item);
+const started = ["overview", "installation", "reactivity", "ssr"].map(
+  (item) => "getstarted/" + item
+);
 
 module.exports = {
   zhCN: {
