@@ -3,9 +3,9 @@ id: ssr
 title: 服务端渲染 SSR
 ---
 
-React Query 支持两种在服务器上预取数据并将其传递给 queryClient 的方式。
+TanStack Query 支持两种在服务器上预取数据并将其传递给 queryClient 的方式。
 
-- 手动预取数据并将其作为 `initialData` 传递给 React Query
+- 手动预取数据并将其作为 `initialData` 传递给 TanStack Query
   - 对于简单情况可以以此来快速设置
   - 但有一些需要注意的地方
 - 在服务器上预取查询，对缓存进行 dehydrate，然后在客户端上对其进行 rehydrate
@@ -18,12 +18,14 @@ React Query 支持两种在服务器上预取数据并将其传递给 queryClien
 - 静态生成 (SSG)
 - 服务端渲染 (SSR)
 
-无论你使用什么平台，React Query 都支持这两种形式的预渲染
+无论你使用什么平台，TanStack Query 都支持这两种形式的预渲染
+
+> 注意：关于如何迁移进 Next.js 的新测试版(`/app`文件夹版)，请参考本指南的下一单独章节。
 
 ### 使用 `initialData`
 
 与 Next.js 的 [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props) 或 [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props) 一起，你可以将你在任一方法中获取的数据传递给 `useQuery` 的 `initialData` 选项。
-从 React Query 的角度来看，这些集成方式都是相同的。
+从 TanStack Query 的角度来看，这些集成方式都是相同的。
 `getStaticProps` 的形式如下所示：
 
 ```ts
@@ -51,8 +53,8 @@ function Posts(props) {
 
 ### 使用 Hydration
 
-React Query 支持在 Next.js 中预取服务器上的多个查询，然后将这些查询 _dehydrating_ 到 queryClient。
-这意味着服务器可以预渲染那些在页面加载时立即可用的标记。并且一旦 JS 可用，React Query 就可以使用库的全部功能来升级或 hydrate 这些查询。
+TanStack Query 支持在 Next.js 中预取服务器上的多个查询，然后将这些查询 _dehydrating_ 到 queryClient。
+这意味着服务器可以预渲染那些在页面加载时立即可用的标记。并且一旦 JS 可用，TanStack Query 就可以使用库的全部功能来升级或 hydrate 这些查询。
 这包括在客户端重新获取某些在服务器渲染后已经过时的查询。
 
 要支持在服务器上缓存查询并设置 hydration，请执行以下操作：
@@ -84,7 +86,7 @@ export default function MyApp({ Component, pageProps }) {
 ```
 
 现在，你已经准备好用 [`getStaticProps`](https://nextjs.org/docs/basic-features/data-fetching/get-static-props)（针对 SSG）或 [`getServerSideProps`](https://nextjs.org/docs/basic-features/data-fetching/get-server-side-props)（针对 SSR）在页面中预取一些数据了。
-从 React Query 的角度来看，这些集成方式都是相同的。
+从 TanStack Query 的角度来看，这些集成方式都是相同的。
 
 `getStaticProps` 的形式如下所示：
 
@@ -127,10 +129,174 @@ function Posts() {
 
 ### 关于 Next.js rewrite 特性的警告
 
-如果你使用了 [Next.js 的重写功能](https://nextjs.org/docs/api-reference/next.config.js/rewrites) 和[自动静态优化](https://nextjs.org/docs/advanced-features/automatic-static-optimization)特性或 `getStaticProps` 属性的组合，会有一个问题：这会造成 React Query 第二次 hydration。
+如果你使用了 [Next.js 的重写功能](https://nextjs.org/docs/api-reference/next.config.js/rewrites) 和[自动静态优化](https://nextjs.org/docs/advanced-features/automatic-static-optimization)特性或 `getStaticProps` 属性的组合，会有一个问题：这会造成 TanStack Query 第二次 hydration。
 这是因为 [Next.js 需要确保重写的内容在客户端上被正确的处理过](https://nextjs.org/docs/api-reference/next.config.js/rewrites#rewrite-parameters) 并正确收集在 hydration 后任何可能改动到的参数，这样它才能提供 `router.query`.
 
 其结果是，所有 hydration 数据都丢失了引用相等性(referential equality)，会导致意料之外的结果。比如像是 React 组件中的 props, `useEffect`, `useMemo` 依赖数组中用到的内容会被触发。
+
+## 使用 Next.js 13 中的新特性(`/app` 文件夹)
+
+> **警告：** Next.js 13 中引入的`/app`目录特性目前还处于测试阶段，不建议在生产中使用。该 API 在 Next.js 中或 TanStack Query 中都不稳定。
+>
+> 本指南是为早期探索 Next.js 13 的实验性功能而提供的快速入门，不代表最终的 API 设计。
+
+不论是 `initialData` 还是 `<Hydrate>`，两种预取数据的方式在`app`文件夹的设计中都可以正常使用。
+
+- 在服务器端组件(Server Component)中预取数据，然后在客户端组件的 props 注入`initialData`
+  - 对简单的情况这是最快的设计
+  - 或许对于深层组件需要透传 props
+  - 或许对于使用相同查询的组件需要透传同样的查询
+  - 查询是基于页面加载时间而不是真正的过期时间
+- 在服务器端组件(Server Component)中预取数据，然后在客户端组件使用`Hydrate`组件 dehydrate 和 rehydrate
+  - 需要更为复杂的设置
+  - 不需要透传 props
+  - 查询是根据真正的过期时间
+
+### 对于`initialData`和`<Hydrate>`两种预取数据策略，`<QueryClientProvider>`都是必不可少的
+
+`tanstack/react-query`提供的 hooks 需要从自己的上下文中查询`QueryClient`。使用`<QueryClientProvider>`包裹你的组件树，并传递一个`QueryClient`实例：
+
+```tsx
+// app/providers.jsx
+"use client";
+
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+
+export default function Providers({ children }) {
+  const [queryClient] = React.useState(() => new QueryClient());
+
+  return (
+    <QueryClientProvider client={queryClient}>{children}</QueryClientProvider>
+  );
+}
+```
+
+```tsx
+// app/layout.jsx
+import Providers from "./providers";
+
+export default function RootLayout({ children }) {
+  return (
+    <html lang="en">
+      <head />
+      <body>
+        <Providers>{children}</Providers>
+      </body>
+    </html>
+  );
+}
+```
+
+### `initialData` 的策略
+
+在服务器端组件(Server Component)中预取数据，然后在客户端组件的 props 注入`initialData`
+
+```tsx
+// app/page.jsx
+export default async function Home() {
+  const initialData = await getPosts();
+
+  return <Posts posts={initialData} />;
+}
+```
+
+```tsx
+// app/posts.jsx
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+
+export function Posts(props) {
+  const { data } = useQuery({
+    queryKey: ["posts"],
+    queryFn: getPosts,
+    initialData: props.posts,
+  });
+
+  // ...
+}
+```
+
+### `<Hydrate>` 的策略
+
+此策略需要创建一个请求范围内的(request-scoped)`QueryClient`单例。**这确保了数据不会在不同的用户和请求之间共享，同时仍然只为每个请求创建一次`QueryClient`**
+
+```tsx
+// app/getQueryClient.jsx
+import { QueryClient } from "@tanstack/react-query";
+import { cache } from "react";
+
+const getQueryClient = cache(() => new QueryClient());
+export default getQueryClient;
+```
+
+在一个服务器组件中获取你的数据(该组件在组件树中的位置需要高于使用预取数据的查询的客户端组件)。
+这样，你的预取查询才会对组件树中更深层的所有组件可用。
+
+其涉及到的设置过程如下：
+
+- 检索`QueryClient`单例实例
+- 使用客户端的`prefetchQuery`方法预取数据，并等待其完成
+- 使用`dehydrate`从查询缓存中获得预取查询的 dehydrated state
+- 将需要预取查询的组件树包裹在`<Hydrate>`中，并向其提供 dehydrated state
+- (此时)你可以在多个服务器组件中获取数据，并在多个地方使用`<Hydrate>`
+
+> 注意：Typescript 还没法很好的处理使用了异步服务器组件的场景。作为一个临时的解决方法，当在另一个组件中调用这个异步服务器组件时，使用`{/* @ts-expect-error Server Component */}`魔方注释忽略掉它。
+> 欲了解更多信息，请参考 Next.js 的文章[端到端的类型安全](https://beta.nextjs.org/docs/configuring/typescript#end-to-end-type-safety)。
+
+```tsx
+// app/hydratedPosts.jsx
+import { dehydrate, Hydrate } from "@tanstack/react-query";
+import getQueryClient from "./getQueryClient";
+
+export default async function HydratedPosts() {
+  const queryClient = getQueryClient();
+  await queryClient.prefetchQuery(["posts"], getPosts);
+  const dehydratedState = dehydrate(queryClient);
+
+  return (
+    <Hydrate state={dehydratedState}>
+      <Posts />
+    </Hydrate>
+  );
+}
+```
+
+在服务器渲染期间，对嵌套在`<Hydrate>`客户端组件中的`useQuery`的调用将可以访问 state 属性中提供的预取数据。
+
+```tsx
+// app/posts.jsx
+"use client";
+
+import { useQuery } from "@tanstack/react-query";
+
+export default function Posts() {
+  // 这个 useQuery 也可以发生在 "HydratedPosts" 组件的某个更深层次的子组件中，无论哪种方式，数据都可以立即获得。
+  const { data } = useQuery({ queryKey: ["posts"], queryFn: getPosts });
+
+  // 这个查询在服务器上没有预取，在客户端才开始获取。
+  // 这两种模式可以混合使用。
+  const { data: otherData } = useQuery({
+    queryKey: ["posts-2"],
+    queryFn: getPosts,
+  });
+
+  // ...
+}
+```
+
+如演示中所示，你可以预取一些特定的查询，并让其他的查询在客户端上才开始获取。
+这也意味着你可以通过为特定的查询添加或删除`prefetchQuery`来控制服务器渲染或不渲染什么内容。
+
+### 流, Suspense 和 服务端获取
+
+现在，你总是需要在服务器组件中`await`数据。
+在未来，我们的目标是能够在服务器组件中开始预取的同时可以不阻止渲染，而是在标记和数据可用时将其逐步以流的方式发送给客户端。
+但目前 React 和 TanStack Query 都不支持这个功能。
+
+同样地，现在如果你想让数据在服务端渲染时可用，你*必须*在服务器组件中预取数据。
+即使启用了`suspense`选项，`useQuery()`调用也不会在服务器上获取数据，只会在客户端获取。
+我们希望在未来支持这一点，但具体细节及风险还不是很清晰。
 
 ## 在 Remix 中
 
@@ -162,8 +328,8 @@ function Posts() {
 
 ### 使用 Hydration
 
-React Query 支持在 Remix 的服务器端预取多个查询，然后将这些查询*dehydrating*到 queryClient。
-这意味着在页面预渲染时，一旦 JS、服务器端的标记立即可用，React Query 就可以用库的全部功能升级或*hydrate*(upgrade or hydrate)这些查询。这包括在客户端重新获取那些在服务器端渲染后变得陈旧的查询。
+TanStack Query 支持在 Remix 的服务器端预取多个查询，然后将这些查询*dehydrating*到 queryClient。
+这意味着在页面预渲染时，一旦 JS、服务器端的标记立即可用，TanStack Query 就可以用库的全部功能升级或*hydrate*(upgrade or hydrate)这些查询。这包括在客户端重新获取那些在服务器端渲染后变得陈旧的查询。
 
 为了支持服务器上的缓存查询，并设置 hydration 功能：
 
@@ -241,7 +407,7 @@ function Posts() {
 
 ## 使用其他或自定义的 SSR 框架
 
-本指南充其量是对带有 React Query 的 SSR 应该如何工作的高度概述。
+本指南充其量是对带有 TanStack Query 的 SSR 应该如何工作的高度概述。
 由于有许多种不同的 SSR 的设置，你的需求和实现方法可能有所不同。
 
 > 如果可以的话，请把你的发现贡献到此页面，以获取有关框架的特定的指南！
@@ -253,7 +419,7 @@ function Posts() {
 - Dehydrate 客户端
 - **使用客户端的 Provider 和 dehydrated 状态渲染你的应用**。**这一点极其重要**！你必须使用**相同的 dehydrated 状态渲染服务器和客户端**，以确保**客户端上 hydration 产生的标记与服务器完全相同**。
 - 序列化并嵌入 dehydrated 缓存，将其与 HTML 内容一起发送给客户端
-- 在 dehydrated 状态已发往客户端时，调用 [`queryClient.clear()`](../reference/QueryClient#queryclientclear) 清除 React Query 缓存
+- 在 dehydrated 状态已发往客户端时，调用 [`queryClient.clear()`](../reference/QueryClient#queryclientclear) 清除 TanStack Query 缓存
 
 > 安全说明：使用 `JSON.stringify` 序列化数据可能使你面临 XSS 攻击的风险，[此博客文章](https://medium.com/node-security/the-most-common-xss-vulnerability-in-react-js-applications-2bdffbcc1fa0)解释了为什么以及如何解决它
 
@@ -390,7 +556,7 @@ async function handleRequest(req, res) {
 
 查询被标记为 `dataUpdatedAt` 时，就代表它已经是过时的查询了。
 这里需要注意的是，服务器需要有正确的时间才能正常工作。
-React Query **使用的是 UTC 时间**，所以时区不需要考虑在内。
+TanStack Query **使用的是 UTC 时间**，所以时区不需要考虑在内。
 
 由于 `staleTime` 默认为 `0`，因此默认情况下，在页面加载时，查询就将在后台重新获取。
 你可能想使用一个较久的 `staleTime` 来避免这种多次没必要的获取，特别是你不缓存你的标记(don't cache your markup)的情况下。
@@ -401,7 +567,7 @@ React Query **使用的是 UTC 时间**，所以时区不需要考虑在内。
 
 ### 服务端的内存占用过高
 
-如果你为每个请求都创建一个 `QueryClient`, React Query 就会为每个 QueryClient 都创建一个隔离的缓存，每个都会在内存中保存一段时间(通过 `cacheTime` 设定<sup>\*</sup>)。
+如果你为每个请求都创建一个 `QueryClient`, TanStack Query 就会为每个 QueryClient 都创建一个隔离的缓存，每个都会在内存中保存一段时间(通过 `cacheTime` 设定<sup>\*</sup>)。
 如果在此期间有大量的请求，这可能会导致服务器上的内存使用过高。
 
 > <sup>\*</sup> 在服务器上，`cacheTime` 默认为 `Infinity`。它禁用了手动垃圾收集，一旦请求结束就会自动清除内存。

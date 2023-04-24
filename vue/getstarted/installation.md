@@ -42,12 +42,12 @@ Vue 2 用户也可以使用[此插件](https://github.com/antfu/unplugin-vue2-sc
 
 ```html
 <script setup>
-import { useQuery } from "@tanstack/vue-query";
+  import { useQuery } from "@tanstack/vue-query";
 
-const { isLoading, isFetching, isError, data, error } = useQuery({
-  queryKey: ["todos"],
-  queryFn: getTodos,
-});
+  const { isLoading, isFetching, isError, data, error } = useQuery({
+    queryKey: ["todos"],
+    queryFn: getTodos,
+  });
 </script>
 
 <template>...</template>

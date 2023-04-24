@@ -49,6 +49,3 @@ function onButtonClick() {
   <button @click="onButtonClick">Add Todo</button>
 </template>
 ```
-
-这三个概念构成了 Vue Query 的大部分核心功能。
-本文档的下一部分将详细介绍这些核心概念。

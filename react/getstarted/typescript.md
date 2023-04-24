@@ -95,4 +95,5 @@ const { error } = useQuery<Group[], Error>(["groups"], fetchGroups);
 
 ## 延伸阅读
 
-关于在 Typescript 中类型推断的技巧和建议，请参阅[此社区资源](https://tanstack.com/query/v4/docs/community/tkdodos-blog#6-react-query-and-typescript)
+关于在 Typescript 中类型推断的技巧和建议，请参阅[此社区资源](https://tanstack.com/query/latest/docs/react/community/tkdodos-blog#6-react-query-and-typescript)。
+要了解如何做到尽可能好的类型安全，你可以阅读[Type-safe React Query](https://tanstack.com/query/latest/docs/react/community/tkdodos-blog#19-type-safe-react-query)

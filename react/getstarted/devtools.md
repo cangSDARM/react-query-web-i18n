@@ -8,7 +8,9 @@ title: 开发调试工具
 当开始 React Query 旅程时，你会希望身边有这些开发工具。
 它们有助于可视化 React Query 的所有内部工作原理，并且可以在你发现自己处于紧要关头时，节省你调试的时间!
 
-> 请注意，目前**devtools 还不支持 React Native**。如果你想帮助我们使 devtools 变得平台无关，请让我们知道!
+> 请注意，目前**devtools 还不支持 React Native**。如果你想帮助我们使 devtools 变得平台无关，请让我们知晓!
+>
+> 还有一点需要注意，你可以使用开发工具来检查**查询**，但不能检查**修改**(修改并没有被追踪，因为那个太过于麻烦和庞大)
 
 ## 安装和导入工具
 
@@ -67,6 +69,8 @@ function App() {
   - React Query devtools 面板的位置
 - `context?: React.Context<QueryClient | undefined>`
   - 使用这个来使用自定义的 React Query 上下文。否则，将默认使用`defaultContext`
+- `errorTypes?: { name: string; initializer: (query: Query) => { toString(): string }}`
+  - 使用这个来预定义那些你的查询可能碰到的错误。这样的话在 devtools 中对特定的查询(specific query)你才可以看到 UI 变化(否则它会将错误交给 react 或者是 window)。它必须返回一个可以被转化为字符串的东西，以便我们在查询中可以检查它是否存在。
 
 ## 嵌入模式
 

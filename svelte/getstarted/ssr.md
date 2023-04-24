@@ -127,11 +127,13 @@ export const load: LayoutLoad = async () => {
 ```ts
 import type { PageLoad } from "./$types";
 
-export const load: PageLoad = async ({ parent }) => {
+export const load: PageLoad = async ({ parent, fetch }) => {
   const { queryClient } = await parent();
+
+  // 你需要使用 SvelteKit 的 fetch 函数
   await queryClient.prefetchQuery({
     queryKey: ["posts"],
-    queryFn: getPosts,
+    queryFn: async () => (await fetch("/api/posts")).json(),
   });
 };
 ```
@@ -145,7 +147,7 @@ export const load: PageLoad = async ({ parent }) => {
   // 这个数据被 prefetchQuery 缓存在 +page.ts 里，所以(客户端)没有任何真实的查询被触发
   const query = createQuery({
     queryKey: ['posts'],
-    queryFn: getPosts
+    queryFn: async () => (await fetch('/api/posts')).json(),
   })
 </script>
 ```

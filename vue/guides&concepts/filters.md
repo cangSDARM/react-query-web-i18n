@@ -25,8 +25,10 @@ await queryClient.refetchQueries(["posts"], { type: "active" });
 
 查询过滤器对象支持以下属性：
 
+- `queryKey?: QueryKey`
+  - 设置此属性以定义要匹配的查询键值
 - `exact?: boolean`
-  - 如果你不想对键值做模糊查询（search queries inclusively），则可以传递 `exact: true` 选项，选项来返回且只返回完整匹配的
+  - 如果你不想对键值做模糊查询(search queries inclusively)，则可以传递 `exact: true` 选项，只返回完整匹配的查询键值
 - `type?: 'active' | 'inactive' | 'all'`
   - 默认为 `all`
   - 设置为 `active` 时，它将匹配当前活跃的查询
@@ -39,9 +41,7 @@ await queryClient.refetchQueries(["posts"], { type: "active" });
   - 设置为 `paused` 时，它将匹配当前想要获取但被暂停了的
   - 设置为 `idle` 时，它将匹配当前未在获取的
 - `predicate?: (query: Query) => boolean`
-  - 对于缓存中的每个查询，都会调用此函数，并且对于需要匹配（found）的查询，该函数返回 `true`
-- `queryKey?: QueryKey`
-  - 设置此属性以定义要匹配的查询键值
+  - 此函数用于需要匹配的每个查询(matching query, 满足其他条件的查询)。如果没有指定其他的过滤规则，这个函数才会针对所有缓存中的查询调用
 
 ## 修改过滤器
 
@@ -62,12 +62,12 @@ await queryClient.isMutating({
 
 修改过滤器对象支持以下属性：
 
+- `mutationKey?: MutationKey`
+  - 设置此属性以定义要匹配的修改键值
 - `exact?: boolean`
   - 如果你不想对键值做模糊查询，你可以设置 `exact: true` 选项来返回且只返回完整匹配的
 - `fetching?: boolean`
   - 设置为 `true` 时，它将匹配当前正在获取的
   - 设置为 `false` 时，它将匹配当前未在获取的
 - `predicate?: (mutation: Mutation) => boolean`
-  - 对于缓存中的每个修改，都会调用此函数，并且对于匹配（found）的修改，该函数返回 `true`
-- `mutationKey?: MutationKey`
-  - 设置此属性以定义要匹配的修改键值
+  - 此函数用于需要匹配的每个查询(matching query, 满足其他条件的查询)。如果没有指定其他的过滤规则，这个函数才会针对所有缓存中的查询调用

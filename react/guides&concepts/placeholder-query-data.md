@@ -38,7 +38,7 @@ function Todos() {
 function Todos() {
   const placeholderData = useMemo(() => generateFakeTodos(), []);
   const result = useQuery({
-    queyKey: ["todos"],
+    queryKey: ["todos"],
     queryFn: () => fetch("/todos"),
     placeholderData,
   });

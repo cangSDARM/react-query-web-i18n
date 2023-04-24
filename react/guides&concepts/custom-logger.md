@@ -3,7 +3,7 @@ id: custom-logger
 title: 自定义日志记录器 Custom Logger (Deprecated)
 ---
 
-如果你想自定义 React Query 记录信息的方式，你可以在创建`QueryClient`时自定义一个日志记录器
+如果你想自定义 TanStack Query 记录信息的方式，你可以在创建`QueryClient`时自定义一个日志记录器
 
 ```tsx
 const queryClient = new QueryClient({

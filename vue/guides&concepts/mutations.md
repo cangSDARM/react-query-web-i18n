@@ -117,7 +117,7 @@ useMutation(addTodo, {
 你可能会发现，在调用 `mutate` 时，**有额外的回调被触发**，而不仅仅是 `useMutation` 上定义的回调。
 这可用于触发组件特定的副作用。
 为此，可以在修改变量产生之后向修改函数提供任何被定义的回调选项。
-支持的覆盖包括: `onSuccess`, `onError` 和 `onSettled`。
+支持的选项包括: `onSuccess`, `onError` 和 `onSettled`。
 (请记住，如果组件在*修改完成之前被卸载*，则这些额外的回调不会被运行)
 
 ```ts

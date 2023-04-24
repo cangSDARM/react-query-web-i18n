@@ -28,3 +28,7 @@ const prefetchTodos = async () => {
 ```ts
 queryClient.setQueryData(["todos"], todos);
 ```
+
+## 延伸阅读
+
+如果想深入了解如何在获取数据之前将其放入查询缓存，请查看[此社区资源](https://tanstack.com/query/latest/docs/react/community/tkdodos-blog#17-seeding-the-query-cache)

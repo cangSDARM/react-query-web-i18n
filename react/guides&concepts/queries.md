@@ -42,7 +42,7 @@ const result = useQuery({ queryKey: ["todos"], queryFn: fetchTodoList });
 除了这些主要状态之外，取决于具体查询的状态，还有更多信息可用：
 
 - `error` - 如果查询处于`isError`状态，则可以通过`error`属性获取该错误
-- `data` - 如果查询处于`success`状态，则可以通过`data`属性获得数据
+- `data` - 如果查询处于`isSuccess`状态，则可以通过`data`属性获得数据
 
 对于**大多数**查询，通常先检查`isLoading`状态，然后检查`isError`状态，最后假设数据可用并呈现成功状态就足够了：
 
