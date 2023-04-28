@@ -34,13 +34,13 @@ module.exports = {
     colorMode: {
       respectPrefersColorScheme: true,
     },
-    announcementBar: {
-      id: "upgrading",
-      content: `Vue 文档已同步完成，Solid, Svelte 文档正在翻译中！`,
-      backgroundColor: "#272116",
-      textColor: "#eee",
-      isCloseable: false,
-    },
+    // announcementBar: {
+    //   id: "upgrading",
+    //   content: `Vue 文档已同步完成，Solid, Svelte 文档正在翻译中！`,
+    //   backgroundColor: "#272116",
+    //   textColor: "#eee",
+    //   isCloseable: false,
+    // },
     navbar: {
       title: "中文文档",
       logo: {
