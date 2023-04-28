@@ -24,7 +24,7 @@ module.exports = {
   onBrokenMarkdownLinks: "warn",
   organizationName: "cangsdarm",
   favicon: "img/favicon.png",
-  projectName: "ReactQueryCN",
+  projectName: "TanStackQueryCN",
   i18n: {
     defaultLocale: "cn",
     locales: ["cn"],
@@ -42,13 +42,12 @@ module.exports = {
     //   isCloseable: false,
     // },
     navbar: {
-      title: "中文文档",
-      logo: {
-        alt: "logo",
-        src: "img/logo-light.png",
-        href: "/react",
-      },
       items: [
+        {
+          type: "html",
+          position: "left",
+          value: `<a class="navbar__brand" style="margin: 0 0 0 -1em;font-size:1.5rem;" href="/react-query-web-i18n/react"><b class="navbar__title text--truncate"><span style="color:#ea910f;">TanStack</span> Query 中文文档</b></a>`,
+        },
         {
           label: "框架",
           position: "left",
@@ -72,6 +71,10 @@ module.exports = {
           ],
         },
         {
+          type: "search",
+          position: "right",
+        },
+        {
           label: "旧版本",
           position: "right",
           items: [
@@ -81,12 +84,6 @@ module.exports = {
             },
           ],
         },
-        // {
-        //不支持多docs的
-        //   type: "docsVersionDropdown",
-        //   position: "right",
-        //   dropdownActiveClassDisabled: true,
-        // },
         {
           label: "官方资源（英文）",
           position: "right",
