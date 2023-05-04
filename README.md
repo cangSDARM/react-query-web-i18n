@@ -4,7 +4,7 @@ Aka: React-Query 中文文档
 
 Official Repo: https://github.com/TanStack/query
 
-Built on: https://docusaurus.io/
+Built on: https://docusaurus.io/, https://www.algolia.com
 
 ----
 

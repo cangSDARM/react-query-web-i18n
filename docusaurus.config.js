@@ -114,6 +114,16 @@ module.exports = {
       links: [],
       copyright: `Copyright © 2021-${new Date().getFullYear()} Web Community.`,
     },
+    algolia: {
+      appId: "OLBDC9ZFXR",
+      apiKey: "577ee144fbd9fe01f3825491b25524a0",
+      indexName: "react-query-web-i18n-react",
+      debug: false, // Set debug to true if you want to inspect the modal
+      // Optional: see doc section below
+      contextualSearch: true,
+      // Optional: Algolia search parameters
+      searchParameters: {},
+    },
   },
   presets: [
     [
