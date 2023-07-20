@@ -117,7 +117,7 @@ function Todos() {
 - 一个`state='success'`的查询通常处于`fetchStatus='idle'`状态。但如果同时有后台重新获取动作，它也可能为`fetchStatus='fetching'`状态。
 - 一个没有数据的查询通常处于`status='loading'`状态和`fetchStatus='loading`状态。如果同时无网络连接，它也可能为`fetchStatus='paused'`状态。
 
-所以请记住，一个查询可以处于`fetchStatus='loading'`状态，但没有实际的在获取数据。
+所以请记住，一个查询可以处于`status='loading'`状态，但没有实际的在获取数据。
 如何理清两者关系？这里有一个简单的经验法则：
 
 - `status`告诉我们有关`data`的状态：有或者没有？
